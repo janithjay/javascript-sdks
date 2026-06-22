@@ -1,0 +1,41 @@
+{
+  "private": true,
+  "name": "@thunderid/javascript-sdks",
+  "version": "0.0.0",
+  "description": "JavaScript SDK workspace for ⚡️ ThunderID",
+  "author": "WSO2",
+  "license": "Apache-2.0",
+  "type": "module",
+  "homepage": "https://github.com/thunder-id/thunderid",
+  "bugs": {
+    "url": "https://github.com/thunder-id/thunderid/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thunder-id/thunderid"
+  },
+  "keywords": [
+    "thunderid",
+    "sdk",
+    "javascript",
+    "wso2"
+  ],
+  "scripts": {
+    "build": "nx run-many --target=build --all",
+    "clean": "nx run-many --target=clean --all && rimraf node_modules",
+    "format:check": "nx run-many --target=format:check --all --parallel",
+    "format:fix": "nx run-many --target=format:fix --all --parallel",
+    "lint": "nx run-many --target=lint --all --parallel",
+    "lint:fix": "nx run-many --target=lint:fix --all --parallel",
+    "test": "nx run-many --target=test --all --parallel",
+    "typecheck": "nx run-many --target=typecheck --all --parallel"
+  },
+  "devDependencies": {
+    "nx": "22.7.5",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "rimraf": "catalog:",
+    "tslib": "catalog:",
+    "typescript": "catalog:"
+  }
+}
