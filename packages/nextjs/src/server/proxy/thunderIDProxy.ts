@@ -24,9 +24,9 @@ import handleRefreshToken from '../../utils/handleRefreshToken';
 import SessionManager, {SessionTokenPayload} from '../../utils/SessionManager';
 import {getSessionFromRequest, getSessionIdFromRequest} from '../../utils/sessionUtils';
 
-export type ThunderIDMiddlewareOptions = Partial<ThunderIDNextConfig>;
+export type ThunderIDProxyOptions = Partial<ThunderIDNextConfig>;
 
-export interface ThunderIDMiddlewareContext {
+export interface ThunderIDProxyContext {
   /** Get the session payload from JWT session if available */
   getSession: () => Promise<SessionTokenPayload | undefined>;
   /** Get the session ID from the current request */
@@ -45,8 +45,8 @@ export interface ThunderIDMiddlewareContext {
   protectRoute: (routeOptions?: {redirect?: string}) => Promise<NextResponse | void>;
 }
 
-type ThunderIDMiddlewareHandler = (
-  thunderid: ThunderIDMiddlewareContext,
+type ThunderIDProxyHandler = (
+  thunderid: ThunderIDProxyContext,
   req: NextRequest,
 ) => Promise<NextResponse | void> | NextResponse | void;
 
@@ -93,7 +93,7 @@ const replaceCookieInHeader = (cookieHeader: string, name: string, value: string
 };
 
 /**
- * ThunderID middleware that integrates authentication into your Next.js application.
+ * ThunderID proxy that integrates authentication into your Next.js application.
  * Similar to Clerk's clerkMiddleware pattern.
  *
  * Proactively refreshes the access token when it is within REFRESH_BUFFER_SECONDS of
@@ -110,16 +110,16 @@ const replaceCookieInHeader = (cookieHeader: string, name: string, value: string
  * (NEXT_PUBLIC_THUNDERID_BASE_URL, NEXT_PUBLIC_THUNDERID_CLIENT_ID,
  * THUNDERID_CLIENT_SECRET). If none are available the refresh step is skipped silently.
  *
- * @param handler - Optional handler function to customize middleware behavior
- * @param options - Configuration options for the middleware
+ * @param handler - Optional handler function to customize proxy behavior
+ * @param options - Configuration options for the proxy
  * @returns Next.js middleware function
  *
  * @example
  * ```typescript
  * // middleware.ts - Basic usage (config read from env vars automatically)
- * import { thunderIDMiddleware } from '@thunderid/nextjs';
+ * import { thunderIDProxy } from '@thunderid/nextjs/server';
  *
- * export default thunderIDMiddleware();
+ * export default thunderIDProxy();
  *
  * export const config = {
  *   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
@@ -129,24 +129,24 @@ const replaceCookieInHeader = (cookieHeader: string, name: string, value: string
  * @example
  * ```typescript
  * // With route protection
- * import { thunderIDMiddleware, createRouteMatcher } from '@thunderid/nextjs';
+ * import { thunderIDProxy, createRouteMatcher } from '@thunderid/nextjs/server';
  *
  * const isProtectedRoute = createRouteMatcher(['/dashboard(.*)']);
  *
- * export default thunderIDMiddleware(async (thunderid, req) => {
+ * export default thunderIDProxy(async (thunderid, req) => {
  *   if (isProtectedRoute(req)) {
  *     await thunderid.protectRoute();
  *   }
  * });
  * ```
  */
-const thunderIDMiddleware =
+const thunderIDProxy =
   (
-    handler?: ThunderIDMiddlewareHandler,
-    options?: ThunderIDMiddlewareOptions | ((req: NextRequest) => ThunderIDMiddlewareOptions),
+    handler?: ThunderIDProxyHandler,
+    options?: ThunderIDProxyOptions | ((req: NextRequest) => ThunderIDProxyOptions),
   ): ((request: NextRequest) => Promise<NextResponse>) =>
   async (request: NextRequest): Promise<NextResponse> => {
-    const resolvedOptions: ThunderIDMiddlewareOptions =
+    const resolvedOptions: ThunderIDProxyOptions =
       typeof options === 'function' ? options(request) : options || {};
 
     // Resolve full config from passed options + environment variable fallbacks.
@@ -176,7 +176,7 @@ const thunderIDMiddleware =
     const verifiedSession: SessionTokenPayload | undefined = await getSessionFromRequest(request);
 
     // Step 2: If no verified session exists, verify the raw cookie's signature
-    // without enforcing expiry. This allows the middleware to recover from an
+    // without enforcing expiry. This allows the proxy to recover from an
     // expired access token as long as the JWT is authentic and a refresh token
     // is present. Skipping the signature check here would let a tampered cookie
     // drive identity-confusion attacks since handleRefreshToken reuses `sub`,
@@ -249,8 +249,8 @@ const thunderIDMiddleware =
     const sessionId: string | undefined = activeSession?.sessionId ?? (await getSessionIdFromRequest(request));
     const isAuthenticated = !!activeSession;
 
-    // ── Middleware context ────────────────────────────────────────────────────
-    const thunderid: ThunderIDMiddlewareContext = {
+    // ── Proxy context ─────────────────────────────────────────────────────────
+    const thunderid: ThunderIDProxyContext = {
       getSession: async (): Promise<SessionTokenPayload | undefined> => activeSession,
       getSessionId: (): string | undefined => sessionId,
       isSignedIn: (): boolean => isAuthenticated,
@@ -343,4 +343,4 @@ const thunderIDMiddleware =
     return response;
   };
 
-export default thunderIDMiddleware;
+export default thunderIDProxy;

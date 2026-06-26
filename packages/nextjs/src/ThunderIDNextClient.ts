@@ -36,7 +36,6 @@ import {
   User,
   UserProfile,
   createOrganization,
-  deriveOrganizationHandleFromBaseUrl,
   extractUserClaimsFromIdToken,
   flattenUserSchema,
   generateFlattenedUserProfile,
@@ -62,6 +61,13 @@ class ThunderIDNextClient<T extends ThunderIDNextConfig = ThunderIDNextConfig> e
 
   private async ensureInitialized(): Promise<void> {
     if (!this.isInitialized) {
+      // Server actions may run in a module context that hasn't been through
+      // ThunderIDServerProvider (e.g. a different worker). Try to initialize
+      // from environment variables before giving up.
+      await this.initialize({} as T);
+    }
+
+    if (!this.isInitialized) {
       throw new Error(
         '[ThunderIDNextClient] Client is not initialized. Make sure you have wrapped your app with ThunderIDProvider and provided the required configuration (baseUrl, clientId, etc.).',
       );
@@ -85,12 +91,6 @@ class ThunderIDNextClient<T extends ThunderIDNextConfig = ThunderIDNextConfig> e
       ...rest
     } = decorateConfigWithNextEnv(config);
 
-    let resolvedOrganizationHandle: string | undefined = organizationHandle;
-
-    if (!resolvedOrganizationHandle) {
-      resolvedOrganizationHandle = deriveOrganizationHandleFromBaseUrl(baseUrl);
-    }
-
     const origin: string = await getClientOrigin();
 
     const initialized: boolean = await super.initialize(
@@ -101,8 +101,8 @@ class ThunderIDNextClient<T extends ThunderIDNextConfig = ThunderIDNextConfig> e
         baseUrl,
         clientId,
         clientSecret,
-        enablePKCE: clientSecret == null,
-        organizationHandle: resolvedOrganizationHandle,
+        enablePKCE: (rest as any).enablePKCE ?? true,
+        organizationHandle,
         signInUrl,
         signUpUrl,
       } as any,
