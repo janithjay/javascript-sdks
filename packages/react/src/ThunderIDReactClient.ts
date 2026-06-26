@@ -26,7 +26,6 @@ import {
   executeEmbeddedSignInFlow,
   Organization,
   IdToken,
-  deriveOrganizationHandleFromBaseUrl,
   AllOrganizationsApiResponse,
   extractUserClaimsFromIdToken,
   TokenResponse,
@@ -68,16 +67,9 @@ class ThunderIDReactClient<T extends ThunderIDReactConfig = ThunderIDReactConfig
   }
 
   override initialize(config: ThunderIDReactConfig): Promise<boolean> {
-    let resolvedOrganizationHandle: string | undefined = config?.organizationHandle;
-
-    if (!resolvedOrganizationHandle) {
-      resolvedOrganizationHandle = deriveOrganizationHandleFromBaseUrl(config?.baseUrl);
-    }
-
     return this.withLoading(async () => {
       this._initializeConfig = {
         ...config,
-        organizationHandle: resolvedOrganizationHandle,
         periodicTokenRefresh:
           config?.tokenLifecycle?.refreshToken?.autoRefresh ?? (config as any)?.periodicTokenRefresh,
       } as any;

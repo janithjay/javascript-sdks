@@ -39,7 +39,6 @@ import {
   EmbeddedSignInFlowResponse,
   EmbeddedSignInFlowStatus,
   EmbeddedSignUpFlowStatus,
-  deriveOrganizationHandleFromBaseUrl,
   StorageManager,
 } from '@thunderid/browser';
 import getAllOrganizations from './api/getAllOrganizations';
@@ -76,15 +75,7 @@ class ThunderIDVueClient<T extends ThunderIDVueConfig = ThunderIDVueConfig> exte
   }
 
   override initialize(config: ThunderIDVueConfig): Promise<boolean> {
-    let resolvedOrganizationHandle: string | undefined = config?.organizationHandle;
-
-    if (!resolvedOrganizationHandle) {
-      resolvedOrganizationHandle = deriveOrganizationHandleFromBaseUrl(config?.baseUrl);
-    }
-
-    return this.withLoading(async () =>
-      super.initialize({...config, organizationHandle: resolvedOrganizationHandle} as unknown as T),
-    );
+    return this.withLoading(async () => super.initialize(config as unknown as T));
   }
 
   override reInitialize(config: Partial<ThunderIDVueConfig>): Promise<boolean> {
