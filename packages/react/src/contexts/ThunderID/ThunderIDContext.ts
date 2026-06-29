@@ -22,7 +22,6 @@ import {
   HttpResponse,
   IdToken,
   OIDCDiscoveryApiResponse,
-  Organization,
   SignInOptions,
   TokenExchangeRequestConfig,
   TokenResponse,
@@ -126,8 +125,6 @@ export type ThunderIDContextProps = {
    */
   meta: FlowMetadataResponse | null;
 
-  organization: Organization;
-
   organizationHandle: string | undefined;
 
   /**
@@ -211,7 +208,7 @@ export type ThunderIDContextProps = {
   signUpUrl: string | undefined;
 
   user: any;
-} & Pick<ThunderIDReactClient, 'clearSession' | 'switchOrganization'>;
+} & Pick<ThunderIDReactClient, 'clearSession'>;
 
 /**
  * Context object for managing the Authentication flow builder core context.
@@ -241,7 +238,6 @@ const ThunderIDContext: Context<ThunderIDContextProps | null> = createContext<nu
   isMetaLoading: false,
   isSignedIn: false,
   meta: null,
-  organization: null as unknown as Organization,
   organizationHandle: undefined,
   reInitialize: null as unknown as ThunderIDContextProps['reInitialize'],
   recover: () => Promise.resolve({} as any),
@@ -252,7 +248,6 @@ const ThunderIDContext: Context<ThunderIDContextProps | null> = createContext<nu
   signOut: () => Promise.resolve({} as any),
   signUp: () => Promise.resolve({} as any),
   signUpUrl: undefined,
-  switchOrganization: null as unknown as ThunderIDContextProps['switchOrganization'],
   user: null,
 });
 

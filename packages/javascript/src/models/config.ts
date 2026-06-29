@@ -450,13 +450,6 @@ export interface ThemePreferences {
    */
   direction?: 'ltr' | 'rtl';
   /**
-   * Inherit branding from WSO2 Identity Server or ThunderID.
-   * When set to `true`, the SDK will fetch and apply branding preferences from the server.
-   * Defaults to `false` — branding is not fetched unless explicitly enabled.
-   * @default false
-   */
-  inheritFromBranding?: boolean;
-  /**
    * The theme mode to use. Defaults to 'system'.
    */
   mode?: ThemeMode;
@@ -525,14 +518,6 @@ export interface I18nPreferences {
 }
 
 export interface UserPreferences {
-  /**
-   * Whether to automatically fetch the user's associated organizations after sign-in.
-   * When set to false, the SDK will not make API calls to `/api/users/v1/me/organizations`.
-   * @default true
-   * @remarks Disabling this will improve performance if you don't need organization information.
-   * You can manually call `getMyOrganizations()` when needed if this is disabled.
-   */
-  fetchOrganizations?: boolean;
   /**
    * Whether to automatically fetch the user profile from SCIM2 endpoints after sign-in.
    * When set to false, the SDK will not make API calls to `/scim2/Me` and `/scim2/Schemas`.

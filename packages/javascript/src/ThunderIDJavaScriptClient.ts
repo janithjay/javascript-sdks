@@ -33,7 +33,6 @@ import {Crypto} from './models/crypto';
 import {ExtendedAuthorizeRequestUrlParams} from './models/oauth-request';
 import {OIDCDiscoveryApiResponse} from './models/oidc-discovery';
 import {OIDCEndpoints} from './models/oidc-endpoints';
-import {AllOrganizationsApiResponse, Organization} from './models/organization';
 import {SessionData, UserSession} from './models/session';
 import {Storage, TemporaryStore} from './models/store';
 import {IdToken, TokenExchangeRequestConfig, TokenResponse} from './models/token';
@@ -309,22 +308,6 @@ class ThunderIDJavaScriptClient<T = Config> implements ThunderIDClient<T> {
   }
 
   public recover(): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-
-  public switchOrganization(_organization: Organization, _sessionId?: string): Promise<TokenResponse | Response> {
-    throw new Error('Method not implemented.');
-  }
-
-  public getCurrentOrganization(_sessionId?: string): Promise<Organization | null> {
-    throw new Error('Method not implemented.');
-  }
-
-  public getAllOrganizations(_options?: any, _sessionId?: string): Promise<AllOrganizationsApiResponse> {
-    throw new Error('Method not implemented.');
-  }
-
-  public getMyOrganizations(_options?: any, _sessionId?: string): Promise<Organization[]> {
     throw new Error('Method not implemented.');
   }
 

@@ -33,9 +33,6 @@ export enum ErrorCode {
   // ── Security ───────────────────────────────────────────────────────
   OpenRedirectBlocked = 'security/open-redirect-blocked',
 
-  // ── Organization ───────────────────────────────────────────────────
-  OrganizationCreateFailed = 'organization/create-failed',
-  OrganizationSwitchFailed = 'organization/switch-failed',
   // ── Session ────────────────────────────────────────────────────────
   SessionExpired = 'session/expired',
   SessionInvalid = 'session/invalid',

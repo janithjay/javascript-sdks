@@ -25,25 +25,18 @@ export {default as executeEmbeddedUserOnboardingFlow} from './api/executeEmbedde
 export type {EmbeddedUserOnboardingFlowResponse} from './api/executeEmbeddedUserOnboardingFlow';
 export {default as getFlowMeta} from './api/getFlowMeta';
 export {default as getOrganizationUnitChildren} from './api/getOrganizationUnitChildren';
+export type {
+  GetOrganizationUnitChildrenConfig,
+  OrganizationUnit,
+  OrganizationUnitListResponse,
+} from './api/getOrganizationUnitChildren';
 export {default as getUserInfo} from './api/getUserInfo';
 export {default as getScim2Me} from './api/getScim2Me';
 export type {GetScim2MeConfig} from './api/getScim2Me';
 export {default as getSchemas} from './api/getSchemas';
 export type {GetSchemasConfig} from './api/getSchemas';
-export {default as getAllOrganizations} from './api/getAllOrganizations';
-export type {GetAllOrganizationsConfig} from './api/getAllOrganizations';
-export {default as createOrganization} from './api/createOrganization';
-export type {CreateOrganizationPayload, CreateOrganizationConfig} from './api/createOrganization';
-export {default as getMeOrganizations} from './api/getMeOrganizations';
-export type {GetMeOrganizationsConfig} from './api/getMeOrganizations';
-export {default as getOrganization} from './api/getOrganization';
-export type {OrganizationDetails, GetOrganizationConfig} from './api/getOrganization';
-export {default as updateOrganization, createPatchOperations} from './api/updateOrganization';
-export type {UpdateOrganizationConfig} from './api/updateOrganization';
 export {default as updateMeProfile} from './api/updateMeProfile';
 export type {UpdateMeProfileConfig} from './api/updateMeProfile';
-export {default as getBrandingPreference} from './api/getBrandingPreference';
-export type {GetBrandingPreferenceConfig} from './api/getBrandingPreference';
 
 export {default as ApplicationNativeAuthenticationConstants} from './constants/ApplicationNativeAuthenticationConstants';
 export {default as TokenConstants} from './constants/TokenConstants';
@@ -57,7 +50,6 @@ export {ThunderIDAuthException} from './errors/exception';
 
 export type {CIBAInitiateOptions, CIBAInitiateResponse, CIBAErrorCode, CIBAPollOptions} from './models/ciba';
 
-export type {AllOrganizationsApiResponse} from './models/organization';
 export {
   EmbeddedFlowComponentType,
   EmbeddedFlowActionVariant,
@@ -103,11 +95,6 @@ export type {
   EmbeddedRecoveryFlowRequest,
   EmbeddedRecoveryFlowErrorResponse,
 } from './models/embedded-recovery-flow';
-export type {
-  OrganizationUnit,
-  OrganizationUnitListResponse,
-  GetOrganizationUnitChildrenConfig,
-} from './models/organization-unit';
 export {FlowMetaType} from './models/flow-meta';
 export type {
   ApplicationMetadata,
@@ -165,21 +152,8 @@ export type {OIDCDiscoveryApiResponse} from './models/oidc-discovery';
 export type {Storage, TemporaryStore} from './models/store';
 export type {User, UserProfile} from './models/user';
 export type {SessionData} from './models/session';
-export type {Organization} from './models/organization';
 export type {TranslationFn} from './models/translation';
 export type {ResolveFlowTemplateLiteralsOptions} from './models/vars';
-export type {
-  BrandingPreference,
-  BrandingPreferenceConfig,
-  BrandingLayout,
-  BrandingTheme,
-  ThemeVariant,
-  ButtonsConfig,
-  ColorsConfig,
-  ColorVariants,
-  BrandingOrganizationDetails,
-  UrlsConfig,
-} from './models/branding-preference';
 export {WellKnownSchemaIds} from './models/scim2-schema';
 export type {Schema, SchemaAttribute, FlattenedSchema} from './models/scim2-schema';
 export type {RecursivePartial} from './models/utility-types';
@@ -197,7 +171,6 @@ export {default as bem} from './utils/bem';
 export {default as formatDate} from './utils/formatDate';
 export {default as processUsername} from './utils/processUsername';
 export {default as deepMerge} from './utils/deepMerge';
-export {default as deriveOrganizationHandleFromBaseUrl} from './utils/deriveOrganizationHandleFromBaseUrl';
 export {default as extractUserClaimsFromIdToken} from './utils/extractUserClaimsFromIdToken';
 export {default as isRecognizedBaseUrlPattern} from './utils/isRecognizedBaseUrlPattern';
 export {default as extractPkceStorageKeyFromState} from './utils/extractPkceStorageKeyFromState';
@@ -222,7 +195,6 @@ export {default as buildValidatorFromRules} from './utils/buildValidatorFromRule
 export {default as evaluateValidationRule, DEFAULT_VALIDATION_MESSAGE_KEYS} from './utils/evaluateValidationRule';
 export {default as processOpenIDScopes} from './utils/processOpenIDScopes';
 export {default as withVendorCSSClassPrefix} from './utils/withVendorCSSClassPrefix';
-export {default as transformBrandingPreferenceToTheme} from './utils/transformBrandingPreferenceToTheme';
 
 export {
   default as logger,

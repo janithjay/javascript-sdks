@@ -18,15 +18,10 @@
 
 'use server';
 
-import {BrandingPreference, ThunderIDRuntimeError, IdToken, Organization, User, UserProfile} from '@thunderid/node';
+import {ThunderIDRuntimeError, IdToken, User, UserProfile} from '@thunderid/node';
 import {ThunderIDProviderProps} from '@thunderid/react';
 import {FC, PropsWithChildren, ReactElement} from 'react';
 import clearSession from './actions/clearSession';
-import createOrganization from './actions/createOrganization';
-import getAllOrganizations from './actions/getAllOrganizations';
-import getBrandingPreference from './actions/getBrandingPreference';
-import getCurrentOrganizationAction from './actions/getCurrentOrganizationAction';
-import getMyOrganizations from './actions/getMyOrganizations';
 import getSessionId from './actions/getSessionId';
 import getSessionPayload from './actions/getSessionPayload';
 import getUserAction from './actions/getUserAction';
@@ -37,7 +32,6 @@ import refreshToken from './actions/refreshToken';
 import signInAction from './actions/signInAction';
 import signOutAction from './actions/signOutAction';
 import signUpAction from './actions/signUpAction';
-import switchOrganization from './actions/switchOrganization';
 import updateUserProfileAction from './actions/updateUserProfileAction';
 import getClient from './getClient';
 import ThunderIDClientProvider from '../client/contexts/ThunderID/ThunderIDProvider.js';
@@ -123,14 +117,6 @@ const ThunderIDServerProvider: FC<PropsWithChildren<ThunderIDServerProviderProps
     profile: {},
     schemas: [],
   };
-  let currentOrganization: Organization = {
-    id: '',
-    name: '',
-    orgHandle: '',
-  };
-  let myOrganizations: Organization[] = [];
-  let brandingPreference: BrandingPreference | null = null;
-
   if (signedIn) {
     let updatedBaseUrl: string | undefined = config?.baseUrl;
 
@@ -151,8 +137,6 @@ const ThunderIDServerProvider: FC<PropsWithChildren<ThunderIDServerProviderProps
 
     // Check if user profile fetching is enabled (default: true)
     const shouldFetchUserProfile: boolean = config?.preferences?.user?.fetchUserProfile !== false;
-    // Check if organization fetching is enabled (default: true)
-    const shouldFetchOrganizations: boolean = config?.preferences?.user?.fetchOrganizations !== false;
 
     if (shouldFetchUserProfile) {
       try {
@@ -173,44 +157,6 @@ const ThunderIDServerProvider: FC<PropsWithChildren<ThunderIDServerProviderProps
         logger.warn('[ThunderIDServerProvider] Failed to fetch user profile from SCIM2:', error?.toString());
       }
     }
-
-    if (shouldFetchOrganizations) {
-      try {
-        const currentOrganizationResponse: {
-          data: {organization?: Organization; user?: Record<string, unknown>};
-          error: string | null;
-          success: boolean;
-        } = await getCurrentOrganizationAction(sessionId);
-
-        if (sessionId) {
-          myOrganizations = await getMyOrganizations({}, sessionId);
-        } else {
-          logger.warn('[ThunderIDServerProvider] No session ID available, skipping organization fetch');
-        }
-
-        currentOrganization = currentOrganizationResponse?.data?.organization!;
-      } catch (error) {
-        logger.warn('[ThunderIDServerProvider] Failed to fetch organization info:', error?.toString());
-      }
-    }
-  }
-
-  // Fetch branding preference if branding is enabled in config
-  if (config?.preferences?.theme?.inheritFromBranding !== false) {
-    try {
-      brandingPreference = await getBrandingPreference(
-        {
-          baseUrl: config?.baseUrl!,
-          locale: 'en-US',
-          name: config.applicationId || config.organizationHandle,
-          type: config.applicationId ? 'APP' : 'ORG',
-        },
-        sessionId,
-      );
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn('[ThunderIDServerProvider] Failed to fetch branding preference:', error);
-    }
   }
 
   return (
@@ -229,15 +175,9 @@ const ThunderIDServerProvider: FC<PropsWithChildren<ThunderIDServerProviderProps
       preferences={config?.preferences}
       clientId={config?.clientId}
       user={user}
-      currentOrganization={currentOrganization}
       userProfile={userProfile}
       updateProfile={updateUserProfileAction}
       isSignedIn={signedIn}
-      myOrganizations={myOrganizations}
-      getAllOrganizations={getAllOrganizations}
-      switchOrganization={switchOrganization}
-      brandingPreference={brandingPreference}
-      createOrganization={createOrganization}
     >
       {children}
     </ThunderIDClientProvider>

@@ -16,16 +16,16 @@
  * under the License.
  */
 
-import {defineNuxtPlugin, useState, useRequestEvent, useRuntimeConfig, navigateTo} from '#app';
-import type {NuxtApp} from '#app';
 import {getRedirectBasedSignUpUrl} from '@thunderid/browser';
-import type {BrandingPreference, Organization, UserProfile} from '@thunderid/node';
+import type {UserProfile} from '@thunderid/node';
 import {ThunderIDPlugin, THUNDERID_KEY} from '@thunderid/vue';
 import type {H3Event} from 'h3';
 import {computed} from 'vue';
 import type {ComputedRef, Ref} from 'vue';
 import ThunderIDRoot from '../components/ThunderIDRoot';
 import type {ThunderIDAuthState, ThunderIDSSRData} from '../types';
+import type {NuxtApp} from '#app';
+import {defineNuxtPlugin, useState, useRequestEvent, useRuntimeConfig, navigateTo} from '#app';
 
 /**
  * Universal Nuxt plugin (runs on both server and client) that wires up the
@@ -41,9 +41,8 @@ import type {ThunderIDAuthState, ThunderIDSSRData} from '../types';
  *     Action helpers (`signIn` / `signOut` / `signUp`) use Nuxt's
  *     `navigateTo` so redirects work on both server and client.
  *  3. **ThunderIDRoot** — register the wrapper component that mounts the rest
- *     of the provider tree (`I18nProvider`, `BrandingProvider`,
- *     `ThemeProvider`, `FlowProvider`, `UserProvider`, `OrganizationProvider`)
- *     so downstream composables receive real context values.
+ *     of the provider tree (`I18nProvider`, `ThemeProvider`, `FlowProvider`,
+ *     `UserProvider`) so downstream composables receive real context values.
  *  4. **ThunderIDPlugin (delegated)** — install the Vue SDK plugin in
  *     delegated mode so it skips browser-only initialisation (SSR-safe).
  */
@@ -95,12 +94,6 @@ export default defineNuxtPlugin((nuxtApp: NuxtApp) => {
     user: null,
   }));
   const userProfileState: Ref<UserProfile | null> = useState<UserProfile | null>('thunderid:user-profile', () => null);
-  const currentOrgState: Ref<Organization | null> = useState<Organization | null>('thunderid:current-org', () => null);
-  const myOrgsState: Ref<Organization[]> = useState<Organization[]>('thunderid:my-orgs', () => []);
-  const brandingState: Ref<BrandingPreference | null> = useState<BrandingPreference | null>(
-    'thunderid:branding',
-    () => null,
-  );
 
   if (import.meta.server) {
     const event: H3Event | undefined = useRequestEvent();
@@ -114,9 +107,6 @@ export default defineNuxtPlugin((nuxtApp: NuxtApp) => {
         user: ssr.user,
       };
       userProfileState.value = ssr.userProfile;
-      currentOrgState.value = ssr.currentOrganization;
-      myOrgsState.value = ssr.myOrganizations;
-      brandingState.value = ssr.brandingPreference;
     } else {
       // Backwards-compat: fall back to the legacy context shape (pre-Step-2 plugin).
       const ssrContext: {isSignedIn?: boolean; session?: {sub?: string}} | undefined = event?.context?.thunderid as
@@ -148,9 +138,6 @@ export default defineNuxtPlugin((nuxtApp: NuxtApp) => {
   // `user` is backed by the dedicated state key so ThunderIDRoot can read it
   // reactively without going through the THUNDERID_KEY indirection.
   const user: ComputedRef<ThunderIDAuthState['user'] | null> = computed(() => authState.value.user ?? null);
-  // `organization` reflects the SSR-resolved current org (hydrated from
-  // 'thunderid:current-org'). Kept readonly at the THUNDERID_KEY level.
-  const organizationRef: ComputedRef<Organization | null> = computed(() => currentOrgState.value);
 
   // ── 3. Action helpers (Nuxt-aware navigation) ───────────────────────────
   const signIn = async (options?: Record<string, unknown>): Promise<void> => {
@@ -218,7 +205,6 @@ export default defineNuxtPlugin((nuxtApp: NuxtApp) => {
     isInitialized,
     isLoading,
     isSignedIn,
-    organization: organizationRef,
     organizationHandle: publicConfig.organizationHandle,
     platform: undefined,
     reInitialize: async () => false,
@@ -231,7 +217,6 @@ export default defineNuxtPlugin((nuxtApp: NuxtApp) => {
     signUp,
     signUpUrl: publicConfig.signUpUrl,
     storage: undefined,
-    switchOrganization: noop,
     user,
   });
 

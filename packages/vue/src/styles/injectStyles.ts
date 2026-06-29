@@ -38,11 +38,7 @@ import ANIMATIONS_CSS from './animations.css';
 import DEFAULTS_CSS from './defaults.css';
 
 // Primitives
-import CREATE_ORGANIZATION_CSS from '../components/presentation/create-organization/CreateOrganization.css';
 import LANGUAGE_SWITCHER_CSS from '../components/presentation/language-switcher/LanguageSwitcher.css';
-import ORGANIZATION_LIST_CSS from '../components/presentation/organization-list/OrganizationList.css';
-import ORGANIZATION_PROFILE_CSS from '../components/presentation/organization-profile/OrganizationProfile.css';
-import ORGANIZATION_SWITCHER_CSS from '../components/presentation/organization-switcher/OrganizationSwitcher.css';
 import USER_DROPDOWN_CSS from '../components/presentation/user-dropdown/UserDropdown.css';
 import USER_PROFILE_CSS from '../components/presentation/user-profile/UserProfile.css';
 import ALERT_CSS from '../components/primitives/Alert/Alert.css';
@@ -89,10 +85,6 @@ const STYLES: string = [
   LOGO_CSS,
   SPINNER_CSS,
   // Presentation
-  ORGANIZATION_LIST_CSS,
-  ORGANIZATION_SWITCHER_CSS,
-  ORGANIZATION_PROFILE_CSS,
-  CREATE_ORGANIZATION_CSS,
   LANGUAGE_SWITCHER_CSS,
   USER_DROPDOWN_CSS,
   USER_PROFILE_CSS,

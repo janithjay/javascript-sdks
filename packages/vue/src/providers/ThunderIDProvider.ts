@@ -17,7 +17,6 @@
  */
 
 import {
-  AllOrganizationsApiResponse,
   ThunderIDRuntimeError,
   extractUserClaimsFromIdToken,
   generateFlattenedUserProfile,
@@ -25,7 +24,6 @@ import {
   hasCalledForThisInstanceInUrl,
   HttpResponse,
   IdToken,
-  Organization,
   User,
   UserProfile,
   SignInOptions,
@@ -47,11 +45,9 @@ import {
   type PropType,
   type VNode,
 } from 'vue';
-import BrandingProvider from './BrandingProvider';
 import FlowMetaProvider from './FlowMetaProvider';
 import FlowProvider from './FlowProvider';
 import I18nProvider from './I18nProvider';
-import OrganizationProvider from './OrganizationProvider';
 import ThemeProvider from './ThemeProvider';
 import UserProvider from './UserProvider';
 import {THUNDERID_KEY} from '../keys';
@@ -186,8 +182,6 @@ const ThunderIDProvider: Component = defineComponent({
     const isInitialized: Ref<boolean> = ref<boolean>(false);
     const isLoading: Ref<boolean> = ref<boolean>(true);
     const user: ShallowRef<any | null> = shallowRef<any | null>(null);
-    const currentOrganization: ShallowRef<Organization | null> = shallowRef<Organization | null>(null);
-    const myOrganizations: ShallowRef<Organization[]> = shallowRef<Organization[]>([]);
     const userProfile: ShallowRef<UserProfile | null> = shallowRef<UserProfile | null>(null);
     const resolvedBaseUrl: Ref<string> = ref<string>(props.baseUrl);
 
@@ -304,31 +298,6 @@ const ThunderIDProvider: Component = defineComponent({
       }
     }
 
-    // ── Switch Organization ──
-    async function switchOrganization(organization: Organization): Promise<TokenResponse | Response> {
-      try {
-        isUpdatingSession = true;
-        isLoading.value = true;
-        const response: TokenResponse | Response = await client.switchOrganization(organization);
-
-        if (await client.isSignedIn()) {
-          await updateSession();
-        }
-
-        return response;
-      } catch (error) {
-        throw new ThunderIDRuntimeError(
-          `Failed to switch organization: ${error instanceof Error ? error.message : String(JSON.stringify(error))}`,
-          'thunderid-switchOrganization-Error',
-          'vue',
-          'An error occurred while switching to the specified organization.',
-        );
-      } finally {
-        isUpdatingSession = false;
-        isLoading.value = client.isLoading();
-      }
-    }
-
     // ── Provide Context ──
     const context: ThunderIDContext = {
       afterSignInUrl: props.afterSignInUrl,
@@ -352,7 +321,6 @@ const ThunderIDProvider: Component = defineComponent({
       isInitialized,
       isLoading,
       isSignedIn,
-      organization: currentOrganization,
       organizationHandle: props.organizationHandle,
       reInitialize: async (config: any): Promise<boolean> => {
         const result: boolean = await client.reInitialize(config);
@@ -366,7 +334,6 @@ const ThunderIDProvider: Component = defineComponent({
       signUp,
       signUpUrl: props.signUpUrl,
       storage: props.storage as ThunderIDVueConfig['storage'],
-      switchOrganization,
       user,
     };
 
@@ -484,70 +451,44 @@ const ThunderIDProvider: Component = defineComponent({
             {enabled: true},
             {
               default: (): any =>
-                h(BrandingProvider, null, {
+                h(ThemeProvider, null, {
                   default: (): any =>
-                    h(ThemeProvider, null, {
+                    h(FlowProvider, null, {
                       default: (): any =>
-                        h(FlowProvider, null, {
-                          default: (): any =>
-                            h(
-                              UserProvider,
-                              {
-                                onUpdateProfile: (updatedUser: User): void => {
-                                  user.value = updatedUser;
-                                  userProfile.value = {
-                                    flattenedProfile: generateFlattenedUserProfile(
-                                      updatedUser,
-                                      userProfile.value?.schemas ?? [],
-                                    ),
-                                    profile: updatedUser,
-                                    schemas: userProfile.value?.schemas ?? [],
-                                  };
-                                },
-                                profile: userProfile.value,
-                                revalidateProfile: async (): Promise<void> => {
-                                  try {
-                                    const decodedToken: IdToken = await client.getDecodedIdToken();
-                                    const claims: User = extractUserClaimsFromIdToken(decodedToken);
-                                    user.value = claims;
-                                    userProfile.value = {
-                                      flattenedProfile: claims,
-                                      profile: claims,
-                                      schemas: [],
-                                    };
-                                  } catch {
-                                    // silent
-                                  }
-                                },
-                              },
-                              {
-                                default: (): any =>
-                                  h(
-                                    OrganizationProvider,
-                                    {
-                                      currentOrganization: currentOrganization.value,
-                                      getAllOrganizations: async (): Promise<AllOrganizationsApiResponse> =>
-                                        client.getAllOrganizations({baseUrl: resolvedBaseUrl.value}),
-                                      myOrganizations: myOrganizations.value,
-                                      onOrganizationSwitch: switchOrganization,
-                                      revalidateMyOrganizations: async (): Promise<Organization[]> => {
-                                        const baseUrl: string = resolvedBaseUrl.value;
-                                        try {
-                                          const orgs: Organization[] = await client.getMyOrganizations({baseUrl});
-                                          myOrganizations.value = orgs || [];
-                                          return orgs || [];
-                                        } catch {
-                                          return [];
-                                        }
-                                      },
-                                    },
-                                    {
-                                      default: (): any => slots['default']?.(),
-                                    },
-                                  ),
-                              },
-                            ),
-                        }),
+                        h(
+                          UserProvider,
+                          {
+                            onUpdateProfile: (updatedUser: User): void => {
+                              user.value = updatedUser;
+                              userProfile.value = {
+                                flattenedProfile: generateFlattenedUserProfile(
+                                  updatedUser,
+                                  userProfile.value?.schemas ?? [],
+                                ),
+                                profile: updatedUser,
+                                schemas: userProfile.value?.schemas ?? [],
+                              };
+                            },
+                            profile: userProfile.value,
+                            revalidateProfile: async (): Promise<void> => {
+                              try {
+                                const decodedToken: IdToken = await client.getDecodedIdToken();
+                                const claims: User = extractUserClaimsFromIdToken(decodedToken);
+                                user.value = claims;
+                                userProfile.value = {
+                                  flattenedProfile: claims,
+                                  profile: claims,
+                                  schemas: [],
+                                };
+                              } catch {
+                                // silent
+                              }
+                            },
+                          },
+                          {
+                            default: (): any => slots['default']?.(),
+                          },
+                        ),
                     }),
                 }),
             },

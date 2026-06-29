@@ -52,7 +52,6 @@ const mockClient = vi.hoisted(() => ({
     name: 'Test Org',
     orgHandle: 'test-org',
   }),
-  getBrandingPreference: vi.fn<(config: any) => Promise<any>>().mockResolvedValue({organizationName: 'TestOrg'}),
   getDecodedIdToken: vi.fn<(sessionId: string) => Promise<any>>().mockResolvedValue({sub: 'user-123'}),
 }));
 
@@ -149,7 +148,6 @@ describe('thunderid-ssr Nitro plugin', () => {
       name: 'Test Org',
       orgHandle: 'test-org',
     });
-    mockClient.getBrandingPreference.mockResolvedValue({organizationName: 'TestOrg'});
     mockClient.getDecodedIdToken.mockResolvedValue({sub: 'user-123'});
 
     // Default: no session cookie, root path
@@ -221,7 +219,6 @@ describe('thunderid-ssr Nitro plugin', () => {
     expect(ssr.userProfile).toBeDefined();
     expect(ssr.myOrganizations).toHaveLength(1);
     expect(ssr.currentOrganization).toEqual({id: 'org-1', name: 'Test Org', orgHandle: 'test-org'});
-    expect(ssr.brandingPreference).toEqual({organizationName: 'TestOrg'});
   });
 
   it('calls all client methods with the correct session ID', async () => {
@@ -231,7 +228,6 @@ describe('thunderid-ssr Nitro plugin', () => {
     expect(mockClient.getUserProfile).toHaveBeenCalledWith(MOCK_SESSION.sessionId);
     expect(mockClient.getMyOrganizations).toHaveBeenCalledWith(MOCK_SESSION.sessionId);
     expect(mockClient.getCurrentOrganization).toHaveBeenCalledWith(MOCK_SESSION.sessionId);
-    expect(mockClient.getBrandingPreference).toHaveBeenCalled();
   });
 
   it('writes legacy __thunderidAuth to event context for backwards compatibility', async () => {
@@ -260,7 +256,6 @@ describe('thunderid-ssr Nitro plugin', () => {
     expect(event.context.thunderid.ssr.userProfile).toBeNull();
     // other fields should still be populated
     expect(event.context.thunderid.ssr.myOrganizations).toHaveLength(1);
-    expect(event.context.thunderid.ssr.brandingPreference).toBeDefined();
   });
 
   it('skips org fetches when preferences.user.fetchOrganizations is false', async () => {
@@ -279,28 +274,8 @@ describe('thunderid-ssr Nitro plugin', () => {
     expect(mockClient.getCurrentOrganization).not.toHaveBeenCalled();
     expect(event.context.thunderid.ssr.myOrganizations).toEqual([]);
     expect(event.context.thunderid.ssr.currentOrganization).toBeNull();
-    // user and branding should still be populated
+    // user should still be populated
     expect(event.context.thunderid.ssr.user).toBeDefined();
-    expect(event.context.thunderid.ssr.brandingPreference).toBeDefined();
-  });
-
-  it('skips branding fetch when preferences.theme.inheritFromBranding is false', async () => {
-    vi.mocked(useRuntimeConfig).mockReturnValue({
-      public: {
-        thunderid: {
-          baseUrl: 'https://localhost:8090',
-          preferences: {theme: {inheritFromBranding: false}},
-        },
-      },
-    } as any);
-
-    const event = await callHandler('/', 'valid-cookie');
-
-    expect(mockClient.getBrandingPreference).not.toHaveBeenCalled();
-    expect(event.context.thunderid.ssr.brandingPreference).toBeNull();
-    // other fields should still be populated
-    expect(event.context.thunderid.ssr.user).toBeDefined();
-    expect(event.context.thunderid.ssr.myOrganizations).toHaveLength(1);
   });
 
   // ── Non-fatal partial failures ────────────────────────────────────────────
@@ -324,16 +299,6 @@ describe('thunderid-ssr Nitro plugin', () => {
 
     expect(event.context.thunderid.ssr.isSignedIn).toBe(true);
     expect(event.context.thunderid.ssr.myOrganizations).toEqual([]);
-    expect(event.context.thunderid.ssr.user).toBeDefined();
-  });
-
-  it('still writes SSR data when getBrandingPreference throws (non-fatal)', async () => {
-    mockClient.getBrandingPreference.mockRejectedValueOnce(new Error('branding error'));
-
-    const event = await callHandler('/', 'valid-cookie');
-
-    expect(event.context.thunderid.ssr.isSignedIn).toBe(true);
-    expect(event.context.thunderid.ssr.brandingPreference).toBeNull();
     expect(event.context.thunderid.ssr.user).toBeDefined();
   });
 

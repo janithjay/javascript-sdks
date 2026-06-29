@@ -163,8 +163,14 @@ const signInAction = async (
 
     return {data: response as Record<string, unknown>, success: true};
   } catch (error) {
-    logger.error(`[signInAction] Error during sign-in: ${error instanceof Error ? error.message : String(error)}`);
-    return {error: String(error), success: false};
+    const message =
+      error instanceof Error
+        ? error.message
+        : typeof (error as any)?.message === 'string'
+          ? (error as any).message
+          : String(error);
+    logger.error(`[signInAction] Error during sign-in: ${message}`);
+    return {error: message, success: false};
   }
 };
 

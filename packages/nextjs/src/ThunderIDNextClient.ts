@@ -17,16 +17,12 @@
  */
 
 import {
-  AllOrganizationsApiResponse,
   ThunderIDNodeClient,
   ThunderIDRuntimeError,
   AuthClientConfig,
-  CreateOrganizationPayload,
   ExtendedAuthorizeRequestUrlParams,
   FlattenedSchema,
   IdToken,
-  Organization,
-  OrganizationDetails,
   Schema,
   SignInOptions,
   SignUpOptions,
@@ -35,15 +31,10 @@ import {
   TokenResponse,
   User,
   UserProfile,
-  createOrganization,
-  deriveOrganizationHandleFromBaseUrl,
   extractUserClaimsFromIdToken,
   flattenUserSchema,
   generateFlattenedUserProfile,
   generateUserProfile,
-  getAllOrganizations,
-  getMeOrganizations,
-  getOrganization,
   getScim2Me,
   getSchemas,
   updateMeProfile,
@@ -61,6 +52,13 @@ class ThunderIDNextClient<T extends ThunderIDNextConfig = ThunderIDNextConfig> e
   }
 
   private async ensureInitialized(): Promise<void> {
+    if (!this.isInitialized) {
+      // Server actions may run in a module context that hasn't been through
+      // ThunderIDServerProvider (e.g. a different worker). Try to initialize
+      // from environment variables before giving up.
+      await this.initialize({} as T);
+    }
+
     if (!this.isInitialized) {
       throw new Error(
         '[ThunderIDNextClient] Client is not initialized. Make sure you have wrapped your app with ThunderIDProvider and provided the required configuration (baseUrl, clientId, etc.).',
@@ -85,12 +83,6 @@ class ThunderIDNextClient<T extends ThunderIDNextConfig = ThunderIDNextConfig> e
       ...rest
     } = decorateConfigWithNextEnv(config);
 
-    let resolvedOrganizationHandle: string | undefined = organizationHandle;
-
-    if (!resolvedOrganizationHandle) {
-      resolvedOrganizationHandle = deriveOrganizationHandleFromBaseUrl(baseUrl);
-    }
-
     const origin: string = await getClientOrigin();
 
     const initialized: boolean = await super.initialize(
@@ -101,8 +93,8 @@ class ThunderIDNextClient<T extends ThunderIDNextConfig = ThunderIDNextConfig> e
         baseUrl,
         clientId,
         clientSecret,
-        enablePKCE: clientSecret == null,
-        organizationHandle: resolvedOrganizationHandle,
+        enablePKCE: (rest as any).enablePKCE ?? true,
+        organizationHandle,
         signInUrl,
         signUpUrl,
       } as any,
@@ -213,141 +205,6 @@ class ThunderIDNextClient<T extends ThunderIDNextConfig = ThunderIDNextConfig> e
         'ThunderIDNextClient-UpdateProfileError-001',
         'react',
         'An error occurred while updating the user profile. Please check your configuration and network connection.',
-      );
-    }
-  }
-
-  async createOrganization(payload: CreateOrganizationPayload, userId?: string): Promise<Organization> {
-    try {
-      const configData: AuthClientConfig<T> = await this.getStorageManager().getConfigData();
-      const baseUrl: string = configData?.baseUrl!;
-
-      return createOrganization({
-        baseUrl,
-        headers: {
-          Authorization: `Bearer ${await this.getAccessToken(userId)}`,
-        },
-        payload,
-      });
-    } catch (error) {
-      throw new ThunderIDRuntimeError(
-        `Failed to create organization: ${error instanceof Error ? error.message : String(error)}`,
-        'ThunderIDReactClient-createOrganization-RuntimeError-001',
-        'nextjs',
-        'An error occurred while creating the organization. Please check your configuration and network connection.',
-      );
-    }
-  }
-
-  async getOrganization(organizationId: string, userId?: string): Promise<OrganizationDetails> {
-    try {
-      const configData: AuthClientConfig<T> = await this.getStorageManager().getConfigData();
-      const baseUrl: string = configData?.baseUrl!;
-
-      return getOrganization({
-        baseUrl,
-        headers: {
-          Authorization: `Bearer ${await this.getAccessToken(userId)}`,
-        },
-        organizationId,
-      });
-    } catch (error) {
-      throw new ThunderIDRuntimeError(
-        `Failed to fetch the organization details of ${organizationId}: ${String(error)}`,
-        'ThunderIDReactClient-getOrganization-RuntimeError-001',
-        'nextjs',
-        `An error occurred while fetching the organization with the id: ${organizationId}.`,
-      );
-    }
-  }
-
-  override async getMyOrganizations(options?: any, userId?: string): Promise<Organization[]> {
-    try {
-      const configData: AuthClientConfig<T> = await this.getStorageManager().getConfigData();
-      const baseUrl: string = configData?.baseUrl!;
-
-      return getMeOrganizations({
-        baseUrl,
-        headers: {
-          Authorization: `Bearer ${await this.getAccessToken(userId)}`,
-        },
-      });
-    } catch (error) {
-      throw new ThunderIDRuntimeError(
-        `Failed to fetch the user's associated organizations: ${
-          error instanceof Error ? error.message : String(error)
-        }`,
-        'ThunderIDNextClient-getMyOrganizations-RuntimeError-001',
-        'nextjs',
-        'An error occurred while fetching associated organizations of the signed-in user.',
-      );
-    }
-  }
-
-  override async getAllOrganizations(options?: any, userId?: string): Promise<AllOrganizationsApiResponse> {
-    try {
-      const configData: AuthClientConfig<T> = await this.getStorageManager().getConfigData();
-      const baseUrl: string = configData?.baseUrl!;
-
-      return getAllOrganizations({
-        baseUrl,
-        headers: {
-          Authorization: `Bearer ${await this.getAccessToken(userId)}`,
-        },
-      });
-    } catch (error) {
-      throw new ThunderIDRuntimeError(
-        `Failed to fetch all organizations: ${error instanceof Error ? error.message : String(error)}`,
-        'ThunderIDNextClient-getAllOrganizations-RuntimeError-001',
-        'nextjs',
-        'An error occurred while fetching all the organizations associated with the user.',
-      );
-    }
-  }
-
-  override async getCurrentOrganization(userId?: string): Promise<Organization | null> {
-    const idToken: IdToken = await super.getDecodedIdToken(userId);
-
-    return {
-      id: idToken?.org_id!,
-      name: idToken?.org_name!,
-      orgHandle: idToken?.org_handle!,
-    };
-  }
-
-  override async switchOrganization(organization: Organization, userId?: string): Promise<TokenResponse | Response> {
-    try {
-      if (!organization.id) {
-        throw new ThunderIDRuntimeError(
-          'Organization ID is required for switching organizations',
-          'ThunderIDNextClient-switchOrganization-ValidationError-001',
-          'nextjs',
-          'The organization object must contain a valid ID to perform the organization switch.',
-        );
-      }
-
-      const exchangeConfig: TokenExchangeRequestConfig = {
-        attachToken: false,
-        data: {
-          client_id: '{{clientId}}',
-          client_secret: '{{clientSecret}}',
-          grant_type: 'organization_switch',
-          scope: '{{scopes}}',
-          switching_organization: organization.id,
-          token: '{{accessToken}}',
-        },
-        id: 'organization-switch',
-        returnsSession: true,
-        signInRequired: true,
-      };
-
-      return super.exchangeToken(exchangeConfig, userId) as unknown as Promise<TokenResponse | Response>;
-    } catch (error) {
-      throw new ThunderIDRuntimeError(
-        `Failed to switch organization: ${error instanceof Error ? error.message : String(JSON.stringify(error))}`,
-        'ThunderIDReactClient-RuntimeError-003',
-        'nextjs',
-        'An error occurred while switching to the specified organization. Please try again.',
       );
     }
   }

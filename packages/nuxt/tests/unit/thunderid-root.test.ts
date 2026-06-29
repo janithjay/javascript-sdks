@@ -20,7 +20,6 @@
 
 import {generateFlattenedUserProfile} from '@thunderid/browser';
 import {
-  BrandingProvider,
   FlowMetaProvider,
   FlowProvider,
   I18nProvider,
@@ -40,7 +39,6 @@ import {useRuntimeConfig} from '#imports';
 // Provide minimal stubs for @thunderid/vue providers. They are used purely as
 // VNode type markers so we can locate them in the rendered VNode tree.
 vi.mock('@thunderid/vue', () => ({
-  BrandingProvider: {name: 'BrandingProvider'},
   ThemeProvider: {name: 'ThemeProvider'},
   UserProvider: {name: 'UserProvider'},
   OrganizationProvider: {name: 'OrganizationProvider'},
@@ -83,8 +81,6 @@ const MOCK_MY_ORGS = [
   {id: 'org-2', name: 'Other Org', orgHandle: 'other-org'},
 ];
 
-const MOCK_BRANDING = {organizationName: 'TestOrg', theme: 'default'};
-
 const MOCK_AUTH_STATE = {isSignedIn: true, user: {sub: 'user-123'}, isLoading: false};
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -94,7 +90,6 @@ function buildRenderFn(
   preferences?: Record<string, any>,
   stateOverrides?: {
     auth?: any;
-    branding?: any;
     currentOrg?: any;
     myOrgs?: any;
     userProfile?: any;
@@ -111,9 +106,6 @@ function buildRenderFn(
   });
   mockStateStore.set('thunderid:my-orgs', {
     value: hasOverrides && 'myOrgs' in stateOverrides ? stateOverrides.myOrgs : MOCK_MY_ORGS,
-  });
-  mockStateStore.set('thunderid:branding', {
-    value: hasOverrides && 'branding' in stateOverrides ? stateOverrides.branding : MOCK_BRANDING,
   });
   mockStateStore.set('thunderid:auth', {
     value: hasOverrides && 'auth' in stateOverrides ? stateOverrides.auth : MOCK_AUTH_STATE,
@@ -165,7 +157,7 @@ describe('ThunderIDRoot component', () => {
 
   // ── Provider tree structure ─────────────────────────────────────────────
 
-  it('renders all seven providers in the correct nesting order', () => {
+  it('renders all six providers in the correct nesting order', () => {
     const renderFn = buildRenderFn();
     const root = renderFn();
 
@@ -175,8 +167,6 @@ describe('ThunderIDRoot component', () => {
     // FlowMetaProvider defaults to V1 (`enabled: false`) — `useFlowMeta()`
     // still resolves but the provider does not fetch v2 metadata.
     expect(flowMeta!.props.enabled).toBe(false);
-    const branding = findByType(root, BrandingProvider);
-    expect(branding).not.toBeNull();
     const theme = findByType(root, ThemeProvider);
     expect(theme).not.toBeNull();
     const flow = findByType(root, FlowProvider);
@@ -188,22 +178,6 @@ describe('ThunderIDRoot component', () => {
   });
 
   // ── Default preferences (all features enabled) ──────────────────────────
-
-  it('passes brandingPreference to BrandingProvider when inheritFromBranding is enabled (default)', () => {
-    const renderFn = buildRenderFn();
-    const root = renderFn();
-
-    const vnode = findByType(root, BrandingProvider);
-    expect(vnode!.props.brandingPreference).toEqual(MOCK_BRANDING);
-  });
-
-  it('passes inheritFromBranding:true to ThemeProvider when preference is enabled (default)', () => {
-    const renderFn = buildRenderFn();
-    const root = renderFn();
-
-    const vnode = findByType(root, ThemeProvider);
-    expect(vnode!.props.inheritFromBranding).toBe(true);
-  });
 
   it('passes full profile data to UserProvider when fetchUserProfile is enabled (default)', () => {
     const renderFn = buildRenderFn();
@@ -285,24 +259,6 @@ describe('ThunderIDRoot component', () => {
     expect(vnode!.props.onOrganizationSwitch).toBeUndefined();
     expect(vnode!.props.getAllOrganizations).toBeUndefined();
     expect(vnode!.props.revalidateMyOrganizations).toBeUndefined();
-  });
-
-  // ── preferences.theme.inheritFromBranding: false ─────────────────────────
-
-  it('passes brandingPreference:null to BrandingProvider when inheritFromBranding is false', () => {
-    const renderFn = buildRenderFn({theme: {inheritFromBranding: false}});
-    const root = renderFn();
-
-    const vnode = findByType(root, BrandingProvider);
-    expect(vnode!.props.brandingPreference).toBeNull();
-  });
-
-  it('passes inheritFromBranding:false to ThemeProvider when preference is false', () => {
-    const renderFn = buildRenderFn({theme: {inheritFromBranding: false}});
-    const root = renderFn();
-
-    const vnode = findByType(root, ThemeProvider);
-    expect(vnode!.props.inheritFromBranding).toBe(false);
   });
 
   // ── onUpdateProfile callback logic ────────────────────────────────────────

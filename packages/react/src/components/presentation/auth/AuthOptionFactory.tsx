@@ -20,7 +20,6 @@ import {css} from '@emotion/css';
 import {
   FieldType,
   FlowMetadataResponse,
-  OrganizationUnitListResponse,
   EmbeddedFlowComponent,
   EmbeddedFlowComponentType,
   EmbeddedFlowTextVariant,
@@ -33,10 +32,10 @@ import {
   ConsentDecisions,
   ConsentPurposeDecision,
   ConsentAttributeElement,
+  OrganizationUnitListResponse,
 } from '@thunderid/browser';
 import DOMPurify from 'dompurify';
 import {cloneElement, CSSProperties, ReactElement} from 'react';
-import {OrganizationUnitPicker} from './OrganizationUnitPicker';
 import {
   ComponentRenderer,
   ComponentRenderContext,
@@ -199,12 +198,6 @@ const createAuthComponentFromFlow = (
     buttonClassName?: string;
     /** Current consent purpose being rendered. Set by CONSENT_PURPOSE block iteration. */
     currentConsentPurpose?: ConsentPurposeData;
-    /** Function to fetch child organization units. Used by OU_SELECT component type. */
-    fetchOrganizationUnitChildren?: (
-      parentId: string,
-      limit: number,
-      offset: number,
-    ) => Promise<OrganizationUnitListResponse>;
     inStack?: boolean;
     inputClassName?: string;
     /** Flag to determine if the step timeline has expired */
@@ -489,23 +482,8 @@ const createAuthComponentFromFlow = (
     }
 
     case EmbeddedFlowComponentType.OuSelect: {
-      const identifier: string = component.ref ?? component.id;
-      const rootOuId: string | undefined = options.additionalData?.['rootOuId'] as string | undefined;
-
-      if (!rootOuId || !options.fetchOrganizationUnitChildren) {
-        logger.warn('OU_SELECT requires additionalData.rootOuId and fetchOrganizationUnitChildren. Skipping render.');
-        return null;
-      }
-
-      return (
-        <OrganizationUnitPicker
-          key={key}
-          rootOuId={rootOuId}
-          selectedOuId={formValues[identifier] || null}
-          onSelect={(ouId: string) => onInputChange(identifier, ouId)}
-          fetchChildren={options.fetchOrganizationUnitChildren}
-        />
-      );
+      logger.warn('OU_SELECT component type is not supported. Skipping render.');
+      return null;
     }
 
     case EmbeddedFlowComponentType.Block: {
@@ -843,7 +821,7 @@ export const renderInviteUserComponents = (
     /** Additional data from the flow response */
     additionalData?: Record<string, any>;
     buttonClassName?: string;
-    /** Function to fetch child organization units. Used by OU_SELECT component type. */
+    /** Function to fetch child organization units for OU_SELECT components. */
     fetchOrganizationUnitChildren?: (
       parentId: string,
       limit: number,

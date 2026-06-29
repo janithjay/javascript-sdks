@@ -17,14 +17,10 @@
  */
 
 import type {
-  AllOrganizationsApiResponse,
-  BrandingPreference,
-  CreateOrganizationPayload,
   FlowMetadataResponse,
   HttpRequestConfig,
   HttpResponse,
   IdToken,
-  Organization,
   Schema,
   SignInOptions,
   StorageManager,
@@ -38,7 +34,6 @@ import type {
 } from '@thunderid/browser';
 import type {Ref} from 'vue';
 import type {ThunderIDVueConfig} from './config';
-import type ThunderIDVueClient from '../ThunderIDVueClient';
 
 /**
  * Shape of the core ThunderID context provided via `provide`/`inject`.
@@ -84,8 +79,6 @@ export interface ThunderIDContext {
   // ── FlowMeta (injected by useThunderID) ──
   /** Flow metadata from the FlowMeta context, or `null` while loading/unavailable. */
   meta?: Readonly<Ref<FlowMetadataResponse | null>>;
-  /** The current organization, or `null`. */
-  organization: Readonly<Ref<Organization | null>>;
   organizationHandle: string | undefined;
 
   // ── Lifecycle ──
@@ -105,9 +98,6 @@ export interface ThunderIDContext {
   signUp: (...args: any[]) => Promise<any>;
   signUpUrl: string | undefined;
   storage: ThunderIDVueConfig['storage'] | undefined;
-
-  // ── Organization ──
-  switchOrganization: ThunderIDVueClient['switchOrganization'];
 
   /** The current user object, or `null` if not signed in. */
   user: Readonly<Ref<any | null>>;
@@ -138,32 +128,6 @@ export interface UserContextValue {
     requestConfig: UpdateMeProfileConfig,
     sessionId?: string,
   ) => Promise<{data: {user: User}; error: string; success: boolean}>;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Organization Context
-// ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * Shape of the Organization context exposed by `useOrganization()`.
- */
-export interface OrganizationContextValue {
-  /** Optional function to create a new sub-organization. */
-  createOrganization?: (payload: CreateOrganizationPayload, sessionId: string) => Promise<Organization>;
-  /** The organization the user is currently operating in. */
-  currentOrganization: Readonly<Ref<Organization | null>>;
-  /** Last error message from an organization operation, if any. */
-  error: Readonly<Ref<string | null>>;
-  /** Fetch all organizations (paginated). */
-  getAllOrganizations: () => Promise<AllOrganizationsApiResponse>;
-  /** Whether an organization operation is in-flight. */
-  isLoading: Readonly<Ref<boolean>>;
-  /** The list of organizations the signed-in user is a member of. */
-  myOrganizations: Readonly<Ref<Organization[]>>;
-  /** Re-fetch the user's organization list from the server. */
-  revalidateMyOrganizations: () => Promise<Organization[]>;
-  /** Switch to the given organization (performs token exchange). */
-  switchOrganization: (organization: Organization) => Promise<void>;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -252,44 +216,14 @@ export interface FlowMetaContextValue {
  * Shape of the Theme context exposed by `useTheme()`.
  */
 export interface ThemeContextValue {
-  /** Error from the branding theme fetch, if any. */
-  brandingError: Readonly<Ref<Error | null>>;
   /** The current color scheme ('light' | 'dark'). */
   colorScheme: Readonly<Ref<'light' | 'dark'>>;
   /** The text direction for the UI. */
   direction: Readonly<Ref<'ltr' | 'rtl'>>;
-  /** Whether the theme inherits from ThunderID branding preferences. */
-  inheritFromBranding: boolean;
-  /** Whether the branding theme is currently loading. */
-  isBrandingLoading: Readonly<Ref<boolean>>;
   /** The resolved Theme object used by all styled components. */
   theme: Readonly<Ref<Theme>>;
   /** Toggle between light and dark mode. */
   toggleTheme: () => void;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Branding Context
-// ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * Shape of the Branding context exposed by `useBranding()`.
- */
-export interface BrandingContextValue {
-  /** The active theme from the branding preference ('light' | 'dark'), or null. */
-  activeTheme: Readonly<Ref<'light' | 'dark' | null>>;
-  /** The raw branding preference data from the server. */
-  brandingPreference: Readonly<Ref<BrandingPreference | null>>;
-  /** Error from the branding fetch, if any. */
-  error: Readonly<Ref<Error | null>>;
-  /** Trigger a branding preference fetch (deduplicated). */
-  fetchBranding: () => Promise<void>;
-  /** Whether the branding preference is currently loading. */
-  isLoading: Readonly<Ref<boolean>>;
-  /** Force a fresh branding preference fetch (bypasses dedup). */
-  refetch: () => Promise<void>;
-  /** The transformed `Theme` object derived from the branding preference. */
-  theme: Readonly<Ref<Theme | null>>;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
