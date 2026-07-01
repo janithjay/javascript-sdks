@@ -103,7 +103,7 @@ onUnmounted(() => {
           <span class="hero-badge-line"></span>
         </div>
 
-        <h1 class="hero-title">Auth for the Modern Dev</h1>
+        <h1 class="hero-title">Auth for Modern Apps and Agents</h1>
 
         <p class="hero-subtitle">
           ThunderID gives you OAuth 2.0, PKCE, MFA, and JWT out of the box.

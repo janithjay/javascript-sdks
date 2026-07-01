@@ -10,7 +10,7 @@ const baseUrl = import.meta.env.VITE_THUNDERID_BASE_URL
     <main>
       <SignedOut>
         <h1>Welcome</h1>
-        <SignInButton />
+        <SignInButton>Sign In</SignInButton>
       </SignedOut>
       <SignedIn>
         <User v-slot="{ user }">

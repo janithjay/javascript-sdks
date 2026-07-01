@@ -215,7 +215,7 @@ export default function HomePage() {
               <span className="hero-badge-line" />
             </div>
 
-            <h1 className="hero-title">Auth for the Modern Dev</h1>
+            <h1 className="hero-title">Auth for Modern Apps and Agents</h1>
 
             <p className="hero-subtitle">
               ThunderID gives you OAuth 2.0, PKCE, MFA, and JWT out of the box.

@@ -354,17 +354,43 @@ class ThunderIDJavaScriptClient<T = Config> implements ThunderIDClient<T> {
       }
 
       if (response) {
-        await this.storageManager.setOIDCProviderMetaData(
-          await this.authHelper.resolveEndpoints(await response.json()),
-        );
+        let discoveryResolved = false;
+        try {
+          await this.storageManager.setOIDCProviderMetaData(
+            await this.authHelper.resolveEndpoints(await response.json()),
+          );
+          discoveryResolved = true;
+        } catch {
+          // Parsing or endpoint resolution failed; fall through to baseUrl fallback.
+        }
+
+        if (!discoveryResolved) {
+          if (baseUrl) {
+            try {
+              await this.storageManager.setOIDCProviderMetaData(await this.authHelper.resolveEndpointsByBaseURL());
+            } catch (error: unknown) {
+              throw new ThunderIDAuthException(
+                'JS-AUTH_CORE-GOPMD-IV02',
+                'Resolving endpoints failed.',
+                error instanceof Error ? error.message : 'Resolving endpoints by base url failed.',
+              );
+            }
+          } else {
+            throw new ThunderIDAuthException(
+              'JS-AUTH_CORE-GOPMD-HE01',
+              'Invalid well-known response',
+              'The well known endpoint response has been failed with an error.',
+            );
+          }
+        }
       } else if (baseUrl) {
         try {
           await this.storageManager.setOIDCProviderMetaData(await this.authHelper.resolveEndpointsByBaseURL());
-        } catch (error: any) {
+        } catch (error: unknown) {
           throw new ThunderIDAuthException(
             'JS-AUTH_CORE-GOPMD-IV02',
             'Resolving endpoints failed.',
-            error ?? 'Resolving endpoints by base url failed.',
+            error instanceof Error ? error.message : 'Resolving endpoints by base url failed.',
           );
         }
       } else {
@@ -377,11 +403,11 @@ class ThunderIDJavaScriptClient<T = Config> implements ThunderIDClient<T> {
     } else if (baseUrl) {
       try {
         await this.storageManager.setOIDCProviderMetaData(await this.authHelper.resolveEndpointsByBaseURL());
-      } catch (error: any) {
+      } catch (error: unknown) {
         throw new ThunderIDAuthException(
           'JS-AUTH_CORE-GOPMD-IV02',
           'Resolving endpoints failed.',
-          error ?? 'Resolving endpoints by base url failed.',
+          error instanceof Error ? error.message : 'Resolving endpoints by base url failed.',
         );
       }
     } else {
