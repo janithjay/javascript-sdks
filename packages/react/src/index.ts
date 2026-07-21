@@ -245,6 +245,8 @@ export {default as updateMeProfile} from './api/updateMeProfile';
 export type {UpdateMeProfileConfig} from './api/updateMeProfile';
 export {default as getMeProfile} from './api/getUsersMe';
 export * from './api/getUsersMe';
+export {default as getUsersMeMeta} from './api/getUsersMeMeta';
+export * from './api/getUsersMeMeta';
 
 export {
   ThunderIDRuntimeError,

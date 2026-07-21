@@ -176,6 +176,8 @@ export {hasAuthParamsInUrl} from './utils/hasAuthParamsInUrl';
 export {navigate} from './utils/navigate';
 export {http} from './utils/http';
 export {initiateOAuthRedirect} from './utils/oauth';
+export {default as getUsersMeMeta} from './api/getUsersMeMeta';
+export type {GetUsersMeMetaConfig, UsersMeMetaResponse, AttributeSchema} from './api/getUsersMeMeta';
 
 // ── Phase 4 — Router Helpers ──
 export {createThunderIDGuard} from './router/guard';

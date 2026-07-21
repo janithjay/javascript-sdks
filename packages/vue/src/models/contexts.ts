@@ -21,6 +21,7 @@ import type {
   HttpRequestConfig,
   HttpResponse,
   IdToken,
+  Preferences,
   SignInOptions,
   StorageManager,
   Theme,
@@ -80,6 +81,9 @@ export interface ThunderIDContext {
   meta?: Readonly<Ref<FlowMetadataResponse | null>>;
   organizationHandle: string | undefined;
 
+  /** User preferences configuration. */
+  preferences?: Preferences;
+
   // ── Lifecycle ──
   reInitialize: (config: Partial<ThunderIDVueConfig>) => Promise<boolean>;
 
@@ -100,6 +104,9 @@ export interface ThunderIDContext {
 
   /** The current user object, or `null` if not signed in. */
   user: Readonly<Ref<any | null>>;
+
+  /** Schema metadata for user type returned by GET /users/me/meta. */
+  userSchema?: Readonly<Ref<Record<string, any> | null>>;
 
   /**
    * Vendor/brand namespace used to prefix storage keys, cookie names, and CSS class names.
@@ -124,13 +131,13 @@ export interface UserContextValue {
   profile: Readonly<Ref<UserProfile | null>>;
   /** Refetch the user profile from the server. */
   revalidateProfile: () => Promise<void>;
-  /**
-   * Update the user profile. Accepts the standard patch request config.
-   */
+  /** Update the user profile. Accepts the standard patch request config. */
   updateProfile: (
     requestConfig: UpdateMeProfileConfig,
     sessionId?: string,
   ) => Promise<{data: {user: User}; error: string; success: boolean}>;
+  /** Schema metadata for user type returned by GET /users/me/meta. */
+  userSchema?: Readonly<Ref<Record<string, any> | null>>;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2025, WSO2 LLC. (https://www.wso2.com).
+ * Copyright (c) 2026, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -20,25 +20,46 @@ import {
   FetchHttpClient,
   HttpRequestConfig,
   HttpResponse,
-  User,
-  UpdateMeProfileConfig as BaseUpdateMeProfileConfig,
-  updateMeProfile as baseUpdateMeProfile,
 } from '@thunderid/browser';
 
-export interface UpdateMeProfileConfig extends Omit<BaseUpdateMeProfileConfig, 'fetcher'> {
-  fetcher?: (url: string, config: RequestInit) => Promise<Response>;
-  instanceId?: number;
+export interface AttributeSchema {
+  credential?: boolean;
+  description?: string;
+  displayName?: string;
+  mutability?: string;
+  readOnly?: boolean;
+  regex?: string;
+  required?: boolean;
+  subAttributes?: AttributeSchema[];
+  type?: string;
+  unique?: boolean;
 }
 
-const updateMeProfile = async ({fetcher, instanceId = 0, ...requestConfig}: UpdateMeProfileConfig): Promise<User> => {
-  const defaultFetcher = async (url: string, config: RequestInit): Promise<Response> => {
-    const httpClient: FetchHttpClient = FetchHttpClient.getInstance(instanceId);
+export interface GetUsersMeMetaConfig {
+  baseUrl?: string;
+  fetcher?: (url: string, config: RequestInit) => Promise<Response>;
+  instanceId?: number;
+  url?: string;
+}
 
+export interface UsersMeMetaResponse {
+  schema?: Record<string, AttributeSchema>;
+}
+
+const getUsersMeMeta = async ({
+  baseUrl,
+  fetcher,
+  instanceId = 0,
+  url,
+}: GetUsersMeMetaConfig): Promise<UsersMeMetaResponse> => {
+  const targetUrl = url || `${baseUrl?.replace(/\/$/, '')}/users/me/meta`;
+
+  const defaultFetcher = async (endpointUrl: string, config: RequestInit): Promise<Response> => {
+    const httpClient: FetchHttpClient = FetchHttpClient.getInstance(instanceId);
     const response: HttpResponse<any> = await httpClient.request({
-      data: config.body ? JSON.parse(config.body as string) : undefined,
       headers: config.headers as Record<string, string>,
-      method: config.method || 'PUT',
-      url,
+      method: config.method || 'GET',
+      url: endpointUrl,
     } as HttpRequestConfig);
 
     return {
@@ -50,10 +71,14 @@ const updateMeProfile = async ({fetcher, instanceId = 0, ...requestConfig}: Upda
     } as Response;
   };
 
-  return baseUpdateMeProfile({
-    ...requestConfig,
-    fetcher: fetcher || defaultFetcher,
-  });
+  const activeFetcher = fetcher || defaultFetcher;
+  const res = await activeFetcher(targetUrl, {method: 'GET'});
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch user schema metadata: ${res.statusText}`);
+  }
+
+  return res.json();
 };
 
-export default updateMeProfile;
+export default getUsersMeMeta;

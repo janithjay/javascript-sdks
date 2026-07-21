@@ -49,6 +49,7 @@ interface UserProviderProps {
         sessionId?: string,
       ) => Promise<{data: {user: User}; error: string; success: boolean}>)
     | undefined;
+  userSchema?: Record<string, any> | null;
 }
 
 const UserProvider: Component = defineComponent({
@@ -56,11 +57,11 @@ const UserProvider: Component = defineComponent({
   props: {
     /** Callback to sync a successfully-saved profile back up to ThunderIDProvider. */
     onUpdateProfile: {default: undefined, type: Function as PropType<(payload: User) => void>},
-    /** The full user profile data (nested + flat + schemas). */
+    /** The full user profile data (nested + flat). */
     profile: {default: null, type: Object as PropType<UserProfile | null>},
     /** Re-fetch the user profile from the server. */
     revalidateProfile: {default: async () => {}, type: Function as PropType<() => Promise<void>>},
-    /** Update the user profile via PATCH. */
+    /** Update the user profile via PUT. */
     updateProfile: {
       default: undefined,
       type: Function as PropType<
@@ -70,12 +71,14 @@ const UserProvider: Component = defineComponent({
         ) => Promise<{data: {user: User}; error: string; success: boolean}>
       >,
     },
+    /** User schema metadata. */
+    userSchema: {default: null, type: Object as PropType<Record<string, any> | null>},
   },
   setup(props: UserProviderProps, {slots}: SetupContext): () => VNode {
-    // Derive flattenedProfile from the single profile prop,
-    // matching the same pattern as the React SDK's UserProvider.
+    // Derive flattenedProfile and userSchema from props
     const profileRef: Ref<UserProfile | null> = computed(() => props.profile);
     const flattenedProfileRef: Ref<User | null> = computed(() => props.profile?.flattenedProfile ?? null);
+    const userSchemaRef: Ref<Record<string, any> | null> = computed(() => props.userSchema ?? null);
 
     const context: UserContextValue = {
       flattenedProfile: flattenedProfileRef as unknown as Readonly<Ref<User | null>>,
@@ -89,6 +92,7 @@ const UserProvider: Component = defineComponent({
           error: 'updateProfile callback not provided',
           success: false,
         })),
+      userSchema: userSchemaRef as unknown as Readonly<Ref<Record<string, any> | null>>,
     };
 
     provide(USER_KEY, context);

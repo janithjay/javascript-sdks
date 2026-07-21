@@ -29,6 +29,7 @@ import {
   SignInOptions,
   TokenResponse,
   EmbeddedSignInFlowResponse,
+  Preferences,
   getVendorPrefix,
 } from '@thunderid/browser';
 import {
@@ -51,6 +52,8 @@ import FlowProvider from './FlowProvider';
 import I18nProvider from './I18nProvider';
 import ThemeProvider from './ThemeProvider';
 import UserProvider from './UserProvider';
+import getUsersMe from '../api/getUsersMe';
+import getUsersMeMeta from '../api/getUsersMeMeta';
 import {THUNDERID_KEY} from '../keys';
 import type {ThunderIDVueConfig} from '../models/config';
 import type {ThunderIDContext} from '../models/contexts';
@@ -65,6 +68,7 @@ interface ThunderIDProviderProps {
   instanceId: number;
   organizationChain: object | undefined;
   organizationHandle: string | undefined;
+  preferences: Preferences | undefined;
   scopes: string | string[] | undefined;
   signInOptions: SignInOptions | undefined;
   signInUrl: string | undefined;
@@ -144,6 +148,11 @@ const ThunderIDProvider: Component = defineComponent({
       default: undefined,
       type: String,
     },
+    /** User preferences configuration. */
+    preferences: {
+      default: undefined,
+      type: Object as PropType<Preferences>,
+    },
     /** The scopes to request. */
     scopes: {
       default: undefined,
@@ -194,6 +203,7 @@ const ThunderIDProvider: Component = defineComponent({
     const isLoading: Ref<boolean> = ref<boolean>(true);
     const user: ShallowRef<any | null> = shallowRef<any | null>(null);
     const userProfile: ShallowRef<UserProfile | null> = shallowRef<UserProfile | null>(null);
+    const userSchema: Ref<Record<string, any> | null> = ref<Record<string, any> | null>(null);
     const resolvedBaseUrl: Ref<string> = ref<string>(props.baseUrl);
 
     let isUpdatingSession = false;
@@ -210,6 +220,7 @@ const ThunderIDProvider: Component = defineComponent({
         clientId: props.clientId,
         organizationChain: props.organizationChain,
         organizationHandle: props.organizationHandle,
+        preferences: props.preferences,
         scopes: props.scopes,
         signInOptions: props.signInOptions,
         signInUrl: props.signInUrl,
@@ -234,15 +245,36 @@ const ThunderIDProvider: Component = defineComponent({
           resolvedBaseUrl.value = baseUrl;
         }
 
+        const shouldFetchProfile: boolean = props.preferences?.user?.fetchUserProfile !== false;
         const claims: User = extractUserClaimsFromIdToken(decodedToken);
-        user.value = claims;
-        const profileData: UserProfile = {
-          flattenedProfile: claims,
-          profile: claims,
-        };
-        userProfile.value = profileData;
-
+        let profileData: User = claims;
         const currentSignInStatus: boolean = await client.isSignedIn();
+
+        if (currentSignInStatus && shouldFetchProfile) {
+          try {
+            const fetchedProfile: User = await getUsersMe({baseUrl, instanceId: props.instanceId});
+            profileData = {...claims, ...fetchedProfile};
+          } catch {
+            // silent failure, fall back to token claims
+          }
+
+          try {
+            const metaRes = await getUsersMeMeta({baseUrl, instanceId: props.instanceId});
+            if (metaRes?.schema) {
+              userSchema.value = metaRes.schema;
+            }
+          } catch {
+            // silent failure
+          }
+        }
+
+        user.value = profileData;
+        const profileDataObj: UserProfile = {
+          flattenedProfile: generateFlattenedUserProfile(profileData),
+          profile: profileData,
+        };
+        userProfile.value = profileDataObj;
+
         isSignedIn.value = currentSignInStatus;
       } catch {
         // silent
@@ -333,6 +365,7 @@ const ThunderIDProvider: Component = defineComponent({
       isLoading,
       isSignedIn,
       organizationHandle: props.organizationHandle,
+      preferences: props.preferences,
       reInitialize: async (config: any): Promise<boolean> => {
         const result: boolean = await client.reInitialize(config);
         return typeof result === 'boolean' ? result : true;
@@ -346,6 +379,7 @@ const ThunderIDProvider: Component = defineComponent({
       signUpUrl: props.signUpUrl,
       storage: props.storage as ThunderIDVueConfig['storage'],
       user,
+      userSchema,
       vendor,
     };
 
@@ -482,18 +516,9 @@ const ThunderIDProvider: Component = defineComponent({
                               },
                               profile: userProfile.value,
                               revalidateProfile: async (): Promise<void> => {
-                                try {
-                                  const decodedToken: IdToken = await client.getDecodedIdToken();
-                                  const claims: User = extractUserClaimsFromIdToken(decodedToken);
-                                  user.value = claims;
-                                  userProfile.value = {
-                                    flattenedProfile: claims,
-                                    profile: claims,
-                                  };
-                                } catch {
-                                  // silent
-                                }
+                                await updateSession();
                               },
+                              userSchema: userSchema.value,
                             },
                             {
                               default: (): any => slots['default']?.(),

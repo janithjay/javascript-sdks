@@ -31,6 +31,7 @@ export interface UserContextProps {
     requestConfig: UpdateMeProfileConfig,
     sessionId?: string,
   ) => Promise<{data: {user: User}; error: string; success: boolean}>;
+  userSchema?: Record<string, any> | null;
 }
 
 /**
@@ -42,6 +43,7 @@ const UserContext: Context<UserContextProps | null> = createContext<null | UserC
   profile: null,
   revalidateProfile: () => null as unknown as Promise<void>,
   updateProfile: () => null as unknown as Promise<{data: {user: User}; error: string; success: boolean}>,
+  userSchema: null,
 });
 
 UserContext.displayName = 'UserContext';

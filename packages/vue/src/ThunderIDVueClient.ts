@@ -95,21 +95,8 @@ class ThunderIDVueClient<T extends ThunderIDVueConfig = ThunderIDVueConfig> exte
     throw new Error('Not implemented');
   }
 
-  override async getUser(options?: any): Promise<User> {
-    try {
-      let baseUrl: string = options?.baseUrl;
-
-      if (!baseUrl) {
-        const configData: any = await this.getStorageManager().getConfigData();
-        baseUrl = configData?.baseUrl;
-      }
-
-      const profile: User = await getUsersMe({baseUrl});
-
-      return profile;
-    } catch (error) {
-      return extractUserClaimsFromIdToken(await this.getDecodedIdToken());
-    }
+  override async getUser(): Promise<User> {
+    return extractUserClaimsFromIdToken(await this.getDecodedIdToken());
   }
 
   override async getDecodedIdToken(sessionId?: string): Promise<IdToken> {
@@ -120,30 +107,13 @@ class ThunderIDVueClient<T extends ThunderIDVueConfig = ThunderIDVueConfig> exte
     return this.withLoading(async () => super.getIdToken());
   }
 
-  override async getUserProfile(options?: any): Promise<UserProfile> {
+  override async getUserProfile(): Promise<UserProfile> {
     return this.withLoading(async () => {
-      try {
-        let baseUrl: string = options?.baseUrl;
-
-        if (!baseUrl) {
-          const configData: any = await this.getStorageManager().getConfigData();
-          baseUrl = configData?.baseUrl;
-        }
-
-        const profile: User = await getUsersMe({baseUrl, instanceId: this.getInstanceId()});
-
-        const output: UserProfile = {
-          flattenedProfile: generateFlattenedUserProfile(profile),
-          profile,
-        };
-
-        return output;
-      } catch (error) {
-        return {
-          flattenedProfile: extractUserClaimsFromIdToken(await this.getDecodedIdToken()),
-          profile: extractUserClaimsFromIdToken(await this.getDecodedIdToken()),
-        };
-      }
+      const claims: User = extractUserClaimsFromIdToken(await this.getDecodedIdToken());
+      return {
+        flattenedProfile: claims,
+        profile: claims,
+      };
     });
   }
 
