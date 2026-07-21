@@ -18,51 +18,23 @@
 
 /**
  * Styles for the UserProfile presentation component.
- *
- * BEM block: `.thunderid-user-profile`
- *
- * Modifiers:
- *   --compact   – reduced field padding for modal / dropdown embedding
- *
- * New elements in this version:
- *   __hero           – avatar + name + subtitle banner
- *   __avatar--sm/md/lg  – avatar size variants
- *   __hero-name      – prominent display name
- *   __hero-subtitle  – secondary line (email / username)
+ * Parity target: `@thunderid/react` BaseUserProfile.styles.ts
  */
 const USER_PROFILE_CSS = `
 /* ============================================================
-   UserProfile  (modern redesign)
+   UserProfile (React Parity)
    ============================================================ */
 
 .thunderid-user-profile {
   display: flex;
   flex-direction: column;
-  min-width: 320px;
-  overflow: hidden;
+  padding: calc(var(--thunder-spacing-unit) * 4);
+  min-width: 600px;
+  margin: 0 auto;
   font-family: var(--thunder-typography-fontFamily);
-}
-
-/* ── Header ─────────────────────────────────────────────────── */
-
-.thunderid-user-profile__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: calc(var(--thunder-spacing-unit) * 2) calc(var(--thunder-spacing-unit) * 2.5)
-    calc(var(--thunder-spacing-unit) * 1.75);
-}
-
-.thunderid-user-profile__title {
-  margin: 0;
-  font-size: var(--thunder-typography-fontSize-md);
-  font-weight: var(--thunder-typography-fontWeight-semibold);
-  color: var(--thunder-color-text-primary);
-  letter-spacing: var(--thunder-typography-letterSpacing-tight);
-}
-
-.thunderid-user-profile__header-divider {
-  margin: 0;
+  background: var(--thunder-color-background-surface);
+  border-radius: var(--thunder-border-radius-large, 8px);
+  box-sizing: border-box;
 }
 
 /* ── Hero (avatar + name + subtitle) ────────────────────────── */
@@ -70,42 +42,27 @@ const USER_PROFILE_CSS = `
 .thunderid-user-profile__hero {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: calc(var(--thunder-spacing-unit) * 3) calc(var(--thunder-spacing-unit) * 2.5)
-    calc(var(--thunder-spacing-unit) * 2);
-  gap: calc(var(--thunder-spacing-unit) * 1.25);
-  background: linear-gradient(
-    180deg,
-    var(--thunder-color-primary-light) 0%,
-    var(--thunder-color-background-surface) 100%
-  );
+  align-items: flex-start;
+  gap: calc(var(--thunder-spacing-unit) * 1);
+  padding-bottom: calc(var(--thunder-spacing-unit) * 2);
+  margin-bottom: calc(var(--thunder-spacing-unit) * 2);
   border-bottom: 1px solid var(--thunder-color-border);
 }
 
 .thunderid-user-profile__avatar-wrapper {
   position: relative;
   border-radius: 50%;
-  padding: 3px;
-  background: linear-gradient(
-    135deg,
-    var(--thunder-color-primary-main),
-    var(--thunder-color-primary-dark)
-  );
-  box-shadow: 0 4px 14px rgba(75, 110, 245, 0.28);
 }
 
 .thunderid-user-profile__avatar {
-  width: var(--thunder-avatar-size, 72px);
-  height: var(--thunder-avatar-size, 72px);
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 2px solid var(--thunder-color-background-surface);
 }
-
-/* Avatar size variants */
 
 .thunderid-user-profile__avatar--sm {
   width: 48px;
@@ -126,17 +83,17 @@ const USER_PROFILE_CSS = `
 }
 
 .thunderid-user-profile__avatar--lg {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
 }
 
 .thunderid-user-profile__avatar--lg .thunderid-user-profile__avatar-initials {
-  font-size: 1.625rem;
+  font-size: 1.5rem;
 }
 
 .thunderid-user-profile__avatar-initials {
   color: #ffffff;
-  font-weight: var(--thunder-typography-fontWeight-semibold);
+  font-weight: var(--thunder-typography-fontWeight-semibold, 600);
   line-height: 1;
   letter-spacing: 0.02em;
   pointer-events: none;
@@ -146,37 +103,36 @@ const USER_PROFILE_CSS = `
 .thunderid-user-profile__hero-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: calc(var(--thunder-spacing-unit) * 0.375);
-  text-align: center;
+  align-items: flex-start;
+  margin-top: calc(var(--thunder-spacing-unit) * 0.5);
 }
 
 .thunderid-user-profile__hero-name {
-  font-size: var(--thunder-typography-fontSize-lg);
-  font-weight: var(--thunder-typography-fontWeight-semibold);
+  font-size: var(--thunder-typography-fontSize-xl, 1.5rem);
+  font-weight: var(--thunder-typography-fontWeight-semibold, 600);
   color: var(--thunder-color-text-primary);
-  line-height: var(--thunder-typography-lineHeight-tight);
-  letter-spacing: var(--thunder-typography-letterSpacing-tight);
+  margin: 0;
+  line-height: var(--thunder-typography-lineHeight-tight, 1.2);
 }
 
 .thunderid-user-profile__hero-subtitle {
-  font-size: var(--thunder-typography-fontSize-sm);
+  font-size: var(--thunder-typography-fontSize-sm, 0.875rem);
   color: var(--thunder-color-text-secondary);
-  line-height: var(--thunder-typography-lineHeight-normal);
+  margin-top: calc(var(--thunder-spacing-unit) * 0.5);
+  line-height: var(--thunder-typography-lineHeight-normal, 1.4);
 }
 
 /* ── Alerts & loading ────────────────────────────────────────── */
 
 .thunderid-user-profile__error {
-  margin: calc(var(--thunder-spacing-unit) * 1.5) calc(var(--thunder-spacing-unit) * 2.5)
-    calc(var(--thunder-spacing-unit) * 0.5);
+  margin-bottom: calc(var(--thunder-spacing-unit) * 3);
 }
 
 .thunderid-user-profile__loading {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: calc(var(--thunder-spacing-unit) * 3.5) 0;
+  padding: calc(var(--thunder-spacing-unit) * 4) 0;
 }
 
 /* ── Fields ──────────────────────────────────────────────────── */
@@ -187,141 +143,119 @@ const USER_PROFILE_CSS = `
 }
 
 .thunderid-user-profile__field {
-  display: grid;
-  grid-template-columns: 38% 62%;
-  align-items: start;
-  padding: calc(var(--thunder-spacing-unit) * 1.5) calc(var(--thunder-spacing-unit) * 2.5);
-  gap: calc(var(--thunder-spacing-unit) * 0.75);
-  box-sizing: border-box;
-  transition: background-color var(--thunder-transition-fast);
-}
-
-.thunderid-user-profile__field:hover {
-  background-color: var(--thunder-color-action-hover);
-}
-
-.thunderid-user-profile__field + .thunderid-user-profile__field {
-  border-top: 1px solid var(--thunder-color-border);
-}
-
-.thunderid-user-profile__field-label {
-  color: var(--thunder-color-text-secondary);
-  font-size: var(--thunder-typography-fontSize-sm);
-  font-weight: var(--thunder-typography-fontWeight-medium);
-  padding-top: 2px;
-}
-
-.thunderid-user-profile__field-display {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: calc(var(--thunder-spacing-unit) * 0.5);
-  min-height: 1.5rem;
+  padding: calc(var(--thunder-spacing-unit) * 1.5) 0;
+  border-bottom: 1px solid var(--thunder-color-border);
+  min-height: 28px;
+  box-sizing: border-box;
+}
+
+.thunderid-user-profile__field:last-child {
+  border-bottom: none;
+}
+
+.thunderid-user-profile__field-inner {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--thunder-spacing-unit);
+}
+
+.thunderid-user-profile__field-label {
+  font-size: var(--thunder-typography-fontSize-sm, 0.875rem);
+  font-weight: var(--thunder-typography-fontWeight-medium, 500);
+  color: var(--thunder-color-text-secondary);
+  width: 120px;
+  flex-shrink: 0;
+  line-height: 28px;
+  text-align: start;
 }
 
 .thunderid-user-profile__field-value {
   color: var(--thunder-color-text-primary);
-  word-break: break-word;
   flex: 1;
-  font-size: var(--thunder-typography-fontSize-sm);
+  display: inline-block;
+  align-items: center;
+  font-size: var(--thunder-typography-fontSize-sm, 0.875rem);
+  line-height: 28px;
+  word-break: break-word;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 350px;
+  text-align: start;
+  overflow: hidden;
 }
 
 .thunderid-user-profile__field-placeholder {
-  color: var(--thunder-color-primary-main);
-  font-size: var(--thunder-typography-fontSize-sm);
+  font-size: var(--thunder-typography-fontSize-sm, 0.875rem);
   font-style: italic;
-  flex: 1;
+  color: var(--thunder-color-text-secondary);
+  opacity: 0.7;
   cursor: pointer;
   text-decoration: underline;
-  text-decoration-style: dotted;
-  text-underline-offset: 2px;
-  opacity: 0.8;
-  transition: opacity var(--thunder-transition-fast);
+  white-space: nowrap;
+  line-height: 28px;
 }
 
 .thunderid-user-profile__field-placeholder:hover {
   opacity: 1;
 }
 
-/* ── Edit button (pencil) ────────────────────────────────────── */
+.thunderid-user-profile__field-actions {
+  display: flex;
+  gap: calc(var(--thunder-spacing-unit) * 0.5);
+  align-items: center;
+  margin-inline-start: calc(var(--thunder-spacing-unit) * 4);
+}
 
 .thunderid-user-profile__field-edit-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: none;
+  background: transparent;
   border: none;
   cursor: pointer;
   color: var(--thunder-color-text-secondary);
-  flex-shrink: 0;
-  padding: calc(var(--thunder-spacing-unit) * 0.375);
-  border-radius: var(--thunder-border-radius-small);
-  transition:
-    color var(--thunder-transition-fast),
-    background-color var(--thunder-transition-fast),
-    opacity var(--thunder-transition-fast);
-  opacity: 0;
+  padding: 0;
+  min-height: auto;
+  opacity: 0.7;
   line-height: 0;
-}
-
-.thunderid-user-profile__field:hover .thunderid-user-profile__field-edit-btn {
-  opacity: 1;
+  transition: opacity var(--thunder-transition-fast, 0.15s ease);
 }
 
 .thunderid-user-profile__field-edit-btn:hover {
-  color: var(--thunder-color-primary-main);
-  background-color: var(--thunder-color-primary-light);
-}
-
-.thunderid-user-profile__field-edit-btn:focus-visible {
   opacity: 1;
-  outline: none;
-  box-shadow: 0 0 0 var(--thunder-focus-ring-width) var(--thunder-focus-ring-color);
+  background: transparent;
 }
-
-/* ── Edit mode ───────────────────────────────────────────────── */
 
 .thunderid-user-profile__field-edit {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: calc(var(--thunder-spacing-unit) * 0.75);
-  padding: calc(var(--thunder-spacing-unit) * 0.25) 0;
+  gap: calc(var(--thunder-spacing-unit) * 0.5);
 }
 
-.thunderid-user-profile__field-edit-actions {
-  display: flex;
-  align-items: center;
-  gap: calc(var(--thunder-spacing-unit) * 0.75);
+.thunderid-user-profile__field-error {
+  color: var(--thunder-color-error, #d32f2f);
+  font-size: var(--thunder-typography-fontSize-xs, 0.8rem);
+  font-weight: var(--thunder-typography-fontWeight-medium, 500);
+  margin-top: calc(var(--thunder-spacing-unit) * 0.5);
 }
 
-/* ── Footer slot ─────────────────────────────────────────────── */
+/* ── Footer ──────────────────────────────────────────────────── */
 
 .thunderid-user-profile__footer {
-  padding: calc(var(--thunder-spacing-unit) * 1.5) calc(var(--thunder-spacing-unit) * 2.5);
+  padding-top: calc(var(--thunder-spacing-unit) * 2);
   border-top: 1px solid var(--thunder-color-border);
 }
 
 /* ── Compact modifier ────────────────────────────────────────── */
 
-.thunderid-user-profile--compact .thunderid-user-profile__hero {
-  padding: calc(var(--thunder-spacing-unit) * 2) calc(var(--thunder-spacing-unit) * 2);
-}
-
-.thunderid-user-profile--compact .thunderid-user-profile__avatar--lg {
-  width: 56px;
-  height: 56px;
-}
-
-.thunderid-user-profile--compact .thunderid-user-profile__avatar--lg .thunderid-user-profile__avatar-initials {
-  font-size: 1.125rem;
-}
-
-.thunderid-user-profile--compact .thunderid-user-profile__field {
-  padding: calc(var(--thunder-spacing-unit) * 1) calc(var(--thunder-spacing-unit) * 2);
-}
-
-.thunderid-user-profile--compact .thunderid-user-profile__hero-name {
-  font-size: var(--thunder-typography-fontSize-md);
+.thunderid-user-profile--compact {
+  padding: calc(var(--thunder-spacing-unit) * 2);
+  min-width: 100%;
 }
 `;
 
