@@ -66,7 +66,7 @@ export type UserProfileProps = Omit<BaseUserProfileProps, 'user' | 'profile' | '
  */
 const UserProfile: FC<UserProfileProps> = ({preferences, editable = true, ...rest}: UserProfileProps): ReactElement => {
   const {baseUrl, instanceId, preferences: contextPreferences} = useThunderID();
-  const {profile, flattenedProfile, onUpdateProfile} = useUser();
+  const {profile, flattenedProfile, onUpdateProfile, userSchema} = useUser();
   const resolvedPreferences = {
     ...contextPreferences,
     ...preferences,
@@ -112,6 +112,7 @@ const UserProfile: FC<UserProfileProps> = ({preferences, editable = true, ...res
     <BaseUserProfile
       profile={profile ?? undefined}
       flattenedProfile={flattenedProfile ?? undefined}
+      userSchema={userSchema ?? undefined}
       editable={isEditableProfile}
       onUpdate={isEditableProfile ? handleProfileUpdate : undefined}
       error={error}

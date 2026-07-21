@@ -217,6 +217,11 @@ export type ThunderIDContextProps = {
   user: any;
 
   /**
+   * Schema metadata for the user type returned by GET /users/me/meta.
+   */
+  userSchema: Record<string, any> | null;
+
+  /**
    * Vendor/brand namespace used to prefix storage keys, cookie names, and CSS class names.
    * Resolved from the `vendor` config option, defaulting to `'thunderid'`.
    */
@@ -263,6 +268,7 @@ const ThunderIDContext: Context<ThunderIDContextProps | null> = createContext<nu
   signUp: () => Promise.resolve({} as any),
   signUpUrl: undefined,
   user: null,
+  userSchema: null,
   vendor: VendorConstants.VENDOR_PREFIX,
 });
 

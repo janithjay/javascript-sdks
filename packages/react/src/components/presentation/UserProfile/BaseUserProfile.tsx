@@ -49,6 +49,7 @@ interface Schema extends ExtendedFlatSchema {
   multiValued?: boolean;
   mutability?: string;
   name?: string;
+  regex?: string;
   required?: boolean;
   returned?: string;
   subAttributes?: Schema[];
@@ -88,6 +89,7 @@ export interface BaseUserProfileProps {
   showFields?: string[];
 
   title?: string;
+  userSchema?: Record<string, any> | null;
 }
 
 // Fields to skip based on schema.name
@@ -117,7 +119,7 @@ const fieldsToSkip: string[] = [
 ];
 
 // Fields that should be readonly
-const readonlyFields: string[] = ['attributes', 'id', 'isReadOnly', 'ouId', 'username'];
+const readonlyFields: string[] = ['attributes', 'id', 'isReadOnly', 'ouId', 'username', 'sub'];
 
 const BaseUserProfile: FC<BaseUserProfileProps> = ({
   fallback = null,
@@ -125,6 +127,7 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
   cardLayout = true,
   profile,
   flattenedProfile,
+  userSchema,
   mode = 'inline',
   title,
   attributeMapping = {},
@@ -142,6 +145,7 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
   const {theme, colorScheme} = useTheme();
   const [editedUser, setEditedUser] = useState(flattenedProfile || profile);
   const [editingFields, setEditingFields] = useState<Record<string, boolean>>({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const {t} = useTranslation(preferences?.i18n);
 
   useEffect(() => {
@@ -162,17 +166,13 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
   }, [flattenedProfile, profile, editingFields]);
 
   /**
-   * Determines if a field should be visible based on showFields, hideFields, and fieldsToSkip arrays.
-   * Priority order:
-   * 1. fieldsToSkip (always hidden) - highest priority
-   * 2. hideFields (explicitly hidden)
-   * 3. showFields (explicitly shown, if array is not empty)
-   * 4. Default behavior (show all fields not in fieldsToSkip)
+   * Determines if a field should be visible based on showFields, hideFields, and fallback fieldsToSkip arrays.
+   * When isSchemaBased is true, fieldsToSkip is bypassed so schema-defined fields render dynamically.
    */
-  const shouldShowField: any = useCallback(
-    (fieldName: string): boolean => {
-      // Always skip fields in the hardcoded fieldsToSkip array
-      if (fieldsToSkip.includes(fieldName)) {
+  const shouldShowField = useCallback(
+    (fieldName: string, isSchemaBased: boolean = false): boolean => {
+      // For fallback without schema metadata, skip internal system fields
+      if (!isSchemaBased && fieldsToSkip.includes(fieldName)) {
         return false;
       }
 
@@ -213,22 +213,21 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
     }));
   }, []);
 
-  const getFieldPlaceholder: any = useCallback((schema: Schema): string => {
-    const {type, displayName, description, name} = schema;
+  const getFieldPlaceholder: any = useCallback(
+    (schema: Schema): string => {
+      const {type, displayName, description, name} = schema;
 
-    const fieldLabel: any = displayName || description || name || 'value';
+      const fieldLabel: any = displayName || description || name || 'value';
 
-    switch (type) {
-      case 'DATE_TIME':
-        return `Enter your ${fieldLabel.toLowerCase()}`;
-      case 'BOOLEAN':
-        return `Select ${fieldLabel.toLowerCase()}`;
-      case 'COMPLEX':
-        return `Enter ${fieldLabel.toLowerCase()} details`;
-      default:
-        return `Enter your ${fieldLabel.toLowerCase()}`;
-    }
-  }, []);
+      switch (type) {
+        case 'DATE_TIME':
+        case 'STRING':
+        default:
+          return t('elements.fields.generic.placeholder', {field: fieldLabel.toLowerCase()});
+      }
+    },
+    [t],
+  );
 
   const formatLabel: any = useCallback(
     (key: string): string =>
@@ -285,9 +284,12 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
       if (!onUpdate || !schema.name) return;
 
       const fieldName: string = schema.name;
+      const currentUser: any = flattenedProfile || profile;
       let fieldValue: any;
       if (editedUser && fieldName && editedUser[fieldName] !== undefined) {
         fieldValue = editedUser[fieldName];
+      } else if (currentUser?.attributes?.[fieldName] !== undefined) {
+        fieldValue = currentUser.attributes[fieldName];
       } else if (flattenedProfile?.[fieldName] !== undefined) {
         fieldValue = flattenedProfile[fieldName];
       } else {
@@ -298,6 +300,41 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
         fieldValue = fieldValue.filter((v: any) => v !== undefined && v !== null && v !== '');
       }
 
+      const strVal = String(fieldValue ?? '').trim();
+      const fieldLabel = schema.displayName || (schema.name ? startCase(schema.name) : 'Field');
+
+      // 1. Required validation
+      if (schema.required && !strVal) {
+        setFieldErrors((prev: Record<string, string>) => ({
+          ...prev,
+          [fieldName]: t('validations.required.field.error'),
+        }));
+        return;
+      }
+
+      // 2. Regex validation
+      if (schema.regex && strVal) {
+        try {
+          const reg = new RegExp(schema.regex);
+          if (!reg.test(strVal)) {
+            setFieldErrors((prev: Record<string, string>) => ({
+              ...prev,
+              [fieldName]: t('validation.pattern.invalid'),
+            }));
+            return;
+          }
+        } catch (e) {
+          // ignore invalid regex syntax safely
+        }
+      }
+
+      // Clear field error if valid
+      setFieldErrors((prev: Record<string, string>) => {
+        const next = {...prev};
+        delete next[fieldName];
+        return next;
+      });
+
       let payload: Record<string, any> = {};
       set(payload, fieldName, fieldValue);
 
@@ -305,16 +342,22 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
 
       toggleFieldEdit(fieldName);
     },
-    [editedUser, flattenedProfile, onUpdate, toggleFieldEdit],
+    [editedUser, flattenedProfile, profile, onUpdate, toggleFieldEdit, t],
   );
 
   const handleFieldCancel: any = useCallback(
     (fieldName: string) => {
       const currentUser: any = flattenedProfile || profile;
+      const initialVal = currentUser?.attributes?.[fieldName] ?? currentUser?.[fieldName];
       setEditedUser((prev: any) => ({
         ...prev,
-        [fieldName]: currentUser[fieldName],
+        [fieldName]: initialVal,
       }));
+      setFieldErrors((prev: Record<string, string>) => {
+        const next = {...prev};
+        delete next[fieldName];
+        return next;
+      });
       toggleFieldEdit(fieldName);
     },
     [flattenedProfile, profile, toggleFieldEdit],
@@ -579,6 +622,11 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
             },
             () => toggleFieldEdit(schema.name),
           )}
+          {fieldErrors[schema.name] && (
+            <div style={{color: '#d32f2f', fontSize: '0.8rem', marginTop: '4px', fontWeight: 500}}>
+              {fieldErrors[schema.name]}
+            </div>
+          )}
         </div>
         {editable && schema.mutability !== 'READ_ONLY' && !isReadonlyField && (
           <div className={styles.fieldActions}>
@@ -628,18 +676,54 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
 
   const currentUser: any = flattenedProfile || profile;
 
-  const renderProfileWithoutSchemas = (): any => {
+  const renderProfileContent = (): any => {
     if (!currentUser) return null;
 
     const displayName: any = getDisplayName(mergedMappings, profile!, displayNameAttributes);
 
-    const profileEntries: any = Object.entries(currentUser)
-      .filter(([key, value]: [string, any]) => {
-        if (!shouldShowField(key)) return false;
+    let schemaItems: Schema[] = [];
 
-        return value !== undefined && value !== '' && value !== null;
-      })
-      .sort(([a]: [string, ...any[]], [b]: [string, ...any[]]) => a.localeCompare(b));
+    if (userSchema && typeof userSchema === 'object' && Object.keys(userSchema).length > 0) {
+      schemaItems = Object.entries(userSchema)
+        .filter(([key, metaAttr]: [string, any]) => {
+          if (metaAttr?.credential) return false;
+          return shouldShowField(key, true);
+        })
+        .map(([key, metaAttr]: [string, any]) => {
+          const val = editedUser?.[key] ?? currentUser?.attributes?.[key] ?? currentUser?.[key] ?? '';
+
+          const isReadonly =
+            metaAttr.readOnly === true || metaAttr.mutability === 'READ_ONLY' || readonlyFields.includes(key);
+
+          return {
+            name: key,
+            displayName: metaAttr.displayName || (key ? startCase(key) : ''),
+            type: (metaAttr.type || 'STRING').toUpperCase(),
+            regex: metaAttr.regex,
+            required: !!metaAttr.required,
+            mutability: isReadonly ? 'READ_ONLY' : 'READ_WRITE',
+            value: val,
+          };
+        });
+    } else {
+      const profileEntries: any = Object.entries(currentUser)
+        .filter(([key, value]: [string, any]) => {
+          if (!shouldShowField(key)) return false;
+
+          return value !== undefined && value !== '' && value !== null;
+        })
+        .sort(([a]: [string, ...any[]], [b]: [string, ...any[]]) => a.localeCompare(b));
+
+      schemaItems = profileEntries.map(([key, value]: any) => {
+        const isReadonly = readonlyFields.includes(key);
+        return {
+          name: key,
+          displayName: startCase(key),
+          mutability: isReadonly ? 'READ_ONLY' : 'READ_WRITE',
+          value,
+        };
+      });
+    }
 
     return (
       <>
@@ -661,17 +745,11 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
           )}
         </div>
         <Divider />
-        {profileEntries.map(([key, value]: any) => {
-          const isReadonly = readonlyFields.includes(key);
-          const schema: Schema = {name: key, mutability: isReadonly ? 'READ_ONLY' : 'READ_WRITE'};
-          const schemaWithValue: any = {...schema, value};
-
-          return (
-            <div key={key} className={styles.info}>
-              {renderUserInfo(schemaWithValue)}
-            </div>
-          );
-        })}
+        {schemaItems.map((schemaWithValue: Schema) => (
+          <div key={schemaWithValue.name} className={styles.info}>
+            {renderUserInfo(schemaWithValue)}
+          </div>
+        ))}
       </>
     );
   };
@@ -687,7 +765,7 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
           <AlertPrimitive.Description>{error}</AlertPrimitive.Description>
         </AlertPrimitive>
       )}
-      <div className={styles.infoContainer}>{renderProfileWithoutSchemas()}</div>
+      <div className={styles.infoContainer}>{renderProfileContent()}</div>
     </CardPrimitive>
   );
 

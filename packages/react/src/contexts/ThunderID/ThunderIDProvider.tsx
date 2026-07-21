@@ -42,6 +42,7 @@ import I18nProvider from '../I18n/I18nProvider';
 import ThemeProvider from '../Theme/ThemeProvider';
 import UserProvider from '../User/UserProvider';
 import getUsersMe from '../../api/getUsersMe';
+import getUsersMeMeta from '../../api/getUsersMeMeta';
 
 const logger: ReturnType<typeof createPackageComponentLogger> = createPackageComponentLogger(
   '@thunderid/react',
@@ -83,6 +84,7 @@ const ThunderIDProvider: FC<PropsWithChildren<ThunderIDProviderProps>> = ({
   const [isLoadingSync, setIsLoadingSync] = useState<boolean>(true);
 
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [userSchema, setUserSchema] = useState<Record<string, any> | null>(null);
   const [baseUrl, setBaseUrl] = useState<string>(initialBaseUrl ?? '');
   const [config, setConfig] = useState<ThunderIDReactConfig>({
     afterSignInUrl: afterSignInUrl ?? window.location.origin,
@@ -153,6 +155,20 @@ const ThunderIDProvider: FC<PropsWithChildren<ThunderIDProviderProps>> = ({
         } catch (err) {
           logger.warn('Failed to fetch user profile from /users/me:', err);
         }
+
+        try {
+          const metaRes = await getUsersMeMeta({baseUrl: resolvedBaseUrl, instanceId});
+          if (metaRes?.schema) {
+            setUserSchema(metaRes.schema);
+          } else {
+            setUserSchema(null);
+          }
+        } catch (err) {
+          setUserSchema(null);
+          logger.warn('Failed to fetch user schema metadata from /users/me/meta:', err);
+        }
+      } else {
+        setUserSchema(null);
       }
 
       setUser(profileData);
@@ -507,6 +523,7 @@ const ThunderIDProvider: FC<PropsWithChildren<ThunderIDProviderProps>> = ({
       signUpUrl,
       syncSession,
       user,
+      userSchema,
       vendor: getVendorPrefix(config.vendor),
     }),
     [
@@ -527,6 +544,7 @@ const ThunderIDProvider: FC<PropsWithChildren<ThunderIDProviderProps>> = ({
       signIn,
       signInSilently,
       user,
+      userSchema,
       client,
       signInOptions,
       tokenRequest,
@@ -559,7 +577,11 @@ const ThunderIDProvider: FC<PropsWithChildren<ThunderIDProviderProps>> = ({
             }}
           >
             <FlowProvider>
-              <UserProvider profile={userProfile!} onUpdateProfile={handleProfileUpdate}>
+              <UserProvider
+                profile={userProfile as UserProfile}
+                userSchema={userSchema}
+                onUpdateProfile={handleProfileUpdate}
+              >
                 <ComponentRendererProvider renderers={(extensions?.components?.renderers ?? {}) as any}>
                   {children}
                 </ComponentRendererProvider>

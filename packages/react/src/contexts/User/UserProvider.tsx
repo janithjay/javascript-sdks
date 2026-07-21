@@ -25,12 +25,13 @@ import UserContext from './UserContext';
  */
 export interface UserProviderProps {
   onUpdateProfile?: (payload: User) => void;
-  profile: UserProfile;
+  profile: UserProfile & {userSchema?: Record<string, any> | null};
   revalidateProfile?: () => Promise<void>;
   updateProfile?: (
     requestConfig: UpdateMeProfileConfig,
     sessionId?: string,
   ) => Promise<{data: {user: User}; error: string; success: boolean}>;
+  userSchema?: Record<string, any> | null;
 }
 
 /**
@@ -66,6 +67,7 @@ const UserProvider: FC<PropsWithChildren<UserProviderProps>> = ({
   revalidateProfile,
   onUpdateProfile,
   updateProfile,
+  userSchema,
 }: PropsWithChildren<UserProviderProps>): ReactElement => {
   const contextValue: any = useMemo(
     () => ({
@@ -74,8 +76,9 @@ const UserProvider: FC<PropsWithChildren<UserProviderProps>> = ({
       profile: profile?.profile,
       revalidateProfile,
       updateProfile,
+      userSchema: profile?.userSchema ?? userSchema ?? null,
     }),
-    [profile, onUpdateProfile, revalidateProfile, updateProfile],
+    [profile, onUpdateProfile, revalidateProfile, updateProfile, userSchema],
   );
 
   return <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>;
