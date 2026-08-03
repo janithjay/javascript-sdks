@@ -119,7 +119,7 @@ const TextField: FC<TextFieldProps> = ({
       style={style}
     >
       {label && (
-        <InputLabel required={required} error={hasError}>
+        <InputLabel htmlFor={rest.id} required={required} error={hasError}>
           {label}
         </InputLabel>
       )}

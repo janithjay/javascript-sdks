@@ -35,6 +35,9 @@ export {default as getUsersMe} from './api/getUsersMe';
 export type {GetUsersMeConfig} from './api/getUsersMe';
 export {default as updateMeProfile} from './api/updateMeProfile';
 export type {UpdateMeProfileConfig} from './api/updateMeProfile';
+export {default as updateCredentials} from './api/updateCredentials';
+export type {UpdateCredentialsConfig} from './api/updateCredentials';
+
 
 export {default as ApplicationNativeAuthenticationConstants} from './constants/ApplicationNativeAuthenticationConstants';
 export {default as TokenConstants} from './constants/TokenConstants';
