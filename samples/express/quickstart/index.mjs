@@ -206,6 +206,27 @@ app.get('/', async (req, res) => {
       curl: ['curl http://localhost:3000/api/me \\', `  -H "Authorization: ${bearerLine(accessToken)}"`],
       sample: JSON.stringify({sub: '...', email: 'jane@example.com', given_name: 'Jane'}, null, 2),
     })}
+    ${endpoint({
+      method: 'PUT',
+      path: '/api/me',
+      summary: "Updates the authenticated user's profile attributes on ThunderID.",
+      protectedRoute: true,
+      curl: [
+        'curl -X PUT http://localhost:3000/api/me \\',
+        `  -H "Authorization: ${bearerLine(accessToken)}" \\`,
+        '  -H "Content-Type: application/json" \\',
+        '  -d \'{"given_name": "Jane", "family_name": "Doe"}\'',
+      ],
+      sample: JSON.stringify({sub: '...', email: 'jane@example.com', given_name: 'Jane', family_name: 'Doe'}, null, 2),
+    })}
+    ${endpoint({
+      method: 'GET',
+      path: '/api/me/meta',
+      summary: "Fetches user profile schema metadata from ThunderID's /users/me/meta.",
+      protectedRoute: true,
+      curl: ['curl http://localhost:3000/api/me/meta \\', `  -H "Authorization: ${bearerLine(accessToken)}"`],
+      sample: JSON.stringify({schema: {given_name: {displayName: 'First Name', required: true}}}, null, 2),
+    })}
 
     <div class="section-label">Postman</div>
     <div class="card">
@@ -320,6 +341,52 @@ app.get('/api/protected', requireBearer, (req, res) => {
 app.get('/api/me', requireBearer, (req, res) => {
   res.json(req.thunderIDUserInfo);
 });
+
+app.put('/api/me', requireBearer, async (req, res) => {
+  try {
+    const response = await fetch(`${baseUrl}/users/me`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${req.thunderIDToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(req.body),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+    return res.json(data);
+  } catch (err) {
+    return res.status(500).json({
+      error: 'internal_error',
+      message: err.message || 'Failed to update user profile',
+    });
+  }
+});
+
+app.get('/api/me/meta', requireBearer, async (req, res) => {
+  try {
+    const response = await fetch(`${baseUrl}/users/me/meta`, {
+      headers: {
+        Authorization: `Bearer ${req.thunderIDToken}`,
+      },
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+    return res.json(data);
+  } catch (err) {
+    return res.status(500).json({
+      error: 'internal_error',
+      message: err.message || 'Failed to fetch user schema metadata',
+    });
+  }
+});
+
 
 // ── Postman collection download ─────────────────────────────────────────
 

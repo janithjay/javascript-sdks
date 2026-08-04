@@ -41,6 +41,7 @@ export function verifyBearerToken(baseUrl) {
       });
     }
 
+    req.thunderIDToken = token;
     req.thunderIDUserInfo = await response.json();
     next();
   };
