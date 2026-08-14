@@ -94,9 +94,12 @@ export interface ConsentProps {
   t?: UseTranslation['t'];
 }
 
-const defaultConfig: Required<Pick<ConsentConfig, 'essential' | 'optional'>> = {
-  essential: 'Essential Attributtes',
-  optional: 'Optional Attributes',
+// default config for consent related translation keys
+const defaultConfig: ConsentConfig = {
+  essential: 'essential',
+  optional: 'optional',
+  essentialInfo: 'essential_info',
+  optionalInfo: 'optional_info',
 };
 
 /**
@@ -140,14 +143,32 @@ const Consent: FC<ConsentProps> = ({
     if (!text || (!t && !meta)) {
       return text || '';
     }
-    return resolveFlowTemplateLiterals(text, {meta, t: t || ((k: string): string => k)});
+    // first check if the key is present in the translation file,
+    // if not then resolve the template literals
+    const consentKey = `consent.${text}`;
+    const translated: string = t ? t(consentKey) : consentKey;
+
+    // if the translated value is same as the consent key,
+    // then resolve the template literals
+    const resolvedValue =
+      translated === consentKey
+        ? resolveFlowTemplateLiterals(text, {meta, t: t || ((k: string): string => k)})
+        : translated;
+
+    // if the resolved value is same as the original text,
+    // then return empty string
+    return resolvedValue === text ? '' : resolvedValue;
   };
 
   const config: ConsentConfig = {...defaultConfig, ...suppliedConfig};
-  const essentialInfo = typeof config.essentialInfo === 'string' ? resolve(config.essentialInfo.trim()) : '';
-  const optionalInfo = typeof config.optionalInfo === 'string' ? resolve(config.optionalInfo.trim()) : '';
-  const essentialLabel = resolve(config['essential']);
-  const optionalLabel = resolve(config['optional']);
+  const essentialInfo = resolve(config['essentialInfo']);
+  const optionalInfo = resolve(config['optionalInfo']);
+  /**
+   * Falls back to default config values if essential/optional keys
+   * cannot be resolved via translation files or meta template literals.
+   */
+  const essentialLabel = resolve(config['essential']) || 'Essential Attributes';
+  const optionalLabel = resolve(config['optional']) || 'Optional Attributes';
 
   /**
    * Method to check whether master toggle button is checked or not
@@ -223,6 +244,7 @@ const Consent: FC<ConsentProps> = ({
                 purpose={purpose}
                 formValues={formValues}
                 onInputChange={onInputChange}
+                t={t}
               />
             </div>
           )}
@@ -252,6 +274,7 @@ const Consent: FC<ConsentProps> = ({
                 purpose={purpose}
                 formValues={formValues}
                 onInputChange={onInputChange}
+                t={t}
               />
             </div>
           )}

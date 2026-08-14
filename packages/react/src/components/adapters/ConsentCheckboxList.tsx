@@ -8,6 +8,7 @@ import useTheme from '../../contexts/Theme/useTheme';
 import {cx} from '../../styles/emotion';
 import Toggle from '../primitives/Toggle/Toggle';
 import Typography from '../primitives/Typography/Typography';
+import {UseTranslation} from '../../hooks/useTranslation';
 
 /**
  * Computes the form value key for tracking an optional attribute's consent state.
@@ -78,6 +79,10 @@ export interface ConsentCheckboxListProps {
   purpose: ConsentPurposeData;
   /** Whether to render essential (disabled) or optional (toggleable) attributes */
   variant: ConsentInputVariant;
+  /**
+   * translation data
+   */
+  t?: UseTranslation['t'];
 }
 
 /**
@@ -93,9 +98,20 @@ const ConsentCheckboxList: FC<ConsentCheckboxListProps> = ({
   formValues,
   onInputChange,
   children,
+  t,
 }: ConsentCheckboxListProps) => {
   const {theme, colorScheme}: ReturnType<typeof useTheme> = useTheme();
   const styles: Record<string, string> = useStyles(theme, colorScheme);
+
+  /** Resolve any remaining {{t()}} or {{meta()}} template expressions in a string at render time. */
+  const resolve = (text: string | undefined): string => {
+    if (!text || !t) {
+      return text || '';
+    }
+
+    const translated: string = t(`consent.${text}`);
+    return translated === `consent.${text}` ? text : translated;
+  };
 
   const attributes: string[] = (variant === 'ESSENTIAL' ? purpose.essential : purpose.optional).map(
     (e): string => e.name,
@@ -153,11 +169,11 @@ const ConsentCheckboxList: FC<ConsentCheckboxListProps> = ({
                     styles['typography'],
                   )}
                 >
-                  {attr}
+                  {resolve(attr)}
                 </Typography>
               </div>
               {isEssential ? (
-                <Typography variant="body2">Required</Typography>
+                <Typography variant="body2">{resolve('required')}</Typography>
               ) : (
                 <Toggle
                   id={inputId}
