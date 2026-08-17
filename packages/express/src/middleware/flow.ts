@@ -13,7 +13,7 @@ import ThunderIDExpressClient from '../ThunderIDExpressClient';
  *
  * **First call** — no `executionId`:
  * ```json
- * { "applicationId": "app-id", "flowType": "SIGN_IN" }
+ * { "applicationId": "app-id", "flowType": "AUTHENTICATION" }
  * ```
  * Response includes `executionId`, `challengeToken`, `authId`, and `components`
  * (the UI elements to render).
@@ -65,7 +65,7 @@ const handleFlow = (): express.RequestHandler => {
 
       const payload = executionId
         ? {action: 'submit', challengeToken, executionId, inputs}
-        : {applicationId, flowType: flowType ?? 'SIGN_IN'};
+        : {applicationId, flowType: flowType ?? 'AUTHENTICATION'};
 
       const flowResponse = await executeEmbeddedSignInFlow({
         authId: resolvedAuthId,

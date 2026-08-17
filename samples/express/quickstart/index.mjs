@@ -2,7 +2,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import {thunderID, handleSignIn, handleSignOut, protect} from '@thunderid/express';
+import {thunderID, handleSignIn, handleSignOut, handleFlow, protect, getUsersMe, getUsersMeMeta} from '@thunderid/express';
 import {verifyBearerToken} from './lib/auth.mjs';
 import {layout, esc, escAttr, COPY_ICON} from './lib/layout.mjs';
 import {thunderMark} from './lib/thunderMark.mjs';
@@ -13,24 +13,39 @@ const app = express();
 const port = 3000;
 const baseUrl = process.env.THUNDERID_BASE_URL || 'https://localhost:8090';
 
-const REQUIRED_ENV_VARS = ['THUNDERID_CLIENT_ID', 'THUNDERID_CLIENT_SECRET'];
-const missingEnvVars = REQUIRED_ENV_VARS.filter((key) => !process.env[key]);
+// This app demonstrates two independent, separately-configurable ways to authenticate:
+// OAuth2 redirect flow (clientId/clientSecret) or app-native embedded flow
+// (applicationId/flowSecret, /native-login). Either is sufficient on its own — the
+// config gate below only blocks the app when *neither* is set up.
+const REDIRECT_FLOW_VARS = ['THUNDERID_CLIENT_ID', 'THUNDERID_CLIENT_SECRET'];
+const redirectFlowConfigured = REDIRECT_FLOW_VARS.every((key) => process.env[key]);
+
+const applicationId = process.env.THUNDERID_APPLICATION_ID;
+const flowSecret = process.env.THUNDERID_FLOW_SECRET;
+const nativeFlowConfigured = Boolean(applicationId && flowSecret);
+
+const anyFlowConfigured = redirectFlowConfigured || nativeFlowConfigured;
+// Points the nav's "Sign in" button at whichever flow is actually usable.
+const signInHref = redirectFlowConfigured ? '/login' : nativeFlowConfigured ? '/native-login' : '/login';
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// The thunderID() middleware is only used here to power the `/login` and
-// `/token` convenience routes, which exist so you have a fast way to obtain
-// a real access token to try against the API below. The API routes
-// themselves (`/api/*`) don't rely on cookies or sessions at all — see
-// lib/auth.mjs.
-if (missingEnvVars.length === 0) {
+// The thunderID() middleware powers `/login`/`/token` (redirect flow) and
+// `/native-login`'s handleFlow() route (native flow) alike — req.thunderIDAuth is
+// needed by both, so this mounts whenever either flow has enough config to run.
+// The API routes (`/api/*`) don't rely on cookies or sessions at all — see lib/auth.mjs.
+if (anyFlowConfigured) {
   app.use(
     thunderID({
       baseUrl,
       clientId: process.env.THUNDERID_CLIENT_ID,
       clientSecret: process.env.THUNDERID_CLIENT_SECRET,
+      // Only used by the /native-login demo's handleFlow() route — the OAuth2
+      // redirect flow above authenticates with clientId/clientSecret instead.
+      applicationId,
+      flowSecret,
       // afterSignInUrl doubles as the OAuth2 redirect_uri sent to ThunderID, so
       // it must match the redirect URI registered for this app (`/login`,
       // where handleSignIn() below actually exchanges the code). Where the
@@ -69,13 +84,19 @@ function renderConfigNeeded() {
         <div class="hero-mark">${thunderMark(40)}</div>
         <div class="hero-badge config-badge"><span class="hero-badge-line"></span><span>Setup required</span><span class="hero-badge-line"></span></div>
         <h1 class="hero-title">Configuration needed</h1>
-        <p class="hero-subtitle">This quickstart can't reach ThunderID yet. Follow the steps below, then
-        restart the server.</p>
+        <p class="hero-subtitle">This quickstart can't reach ThunderID yet. Set up <strong>one</strong> of the
+        two sign-in methods below, then restart the server.</p>
 
         <div class="config-step">
           <div class="config-step-label">Step 1 &middot; Set environment variables</div>
+          <p class="config-hint" style="margin:0 0 10px">Either the OAuth2 redirect flow&hellip;</p>
           <ul class="config-list">
-            ${missingEnvVars.map((key) => `<li class="config-list-item">${esc(key)}</li>`).join('')}
+            ${REDIRECT_FLOW_VARS.map((key) => `<li class="config-list-item">${esc(key)}</li>`).join('')}
+          </ul>
+          <p class="config-hint" style="margin:14px 0 10px">&hellip;or the native/embedded flow:</p>
+          <ul class="config-list">
+            <li class="config-list-item">THUNDERID_APPLICATION_ID</li>
+            <li class="config-list-item">THUNDERID_FLOW_SECRET</li>
           </ul>
           <p class="config-hint">Copy <code>.env.example</code> to <code>.env</code>, fill in the values from
           your ThunderID application, then run <code>npm run dev</code> again.</p>
@@ -108,7 +129,7 @@ function renderConfigNeeded() {
 }
 
 app.use((req, res, next) => {
-  if (missingEnvVars.length > 0 && req.path !== '/styles.css') {
+  if (!anyFlowConfigured && req.path !== '/styles.css') {
     return res.status(503).send(renderConfigNeeded());
   }
   next();
@@ -232,6 +253,25 @@ app.get('/', async (req, res) => {
       curl: ['curl http://localhost:3000/api/me \\', `  -H "Authorization: ${bearerLine(accessToken)}"`],
       sample: JSON.stringify({sub: '...', email: 'jane@example.com', given_name: 'Jane'}, null, 2),
     })}
+    ${endpoint({
+      method: 'GET',
+      path: '/api/profile',
+      summary: 'Full profile attributes + schema from /users/me and /users/me/meta.',
+      protectedRoute: true,
+      curl: ['curl http://localhost:3000/api/profile \\', `  -H "Authorization: ${bearerLine(accessToken)}"`],
+      sample: JSON.stringify(
+        {profile: {attributes: {given_name: 'Jane'}}, schema: {given_name: {type: 'string'}}},
+        null,
+        2,
+      ),
+    })}
+
+    <div class="section-label">Native sign-in</div>
+    <div class="card">
+      <p>Prefer app-native auth over a redirect to a hosted page? <a href="/native-login">/native-login</a>
+      drives the same sign-in flow through <code>POST /flow/sign-in</code>, rendering each step's UI
+      components directly in this app via <code>handleFlow()</code>.</p>
+    </div>
 
     <div class="section-label">Postman</div>
     <div class="card">
@@ -244,13 +284,68 @@ app.get('/', async (req, res) => {
     </div>
     </div>
   `;
-  res.send(layout({title: 'API docs', signedIn, user, body}));
+  res.send(layout({title: 'API docs', signedIn, user, signInHref, body}));
 });
 
 // ── Demo token helper (browser-based, cookie session) ───────────────────
 
-app.get('/login', handleSignIn());
-app.get('/logout', handleSignOut());
+// /login and /logout drive the OAuth2 redirect flow specifically — guard them so a
+// deployment with only applicationId/flowSecret configured doesn't fall through to
+// ThunderID with an empty client_id, which surfaces as a confusing hosted error page
+// instead of a clear local one.
+function requireRedirectFlow(_req, res, next) {
+  if (!redirectFlowConfigured) {
+    res.redirect(nativeFlowConfigured ? '/native-login' : '/');
+    return;
+  }
+  next();
+}
+
+app.get('/login', requireRedirectFlow, handleSignIn());
+app.get('/logout', requireRedirectFlow, handleSignOut());
+
+// ── Native/embedded sign-in (Flow Execution API) ────────────────────────
+// Demonstrates app-native auth: no redirect to a hosted page, the flow's UI
+// components are rendered by this app itself and driven via POST /flow/sign-in.
+
+app.get('/native-login', (_req, res) => {
+  if (!nativeFlowConfigured) {
+    res.status(503).send(
+      layout({
+        title: 'Native sign-in',
+        showBack: true,
+        body: `<div class="page">
+          <div class="eyebrow"><span class="eyebrow-dot" style="background:#e88b3a"></span>Setup required</div>
+          <h1 class="page-title">Native sign-in needs a Flow Secret</h1>
+          <p class="page-subtitle">Set <code>THUNDERID_APPLICATION_ID</code> and
+          <code>THUNDERID_FLOW_SECRET</code> in <code>.env</code> (ThunderID Console &rarr; your application
+          &rarr; Overview / Advanced Settings), then restart the server.</p>
+        </div>`,
+      }),
+    );
+    return;
+  }
+
+  res.send(
+    layout({
+      title: 'Native sign-in',
+      showBack: true,
+      body: `<div class="page">
+        <div class="eyebrow"><span class="eyebrow-dot"></span>Flow Execution API</div>
+        <h1 class="page-title">Native sign-in</h1>
+        <p class="page-subtitle">This form is rendered from the flow steps returned by ThunderID —
+        no redirect to a hosted page. Driven by <code>POST /flow/sign-in</code>, backed by
+        <code>handleFlow()</code> from <code>@thunderid/express</code>.</p>
+        <div id="native-login-root" class="card" data-application-id="${escAttr(applicationId)}">
+          <div class="native-login-error" hidden></div>
+        </div>
+      </div>
+      <script src="/native-login.js" defer></script>`,
+    }),
+  );
+});
+
+app.post('/flow/sign-in', handleFlow());
 
 app.get('/token', protect((res) => res.redirect('/login')), async (req, res) => {
   const {accessToken, user} = await getSession(req);
@@ -327,7 +422,7 @@ app.get('/token', protect((res) => res.redirect('/login')), async (req, res) => 
       })();
     </script>
   </div>`;
-  res.send(layout({title: 'Token debug', signedIn: true, showBack: true, user, body}));
+  res.send(layout({title: 'Token debug', signedIn: true, showBack: true, user, signInHref, body}));
 });
 
 // ── API routes (bearer-token protected, no cookies involved) ────────────
@@ -345,6 +440,21 @@ app.get('/api/protected', requireBearer, (req, res) => {
 
 app.get('/api/me', requireBearer, (req, res) => {
   res.json(req.thunderIDUserInfo);
+});
+
+app.get('/api/profile', requireBearer, async (req, res) => {
+  const fetcher = (url, config) =>
+    fetch(url, {...config, headers: {...config?.headers, Authorization: `Bearer ${req.thunderIDAccessToken}`}});
+
+  try {
+    const [profile, meta] = await Promise.all([
+      getUsersMe({baseUrl, fetcher}),
+      getUsersMeMeta({baseUrl, fetcher}),
+    ]);
+    res.json({profile, schema: meta.schema ?? {}});
+  } catch (err) {
+    res.status(502).json({error: 'bad_gateway', message: err.message ?? 'Failed to fetch user profile.'});
+  }
 });
 
 // ── Postman collection download ─────────────────────────────────────────

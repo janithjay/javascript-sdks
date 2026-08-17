@@ -527,6 +527,46 @@ button {
   color: var(--color-text);
 }
 
+/* ── Native sign-in form ── */
+.native-login-error {
+  font-size: 13px;
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+  border-radius: var(--radius-btn);
+  padding: 10px 12px;
+  margin-bottom: 16px;
+}
+
+.native-login-field {
+  margin-bottom: 14px;
+}
+
+.native-login-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+}
+
+.native-login-field input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+}
+
+.native-login-field input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
 /* ── Endpoint list (swagger-like) ── */
 .endpoint {
   border: 1px solid var(--color-border);

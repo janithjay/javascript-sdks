@@ -40,8 +40,8 @@ function userMenu(user) {
   </details>`;
 }
 
-function nav({signedIn, showBack, user}) {
-  const authAction = signedIn ? userMenu(user) : `<a class="btn-primary" href="/login">Sign in</a>`;
+function nav({signedIn, showBack, user, signInHref}) {
+  const authAction = signedIn ? userMenu(user) : `<a class="btn-primary" href="${escAttr(signInHref)}">Sign in</a>`;
 
   return `<nav class="nav">
     <a href="/" class="nav-logo">${expressLogo(24)}<span class="wordmark-name">Quickstart</span></a>
@@ -62,7 +62,7 @@ function nav({signedIn, showBack, user}) {
  * nav/hero/button classnames and design tokens as the React and Next.js
  * quickstarts so the sample apps read as one family.
  */
-export function layout({title, body, signedIn = false, showBack = false, user = null}) {
+export function layout({title, body, signedIn = false, showBack = false, user = null, signInHref = '/login'}) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,7 +76,7 @@ export function layout({title, body, signedIn = false, showBack = false, user = 
 </head>
 <body>
 <div class="app">
-  ${nav({signedIn, showBack, user})}
+  ${nav({signedIn, showBack, user, signInHref})}
   ${body}
 </div>
 <script>
