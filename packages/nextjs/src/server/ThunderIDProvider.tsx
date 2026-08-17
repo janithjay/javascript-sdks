@@ -5,6 +5,7 @@
 
 import {
   ThunderIDRuntimeError,
+  AttributeSchema,
   FlowMetadataResponse,
   FlowMetaType,
   IdToken,
@@ -21,6 +22,7 @@ import getSessionId from './actions/getSessionId';
 import getSessionPayload from './actions/getSessionPayload';
 import getUserAction from './actions/getUserAction';
 import getUserProfileAction from './actions/getUserProfileAction';
+import getUserSchemaAction from './actions/getUserSchemaAction';
 import handleOAuthCallbackAction from './actions/handleOAuthCallbackAction';
 import isSignedIn from './actions/isSignedIn';
 import refreshToken from './actions/refreshToken';
@@ -126,6 +128,7 @@ const ThunderIDServerProvider: FC<PropsWithChildren<ThunderIDServerProviderProps
     flattenedProfile: {},
     profile: {},
   };
+  let userSchema: Record<string, AttributeSchema> | null = null;
 
   const resolvedPreferences = {
     ...config?.preferences,
@@ -169,9 +172,15 @@ const ThunderIDServerProvider: FC<PropsWithChildren<ThunderIDServerProviderProps
           error: string | null;
           success: boolean;
         } = await getUserProfileAction(sessionId);
+        const userSchemaResponse: {
+          data: {userSchema: Record<string, AttributeSchema> | null};
+          error: string | null;
+          success: boolean;
+        } = await getUserSchemaAction(sessionId);
 
         user = userResponse.data?.user || {};
         userProfile = userProfileResponse.data?.userProfile ?? userProfile;
+        userSchema = userSchemaResponse.data?.userSchema ?? null;
       } catch (error) {
         logger.warn('[ThunderIDServerProvider] Failed to fetch user profile from /users/me:', error?.toString());
       }
@@ -209,6 +218,7 @@ const ThunderIDServerProvider: FC<PropsWithChildren<ThunderIDServerProviderProps
       clientId={config?.clientId}
       user={user}
       userProfile={userProfile}
+      userSchema={userSchema}
       updateProfile={updateUserProfileAction}
       isSignedIn={signedIn}
     >
