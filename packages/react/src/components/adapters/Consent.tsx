@@ -41,8 +41,10 @@ export interface ConsentRenderProps {
 export interface ConsentConfig {
   essential?: string;
   optional?: string;
+  permission?: string;
   essentialInfo?: string;
   optionalInfo?: string;
+  permissionInfo?: string;
 }
 
 /**
@@ -96,10 +98,12 @@ export interface ConsentProps {
 
 // default config for consent related translation keys
 const defaultConfig: ConsentConfig = {
-  essential: 'essential',
-  optional: 'optional',
-  essentialInfo: 'essential_info',
-  optionalInfo: 'optional_info',
+  essential: 'essential_claims',
+  optional: 'optional_claims',
+  permission: 'authorize_scope',
+  essentialInfo: 'essential_claims_info',
+  optionalInfo: 'optional_claims_info',
+  permissionInfo: 'authorize_scope_info',
 };
 
 /**
@@ -163,12 +167,14 @@ const Consent: FC<ConsentProps> = ({
   const config: ConsentConfig = {...defaultConfig, ...suppliedConfig};
   const essentialInfo = resolve(config['essentialInfo']);
   const optionalInfo = resolve(config['optionalInfo']);
+  const permissionInfo = resolve(config['permissionInfo']);
   /**
    * Falls back to default config values if essential/optional keys
    * cannot be resolved via translation files or meta template literals.
    */
   const essentialLabel = resolve(config['essential']) || 'Essential Attributes';
   const optionalLabel = resolve(config['optional']) || 'Optional Attributes';
+  const permissionLabel = resolve(config['permission']) || 'Permissions';
 
   /**
    * Method to check whether master toggle button is checked or not
@@ -254,10 +260,11 @@ const Consent: FC<ConsentProps> = ({
               <div className={optionalSectionHeaderClass}>
                 <div className={optionalSectionLabelClass}>
                   <Typography variant="subtitle2" fontWeight="bold">
-                    {purpose.type === 'permissions' ? 'Permissions' : optionalLabel}
+                    {purpose.type === 'permissions' ? permissionLabel : optionalLabel}
                   </Typography>
-                  {optionalInfo !== '' && (
-                    <Tooltip helperText={optionalInfo}>
+                  {/* Show tooltip for optional claims/permissions according to their type */}
+                  {Boolean(purpose.type === 'permissions' ? permissionInfo : optionalInfo) && (
+                    <Tooltip helperText={purpose.type === 'permissions' ? permissionInfo : optionalInfo}>
                       <Info width="1rem" height="1rem" />
                     </Tooltip>
                   )}
