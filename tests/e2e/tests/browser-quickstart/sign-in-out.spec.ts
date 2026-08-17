@@ -8,6 +8,7 @@
 
 import {SampleApps, sampleAppUrl} from '../../constants/sample-apps';
 import {expect, test} from '../../fixtures/sample-apps';
+import {ProfileFieldKeys} from '../../pages/browser-quickstart.page';
 import {decodeJwtPayload} from '../../utils/jwt';
 
 const appUrl = sampleAppUrl(SampleApps.BROWSER);
@@ -66,9 +67,13 @@ test.describe('browser/quickstart - Sign in and Sign out', () => {
     await browserQuickstartPage.verifyLoggedIn();
 
     await browserQuickstartPage.openManageProfile();
-    await browserQuickstartPage.fillProfileName('Profile', 'Updated');
-    await browserQuickstartPage.saveProfile();
+    await browserQuickstartPage.editProfileField(ProfileFieldKeys.givenName, 'Profile');
+    await browserQuickstartPage.editProfileField(ProfileFieldKeys.familyName, 'Updated');
 
+    await browserQuickstartPage.verifyProfileFieldValue(ProfileFieldKeys.givenName, 'Profile');
+    await browserQuickstartPage.verifyProfileFieldValue(ProfileFieldKeys.familyName, 'Updated');
+
+    await browserQuickstartPage.closeManageProfile();
     await browserQuickstartPage.verifyDisplayedName('Profile Updated');
   });
 });

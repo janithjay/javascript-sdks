@@ -11,6 +11,11 @@ import {Page, expect} from '@playwright/test';
 import {GateLoginPage} from './gate-login.page';
 import {Timeouts} from '../constants/timeouts';
 
+export const ProfileFieldKeys = {
+  familyName: 'family_name',
+  givenName: 'given_name',
+};
+
 export class BrowserQuickstartPage extends GateLoginPage {
   constructor(page: Page) {
     super(page);
@@ -74,13 +79,24 @@ export class BrowserQuickstartPage extends GateLoginPage {
       .waitFor({state: 'visible', timeout: Timeouts.ELEMENT_VISIBILITY});
   }
 
-  async fillProfileName(givenName: string, familyName: string): Promise<void> {
-    await this.page.locator('#profile-first-name').fill(givenName);
-    await this.page.locator('#profile-last-name').fill(familyName);
+  /** Edits one field of the profile dialog, which renders each schema attribute as its own row
+   * with a pencil "Edit" button.*/
+  async editProfileField(fieldKey: string, value: string): Promise<void> {
+    const row = this.page.locator(`.profile-field-row[data-field="${fieldKey}"]`);
+    await row.locator('[data-action="edit"]').click();
+    await row.locator('.profile-field-row-input').fill(value);
+    await row.locator('[data-action="save"]').click();
+    await expect(row.locator('.profile-field-row-input')).toHaveCount(0, {timeout: Timeouts.DEFAULT_ACTION});
   }
 
-  async saveProfile(): Promise<void> {
-    await this.page.locator('#profile-dialog-save').click();
+  /** Verifies a field's row reverted from edit mode back to display mode showing the just-saved value*/
+  async verifyProfileFieldValue(fieldKey: string, value: string): Promise<void> {
+    const row = this.page.locator(`.profile-field-row[data-field="${fieldKey}"]`);
+    await expect(row.locator('.profile-field-row-value')).toHaveText(value, {timeout: Timeouts.ELEMENT_VISIBILITY});
+  }
+
+  async closeManageProfile(): Promise<void> {
+    await this.page.locator('#profile-dialog-close').click();
     await this.page.locator('#profile-dialog-overlay').waitFor({state: 'hidden', timeout: Timeouts.DEFAULT_ACTION});
   }
 
