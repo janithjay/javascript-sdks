@@ -1,12 +1,7 @@
 // Copyright 2026 The ThunderID Authors
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  type ConsentPurposeData,
-  FlowMetadataResponse,
-  PromptElement,
-  resolveFlowTemplateLiterals,
-} from '@thunderid/browser';
+import {type ConsentPurposeData, PromptElement} from '@thunderid/browser';
 import {type ChangeEvent, FC, ReactNode} from 'react';
 import ConsentCheckboxList, {getConsentOptionalKey} from './ConsentCheckboxList';
 import Typography from '../primitives/Typography/Typography';
@@ -33,16 +28,6 @@ export interface ConsentRenderProps {
   onInputChange: (name: string, value: string) => void;
   /** The resolved list of consent purposes parsed from `consentData`. */
   purposes: ConsentPurposeData[];
-}
-
-/**
- * Interface for consent configuration
- */
-export interface ConsentConfig {
-  essential?: string;
-  optional?: string;
-  essentialInfo?: string;
-  optionalInfo?: string;
 }
 
 /**
@@ -78,15 +63,6 @@ export interface ConsentProps {
    * Callback invoked when a user toggles an optional attribute.
    */
   onInputChange: (name: string, value: string) => void;
-  /**
-   * Config to modified detail in consent page
-   */
-  config?: Record<string, unknown>;
-
-  /**
-   * Config of meta response
-   */
-  meta?: FlowMetadataResponse | null;
 
   /**
    * translation data
@@ -94,25 +70,12 @@ export interface ConsentProps {
   t?: UseTranslation['t'];
 }
 
-const defaultConfig: Required<Pick<ConsentConfig, 'essential' | 'optional'>> = {
-  essential: 'Essential Attributtes',
-  optional: 'Optional Attributes',
-};
-
 /**
  * Consent component renders the list of purposes and their associated attributes (essential and optional)
  * based on the data provided by the backend. It allows users to toggle optional attributes while essential
  * attributes are displayed as read-only.
  */
-const Consent: FC<ConsentProps> = ({
-  consentData,
-  formValues,
-  config: suppliedConfig = {},
-  onInputChange,
-  children,
-  meta,
-  t,
-}: ConsentProps) => {
+const Consent: FC<ConsentProps> = ({consentData, formValues, onInputChange, children, t}: ConsentProps) => {
   // Computed per render (not at module scope): a CSP nonce configured on <ThunderIDProvider>
   // isn't known until the provider renders, and Emotion needs it applied before any style
   // insertion happens. These are static, so Emotion's own cache dedupes the repeat calls to a
@@ -135,19 +98,24 @@ const Consent: FC<ConsentProps> = ({
   });
   const optionalSectionLabelClass: string = css({alignItems: 'center', display: 'flex', gap: '4px'});
 
-  /** Resolve any remaining {{t()}} or {{meta()}} template expressions in a string at render time. */
+  /** Resolve i18n keys */
   const resolve = (text: string | undefined): string => {
-    if (!text || (!t && !meta)) {
+    if (!text || !t) {
       return text || '';
     }
-    return resolveFlowTemplateLiterals(text, {meta, t: t || ((k: string): string => k)});
+    return t(text);
   };
 
-  const config: ConsentConfig = {...defaultConfig, ...suppliedConfig};
-  const essentialInfo = typeof config.essentialInfo === 'string' ? resolve(config.essentialInfo.trim()) : '';
-  const optionalInfo = typeof config.optionalInfo === 'string' ? resolve(config.optionalInfo.trim()) : '';
-  const essentialLabel = resolve(config['essential']);
-  const optionalLabel = resolve(config['optional']);
+  const essentialInfo = resolve(`consent.essential_claims.info`);
+  const optionalInfo = resolve(`consent.optional_claims.info`);
+  const permissionInfo = resolve(`consent.authorize_scope.info`);
+  /**
+   * Falls back to default config values if essential/optional
+   * keys cannot be resolved via translation files .
+   */
+  const essentialLabel = resolve(`consent.essential_claims`) || 'Essential Attributes';
+  const optionalLabel = resolve(`consent.optional_claims`) || 'Optional Attributes';
+  const permissionLabel = resolve(`consent.authorize_scope`) || 'Permissions';
 
   /**
    * Method to check whether master toggle button is checked or not
@@ -223,6 +191,7 @@ const Consent: FC<ConsentProps> = ({
                 purpose={purpose}
                 formValues={formValues}
                 onInputChange={onInputChange}
+                t={t}
               />
             </div>
           )}
@@ -232,10 +201,11 @@ const Consent: FC<ConsentProps> = ({
               <div className={optionalSectionHeaderClass}>
                 <div className={optionalSectionLabelClass}>
                   <Typography variant="subtitle2" fontWeight="bold">
-                    {purpose.type === 'permissions' ? 'Permissions' : optionalLabel}
+                    {purpose.type === 'permissions' ? permissionLabel : optionalLabel}
                   </Typography>
-                  {optionalInfo !== '' && (
-                    <Tooltip helperText={optionalInfo}>
+                  {/* Show tooltip for optional claims/permissions according to their type */}
+                  {Boolean(purpose.type === 'permissions' ? permissionInfo : optionalInfo) && (
+                    <Tooltip helperText={purpose.type === 'permissions' ? permissionInfo : optionalInfo}>
                       <Info width="1rem" height="1rem" />
                     </Tooltip>
                   )}
@@ -252,6 +222,7 @@ const Consent: FC<ConsentProps> = ({
                 purpose={purpose}
                 formValues={formValues}
                 onInputChange={onInputChange}
+                t={t}
               />
             </div>
           )}

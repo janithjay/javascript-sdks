@@ -143,6 +143,19 @@ const translations: I18nTranslations = {
   'messages.loading.placeholder': 'Chargement...',
 
   /* |---------------------------------------------------------------| */
+  /* |                        Consent                                | */
+  /* |---------------------------------------------------------------| */
+
+  'consent.required': 'Obligatoire',
+  'consent.essential_claims': 'Attributs essentiels',
+  'consent.optional_claims': 'Attributs facultatifs',
+  'consent.authorize_scope': 'Autorisations',
+  'consent.essential_claims.info': 'Ces attributs sont nécessaires au bon fonctionnement du service.',
+  'consent.optional_claims.info': 'Ces attributs sont facultatifs et peuvent être fournis à votre discrétion.',
+  'consent.authorize_scope.info':
+    "Ces autorisations permettent au service d'accéder à des fonctionnalités supplémentaires.",
+
+  /* |---------------------------------------------------------------| */
   /* |                        Errors                                 | */
   /* |---------------------------------------------------------------| */
 
