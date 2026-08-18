@@ -122,10 +122,10 @@ resolve_platform() {
 # GitHub API or thunderid.dev calls of our own and no version pinned in this repo, downloads it for
 # the current platform, and runs setup.sh non-interactively (admin credentials passed through via
 # THUNDERID_ADMIN_* env vars). It always finishes by trying to attach its interactive REPL, which
-# needs a real TTY and fails in a script; that is expected, so its exit code is ignored below. By
-# the time it fails, the release is already downloaded and fully set up on disk, so we start it
-# ourselves with `start.sh` rather than relying on npx thunderid's own (REPL-attached) background
-# process, which does not outlive the npx invocation. A scratch HOME is used for that one
+# needs a real TTY and fails in a script; that is expected, so its exit code is ignored below. npx
+# thunderid already health-checked the server it started before that point, so we only start it
+# ourselves with `start.sh` if it isn't actually reachable (e.g. the REPL failure tore it down)
+# instead of racing a second instance onto the same port. A scratch HOME is used for that one
 # invocation so it can't see, or reuse, a version already active from a developer's own separate
 # `npx thunderid` use on this machine, guaranteeing a fresh "no active version" state and therefore
 # the true latest release every run.
@@ -183,7 +183,7 @@ download_and_start_server() {
     fi
 
     echo "Starting ThunderID server..."
-    (cd "$DIST_HOME" && ./start.sh) &
+    curl -sk "https://localhost:${SERVER_PORT}/health/liveness" > /dev/null 2>&1 || (cd "$DIST_HOME" && ./start.sh &)
     wait_for_url "https://localhost:${SERVER_PORT}/health/liveness" "ThunderID server"
 }
 

@@ -95,8 +95,29 @@ env:
   NODE_VERSION: "lts/*"
 
 jobs:
+  test-e2e:
+    name: 🎭 E2E (sample apps)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    # Least privilege: this job never pushes, comments, or writes to the repo — only the default
+    # GITHUB_TOKEN's read access is needed for checkout.
+    permissions:
+      contents: read
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+
+      - name: 🎭 Run E2E suite
+        uses: ./.github/actions/run-e2e-suite
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          artifact-name: playwright-report-release
+
   validate:
     name: ✅ Validate Inputs
+    needs: [test-e2e]
     runs-on: ubuntu-latest
     steps:
       - name: Guard against accidental major bump

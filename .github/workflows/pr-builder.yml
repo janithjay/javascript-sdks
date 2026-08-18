@@ -2,7 +2,7 @@ name: 👷🛠️ PR Builder
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, labeled]
+    types: [opened, synchronize, reopened]
   merge_group:
   workflow_dispatch:
 
@@ -101,12 +101,6 @@ jobs:
 
   e2e:
     name: 🎭 E2E (sample apps)
-    # Label-gated, mirroring thunderid's own pr-builder.yml `trigger-pr-builder` pattern — a real
-    # backend + six sample apps is expensive enough that it shouldn't run on every push by
-    # default. Always runs on merge_group/workflow_dispatch.
-    if: >-
-      github.event_name != 'pull_request' ||
-      contains(github.event.pull_request.labels.*.name, 'trigger-e2e')
     runs-on: ubuntu-latest
     timeout-minutes: 40
     # Least privilege: this job never pushes, comments, or writes to the repo — only the default
@@ -117,10 +111,6 @@ jobs:
       - name: 📥 Checkout Code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
-          # Matches thunder-id/thunderid's own checkout steps: the checked-out repo never needs
-          # git push/fetch credentials in this job, so don't leave the token available to be
-          # abused by anything that runs afterward (including the third-party composite actions
-          # invoked later in this job).
           persist-credentials: false
 
       - name: 🎭 Run E2E suite
