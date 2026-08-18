@@ -42,7 +42,7 @@ const UserProfile: Component = defineComponent({
     }>,
     {slots}: SetupContext,
   ): () => VNode {
-    const {flattenedProfile, schemas, updateProfile} = useUser();
+    const {flattenedProfile, profile, updateProfile, userSchema} = useUser();
 
     return (): VNode =>
       h(
@@ -55,9 +55,10 @@ const UserProfile: Component = defineComponent({
           flattenedProfile: flattenedProfile?.value,
           hideFields: props.hideFields,
           onUpdate: updateProfile,
-          schemas: schemas?.value,
+          profile: profile?.value,
           showFields: props.showFields,
           title: props.title,
+          userSchema: userSchema?.value,
         },
         slots,
       );
