@@ -1,7 +1,7 @@
 // Copyright 2026 The ThunderID Authors
 // SPDX-License-Identifier: Apache-2.0
 
-import {resolveLocaleDisplayName, resolveLocaleEmoji} from '@thunderid/browser';
+import {getBaseLanguage, normalizeLocaleTag, resolveLocaleDisplayName, resolveLocaleEmoji} from '@thunderid/browser';
 import {FC, ReactElement, ReactNode, useEffect, useMemo} from 'react';
 import BaseLanguageSwitcher, {LanguageOption, LanguageSwitcherRenderProps} from './BaseLanguageSwitcher';
 import useFlowMeta from '../../../contexts/FlowMeta/useFlowMeta';
@@ -89,12 +89,42 @@ const LanguageSwitcher: FC<LanguageSwitcherProps> = ({children, className}: Lang
     [effectiveLanguageCodes],
   );
 
-  // If the detected language isn't supported by the server, fall back to the first available language.
+  // If the detected language isn't supported by the server, fall back to English (matched by base
+  // language, e.g. browser "en-US" against server "en"), or the first available language if the
+  // server doesn't offer English either.
   useEffect(() => {
-    if (availableLanguageCodes.length > 0 && !availableLanguageCodes.includes(currentLanguage)) {
-      switchLanguage(availableLanguageCodes[0]);
+    if (availableLanguageCodes.length === 0) {
+      return;
     }
+    const currentBase: string = getBaseLanguage(currentLanguage);
+    const isSupported: boolean = availableLanguageCodes.some(
+      (code: string): boolean => getBaseLanguage(code) === currentBase,
+    );
+    if (isSupported) {
+      return;
+    }
+    const englishCode: string | undefined = availableLanguageCodes.find(
+      (code: string): boolean => getBaseLanguage(code) === 'en',
+    );
+    switchLanguage(englishCode ?? availableLanguageCodes[0]);
   }, [availableLanguageCodes, currentLanguage, switchLanguage]);
+
+  // Prefer an exact dialect match (e.g. "en-IN" against a supported "en-IN") over a base-language
+  // one, so a specific regional variant isn't silently collapsed to "en" when it's actually offered.
+  // Only fall back to a base-language match (e.g. "en-US" against a supported "en") when the exact
+  // dialect isn't available, and to the raw code if neither is.
+  const displayLanguage: string = useMemo(() => {
+    const exactMatch: LanguageOption | undefined = languages.find(
+      (option: LanguageOption): boolean => normalizeLocaleTag(option.code) === normalizeLocaleTag(currentLanguage),
+    );
+    if (exactMatch) {
+      return exactMatch.code;
+    }
+    const baseMatch: LanguageOption | undefined = languages.find(
+      (option: LanguageOption): boolean => getBaseLanguage(option.code) === getBaseLanguage(currentLanguage),
+    );
+    return baseMatch?.code ?? currentLanguage;
+  }, [languages, currentLanguage]);
 
   const handleLanguageChange = (language: string): void => {
     if (language !== currentLanguage) {
@@ -104,7 +134,7 @@ const LanguageSwitcher: FC<LanguageSwitcherProps> = ({children, className}: Lang
 
   return (
     <BaseLanguageSwitcher
-      currentLanguage={currentLanguage}
+      currentLanguage={displayLanguage}
       isLoading={isLoading}
       languages={languages}
       onLanguageChange={handleLanguageChange}
