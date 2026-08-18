@@ -31,18 +31,6 @@ export interface ConsentRenderProps {
 }
 
 /**
- * Interface for consent configuration
- */
-export interface ConsentConfig {
-  essential?: string;
-  optional?: string;
-  permission?: string;
-  essentialInfo?: string;
-  optionalInfo?: string;
-  permissionInfo?: string;
-}
-
-/**
  * Props for the Consent component.
  */
 export interface ConsentProps {
