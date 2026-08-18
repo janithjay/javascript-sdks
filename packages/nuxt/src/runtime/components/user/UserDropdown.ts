@@ -32,7 +32,7 @@ const UserDropdown: Component = defineComponent({
   },
   setup(props: {className: string}, {slots, emit}: {emit: any; slots: any}): () => VNode | VNode[] | null {
     const {user, signOut} = useThunderID();
-    useUser();
+    const {revalidateProfile} = useUser();
     const isProfileModalOpen: Ref<boolean> = ref(false);
 
     return (): VNode | VNode[] | null =>
@@ -44,6 +44,7 @@ const UserDropdown: Component = defineComponent({
           isProfileModalOpen: isProfileModalOpen.value,
           onProfileClick: (): void => {
             isProfileModalOpen.value = true;
+            void revalidateProfile();
             emit('profileClick');
           },
           onProfileModalClose: (): void => {

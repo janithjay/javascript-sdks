@@ -19,7 +19,7 @@ import {useState, useRuntimeConfig} from '#imports';
  * - {@link I18nProvider}      ← `preferences.i18n`
  * - {@link ThemeProvider}     ← `mode`
  * - {@link FlowProvider}
- * - {@link UserProvider}      ← `profile`, `flattenedProfile`, `schemas`,
+ * - {@link UserProvider}      ← `profile`, `flattenedProfile`, `userSchema`,
  *                               `updateProfile`, `revalidateProfile`, `onUpdateProfile`
  *
  * The `THUNDERID_KEY` (config + auth state + actions) is still provided at the
@@ -130,12 +130,18 @@ const ThunderIDRoot: Component = defineComponent({
     };
 
     /**
-     * Re-fetch the full user profile from `/api/auth/user/profile`.
+     * Re-fetch the full user profile (and its attribute schema) from `/api/auth/user/profile`.
      */
     const revalidateProfile = async (): Promise<void> => {
       try {
-        const res: UserProfile = await $fetch<UserProfile>('/api/auth/user/profile');
-        if (res) userProfileState.value = res;
+        const res: (UserProfile & {userSchema?: Record<string, AttributeSchema> | null}) | null = await $fetch<
+          UserProfile & {userSchema?: Record<string, AttributeSchema> | null}
+        >('/api/auth/user/profile');
+        if (res) {
+          const {userSchema: fetchedSchema, ...profile} = res;
+          userProfileState.value = profile as UserProfile;
+          userSchemaState.value = fetchedSchema ?? null;
+        }
       } catch {
         // Non-fatal — profile stays stale until the next navigation.
       }
