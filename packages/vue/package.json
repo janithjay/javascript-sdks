@@ -1,6 +1,6 @@
 {
   "name": "@thunderid/vue",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Vue SDK for ThunderID",
   "keywords": [
     "thunderid",
