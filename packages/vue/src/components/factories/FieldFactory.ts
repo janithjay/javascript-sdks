@@ -137,6 +137,14 @@ export const createField = (config: FieldConfig): VNode => {
         type: 'email',
       } as Record<string, unknown>);
 
+    case FieldType.Tel:
+      return h(TextField, {
+        ...commonProps,
+        autocomplete: 'tel',
+        'onUpdate:modelValue': onChange,
+        type: 'tel',
+      } as Record<string, unknown>);
+
     case FieldType.Date:
       return h(DatePicker, {
         ...commonProps,

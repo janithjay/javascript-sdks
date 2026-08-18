@@ -23,7 +23,7 @@ import {
   PrefixOption,
 } from '@thunderid/browser';
 import DOMPurify from 'dompurify';
-import {ChangeEvent, cloneElement, CSSProperties, ReactElement} from 'react';
+import {ChangeEvent, cloneElement, CSSProperties, FormEvent, ReactElement} from 'react';
 import {
   ComponentRenderer,
   ComponentRenderContext,
@@ -607,8 +607,17 @@ const createAuthComponentFromFlow = (
           )
           .filter(Boolean);
 
+        // The submit button's `type="submit"` (and pressing Enter in a field) would
+        // otherwise trigger the browser's native form submission — a GET request to
+        // the current URL with all field values (including passwords) as query params.
+        // Actual submission is handled entirely via `onClick`/`onSubmit` above.
         return (
-          <form id={component.id} key={key} className={cx(component.classes, formClass)}>
+          <form
+            id={component.id}
+            key={key}
+            className={cx(component.classes, formClass)}
+            onSubmit={(event: FormEvent<HTMLFormElement>): void => event.preventDefault()}
+          >
             {blockComponents}
           </form>
         );

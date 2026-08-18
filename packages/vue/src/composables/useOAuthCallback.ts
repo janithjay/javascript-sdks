@@ -96,6 +96,13 @@ export function useOAuthCallback({
         return;
       }
 
+      // SSR-safe: `window`/`sessionStorage` are unavailable server-side (e.g. during Nuxt's
+      // SSR render pass). The real OAuth-callback processing only ever needs to happen once
+      // mounted client-side, where the redirect actually lands.
+      if (typeof window === 'undefined') {
+        return;
+      }
+
       const urlParams: URLSearchParams = new URLSearchParams(window.location.search);
       const code: string | null = urlParams.get('code');
       const nonce: string | null = urlParams.get('nonce');

@@ -32,19 +32,23 @@ export function useThunderID(): ThunderIDContext {
   /**
    * Sign in the user.
    *
-   * **Embedded flow**: call with `(payload, request)` where `payload` has a
-   * `flowId` property (use `{flowId: ''}` to initiate).  The method POSTs to
-   * `/api/auth/signin` and returns the flow-step response or redirects on
-   * completion.
+   * **Embedded flow**: call with `(payload, request)` where `payload` has an
+   * `applicationId` (start a new flow) or `executionId` (continue one) property
+   * — mirrors `ThunderIDNuxtClient.signIn`'s own payload detection server-side.
+   * The method POSTs to `/api/auth/signin` and returns the flow-step response
+   * or a synthesized completion response once the server has set the session
+   * cookie.
    *
    * **Redirect flow**: call with an optional `options` object (or no args).
    * Navigates to `/api/auth/signin` (which triggers a server redirect to the
    * IdP).
    */
   const signIn = async (...args: any[]): Promise<any> => {
-    // Embedded-flow path: second arg is a non-null object with `flowId`.
+    // Embedded-flow path: arg0 is a non-null object with `applicationId` (new flow)
+    // or `executionId` (continuing one).
     const arg0: unknown = args[0];
-    const isEmbedded: boolean = typeof arg0 === 'object' && arg0 !== null && 'flowId' in arg0;
+    const isEmbedded: boolean =
+      typeof arg0 === 'object' && arg0 !== null && ('applicationId' in arg0 || 'executionId' in arg0);
 
     if (isEmbedded) {
       const payload: Record<string, unknown> = arg0 as Record<string, unknown>;
@@ -57,9 +61,8 @@ export function useThunderID(): ThunderIDContext {
       // Flow complete — server has set the session cookie. Refresh the client
       // auth state so `useThunderID().isSignedIn` flips to true *immediately*
       // (without waiting for a full page reload). Then return a synthetic
-      // Complete response so `BaseSignIn` emits its `success` event
-      // and the wrapper component (`<ThunderIDSignIn>`) drives navigation via
-      // `onSuccess`.
+      // Complete response so the `<SignIn>` container's `handleComplete`
+      // emits `success` and drives navigation via `afterSignInUrl`.
       //
       // `authData` is intentionally empty: the auth code / state were already
       // consumed server-side in `signin.post.ts`, so there is nothing to
@@ -113,7 +116,7 @@ export function useThunderID(): ThunderIDContext {
     const payload: unknown = args[0];
 
     // Embedded-flow path: arg0 is a non-null object with a `flowType` key
-    // (see `ThunderIDSignUp`'s `handleInitialize`/`handleOnSubmit`).
+    // (see `SignUp`'s `handleInitialize`/`handleOnSubmit`).
     const isEmbedded: boolean = typeof payload === 'object' && payload !== null && 'flowType' in payload;
 
     if (isEmbedded) {
@@ -124,7 +127,7 @@ export function useThunderID(): ThunderIDContext {
 
       // Flow complete — the server route replies with `{ afterSignUpUrl }`
       // (no `flowStatus`). Synthesize one so `BaseSignUp`'s completion check
-      // (`response.flowStatus === Complete`) fires and `<ThunderIDSignUp>`'s
+      // (`response.flowStatus === Complete`) fires and `<SignUp>`'s
       // `handleComplete` drives the post-registration redirect.
       if (res.data?.afterSignUpUrl) {
         return {afterSignUpUrl: res.data.afterSignUpUrl, flowStatus: EmbeddedSignUpFlowStatus.Complete};

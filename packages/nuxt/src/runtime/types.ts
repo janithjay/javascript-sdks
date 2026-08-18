@@ -4,6 +4,7 @@
 import type {
   AttributeSchema,
   AuthClientConfig,
+  FlowMetadataResponse,
   I18nPreferences,
   TokenEndpointAuthMethod,
   User,
@@ -18,6 +19,12 @@ import type {JWTPayload} from 'jose';
 export interface ThunderIDNuxtConfig extends AuthClientConfig {
   /** Secret for signing session JWTs (use THUNDERID_SESSION_SECRET env var) */
   sessionSecret?: string;
+  /**
+   * Flow Secret for this app. Sent in the `Flow-Secret` request header to authenticate the app
+   * when an embedded (app-native) flow starts (use THUNDERID_FLOW_SECRET env var). Server-only,
+   * never exposed to the browser.
+   */
+  flowSecret?: string;
   /** Platform identifier */
   platform?: any;
   /**

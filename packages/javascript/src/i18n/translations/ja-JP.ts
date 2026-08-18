@@ -59,6 +59,7 @@ const translations: I18nTranslations = {
   /* Base Sign In */
   'signin.heading': 'ログイン',
   'signin.subheading': '続行するには認証情報を入力してください。',
+  'signin.images.app_logo.alt': 'アプリケーションロゴ',
 
   /* Base Sign Up */
   'signup.heading': 'サインアップ',

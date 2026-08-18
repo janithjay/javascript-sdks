@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {generateFlattenedUserProfile} from '@thunderid/browser';
-import type {AttributeSchema, UpdateMeProfileConfig, User, UserProfile} from '@thunderid/node';
+import type {AttributeSchema, FlowMetadataResponse, UpdateMeProfileConfig, User, UserProfile} from '@thunderid/node';
 import {FlowMetaProvider, FlowProvider, I18nProvider, ThemeProvider, UserProvider} from '@thunderid/vue';
 import {defineComponent, h, type Component, type Ref, type SetupContext, type VNode} from 'vue';
 import type {ThunderIDAuthState, ThunderIDNuxtConfig} from '../types';
-import {getAuthStateKey, getUserProfileStateKey, getUserSchemaStateKey} from '../utils/stateKeys';
+import {getAuthStateKey, getFlowMetaStateKey, getUserProfileStateKey, getUserSchemaStateKey} from '../utils/stateKeys';
 import {useState, useRuntimeConfig} from '#imports';
 
 /**
@@ -61,6 +61,9 @@ const ThunderIDRoot: Component = defineComponent({
     > | null>(getUserSchemaStateKey(vendor));
     // Used by onUpdateProfile to keep the top-level auth user claim in sync.
     const authState: Ref<ThunderIDAuthState> = useState<ThunderIDAuthState>(getAuthStateKey(vendor));
+    const flowMetaState: Ref<FlowMetadataResponse | null> = useState<FlowMetadataResponse | null>(
+      getFlowMetaStateKey(vendor),
+    );
 
     // ── Preferences from runtime config ────────────────────────────────────
     const prefs: ThunderIDNuxtConfig['preferences'] | undefined = runtimeThunderIDConfig?.preferences;
@@ -101,8 +104,8 @@ const ThunderIDRoot: Component = defineComponent({
      * Signature matches `UserProvider.updateProfile` exactly.
      *
      * On success, applies an optimistic local update via `onUpdateProfile`
-     * so consumers of `useUser()` (e.g. `<ThunderIDUserProfile>`) and
-     * `useThunderID().user` (e.g. `<ThunderIDUser>`) reflect the new value
+     * so consumers of `useUser()` (e.g. `<UserProfile>`) and
+     * `useThunderID().user` (e.g. `<User>`) reflect the new value
      * without waiting for the next navigation/SSR refetch.
      */
     const updateProfile = async (
@@ -138,15 +141,19 @@ const ThunderIDRoot: Component = defineComponent({
       }
     };
 
+    /**
+     * Fetches flow metadata via the `/api/auth/meta` Nitro route instead of `FlowMetaProvider`'s
+     * default direct browser-to-`baseUrl` fetch — so the browser never talks to the ThunderID
+     * server directly and no CORS configuration is required there. Used for both the initial
+     * fetch (when SSR seeding via `flowMetaState` didn't happen, e.g. it failed server-side) and
+     * subsequent `switchLanguage()` calls.
+     */
+    const fetchMeta = async (params: {applicationId?: string; language?: string}): Promise<FlowMetadataResponse> =>
+      $fetch<FlowMetadataResponse>('/api/auth/meta', {
+        query: {...(params.language ? {language: params.language} : {})},
+      });
+
     // ── Render tree — mirrors ThunderIDClientProvider (Next.js) ─────────────
-    //
-    // FlowMetaProvider is mounted unconditionally with `enabled: false` (V1
-    // platform default). It still provides `FLOW_META_KEY` to descendants so
-    // `useFlowMeta()` (called by `BaseSignUp`, v2 `BaseSignIn`,
-    // `BaseAcceptInvite`, `BaseInviteUser`) returns a real context with
-    // `meta: null` instead of throwing. When the Nuxt SDK gains a `platform`
-    // config option, derive `enabled` from it the same way `ThunderIDProvider`
-    // does (`enabled: platform === Platform.ThunderID`).
     return (): VNode =>
       h(
         I18nProvider,
@@ -155,7 +162,7 @@ const ThunderIDRoot: Component = defineComponent({
           default: (): VNode =>
             h(
               FlowMetaProvider,
-              {enabled: false},
+              {enabled: true, fetchMeta, initialMeta: flowMetaState.value},
               {
                 default: (): VNode =>
                   h(

@@ -116,6 +116,7 @@ const SignIn: Component = defineComponent({
     const components: Ref<EmbeddedFlowComponent[]> = ref([]);
     const additionalData: Ref<Record<string, any>> = ref({});
     const currentExecutionId: Ref<string | null> = ref(null);
+    const challengeTokenRef: {current: string | null} = {current: null};
     const isFlowInitialized: Ref<boolean> = ref(false);
     const flowError: Ref<Error | null> = ref(null);
     const isSubmitting: Ref<boolean> = ref(false);
@@ -148,6 +149,7 @@ const SignIn: Component = defineComponent({
     const clearFlowState = async (): Promise<void> => {
       persistExecutionId(null);
       isFlowInitialized.value = false;
+      await setChallengeToken(null);
       const sm = getStorageManager();
       if (sm) {
         await sm.removeHybridDataParameter('authId');
@@ -199,6 +201,26 @@ const SignIn: Component = defineComponent({
       flowError.value = error;
       isFlowInitialized.value = true;
       emit('error', error);
+    };
+
+    /**
+     * Updates challengeTokenRef immediately and persists via the provider's
+     * StorageManager so the token survives OAuth redirects.
+     */
+    const setChallengeToken = async (challengeToken: string | null): Promise<void> => {
+      challengeTokenRef.current = challengeToken;
+      try {
+        const sm = getStorageManager();
+        if (sm) {
+          if (challengeToken) {
+            await sm.setTemporaryDataParameter('challengeToken', challengeToken);
+          } else {
+            await sm.removeTemporaryDataParameter('challengeToken');
+          }
+        }
+      } catch {
+        // Ignore storage failures; the in-memory ref still has the current value.
+      }
     };
 
     // ── Flow initialization ───────────────────────────────────────────────
@@ -265,6 +287,7 @@ const SignIn: Component = defineComponent({
         } = normalizeFlowResponse(response, t, {resolveTranslations: false}, flowMeta.value);
 
         if (normalizedExecutionId && normalizedComponents) {
+          await setChallengeToken(response.challengeToken ?? null);
           persistExecutionId(normalizedExecutionId);
           components.value = normalizedComponents;
           additionalData.value = normalizedAdditionalData ?? {};
@@ -343,6 +366,7 @@ const SignIn: Component = defineComponent({
 
         const response: EmbeddedSignInFlowResponse = (await signIn({
           executionId: effectiveExecutionId,
+          ...(challengeTokenRef.current ? {challengeToken: challengeTokenRef.current} : {}),
           ...payload,
           inputs: processedInputs,
         })) as EmbeddedSignInFlowResponse;
@@ -383,6 +407,8 @@ const SignIn: Component = defineComponent({
           return;
         }
 
+        await setChallengeToken(response.challengeToken ?? null);
+
         const {
           executionId: normalizedExecutionId,
           components: normalizedComponents,
@@ -411,6 +437,7 @@ const SignIn: Component = defineComponent({
             await sm.removeHybridDataParameter('authId');
           }
           cleanupOAuthUrlParams();
+          await setChallengeToken(null);
 
           emit('success', {
             redirectUrl: finalRedirectUrl,
@@ -559,6 +586,17 @@ const SignIn: Component = defineComponent({
 
     onMounted(async () => {
       const urlParams: UrlParams = getUrlParams();
+
+      // Restore any challenge token persisted before an OAuth redirect.
+      try {
+        const sm = getStorageManager();
+        const tempData: any = await sm?.getTemporaryData?.();
+        if (tempData?.challengeToken) {
+          challengeTokenRef.current = tempData.challengeToken as string;
+        }
+      } catch {
+        // Ignore — the flow will re-fetch a fresh challengeToken from the next response.
+      }
 
       if (urlParams.authId) {
         const sm = getStorageManager();

@@ -6,19 +6,19 @@ const dark = useState('dark', () => false)
   <div :class="['app', { dark }]">
     <AppNav />
 
-    <ThunderIDSignedIn>
+    <SignedIn>
       <main class="auth-main">
         <div class="auth-card">
           <p class="auth-subtitle">You're already signed in.</p>
           <NuxtLink to="/" class="btn-primary">Go home</NuxtLink>
         </div>
       </main>
-    </ThunderIDSignedIn>
+    </SignedIn>
 
-    <ThunderIDSignedOut>
+    <SignedOut>
       <main class="auth-main">
-        <ThunderIDSignUp after-sign-up-url="/" />
+        <SignUp after-sign-up-url="/" />
       </main>
-    </ThunderIDSignedOut>
+    </SignedOut>
   </div>
 </template>

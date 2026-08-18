@@ -59,6 +59,7 @@ const translations: I18nTranslations = {
   /* Base Sign In */
   'signin.heading': 'Iniciar Sessão',
   'signin.subheading': 'Introduza as suas credenciais para continuar.',
+  'signin.images.app_logo.alt': 'Logótipo da aplicação',
 
   /* Base Sign Up */
   'signup.heading': 'Registar-se',

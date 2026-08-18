@@ -59,6 +59,7 @@ export interface I18nTranslations {
   /* Base Sign In */
   'signin.heading': string;
   'signin.subheading': string;
+  'signin.images.app_logo.alt': string;
 
   /* Base Sign Up */
   'signup.heading': string;

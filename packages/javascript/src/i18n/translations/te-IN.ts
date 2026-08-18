@@ -59,6 +59,7 @@ const translations: I18nTranslations = {
   /* Base Sign In */
   'signin.heading': 'సైన్ ఇన్ చేయండి',
   'signin.subheading': 'కొనసాగించడానికి మీ వివరాలు ఇవ్వండి.',
+  'signin.images.app_logo.alt': 'అప్లికేషన్ లోగో',
 
   /* Base Sign Up */
   'signup.heading': 'సైన్ అప్ చేయండి',

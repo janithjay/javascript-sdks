@@ -23,7 +23,7 @@ type SelectProps = Readonly<{
 }>;
 
 const Select: Component = defineComponent({
-  name: 'ThunderIDSelect',
+  name: 'Select',
   props: {
     disabled: {default: false, type: Boolean},
     error: {default: undefined, type: String},

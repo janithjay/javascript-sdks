@@ -14,12 +14,12 @@ import {useThunderID} from '#imports';
  *
  * @example
  * ```vue
- * <ThunderIDUser>
+ * <User>
  *   <template #default="{ user }">
  *     <p>Welcome, {{ user.givenName }}!</p>
  *   </template>
  *   <template #fallback><p>Not signed in.</p></template>
- * </ThunderIDUser>
+ * </User>
  * ```
  */
 const User: Component = defineComponent({

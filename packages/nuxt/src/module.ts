@@ -60,8 +60,9 @@ export default defineNuxtModule<ThunderIDNuxtConfig>({
       },
     );
 
-    const privateConfig: {clientSecret: string; sessionSecret: string} = {
+    const privateConfig: {clientSecret: string; flowSecret: string; sessionSecret: string} = {
       clientSecret: process.env.THUNDERID_CLIENT_SECRET || userOptions.clientSecret || '',
+      flowSecret: process.env.THUNDERID_FLOW_SECRET || userOptions.flowSecret || '',
       sessionSecret: process.env.THUNDERID_SESSION_SECRET || userOptions.sessionSecret || '',
     };
 
@@ -78,7 +79,7 @@ export default defineNuxtModule<ThunderIDNuxtConfig>({
     options.runtimeConfig.thunderid = defu(
       (options.runtimeConfig.thunderid as Record<string, unknown>) || {},
       privateConfig,
-    ) as {clientSecret: string; sessionSecret: string};
+    ) as {clientSecret: string; flowSecret: string; sessionSecret: string};
 
     options.runtimeConfig.public.thunderid = defu(
       (options.runtimeConfig.public.thunderid as Record<string, unknown>) || {},
@@ -129,6 +130,13 @@ export default defineNuxtModule<ThunderIDNuxtConfig>({
         `[${PACKAGE_NAME}] SECURITY: sessionSecret found in public config. Removed. Use THUNDERID_SESSION_SECRET env var.`,
       );
     }
+    if (publicThunderID?.flowSecret) {
+      delete publicThunderID.flowSecret;
+      // eslint-disable-next-line no-console
+      console.error(
+        `[${PACKAGE_NAME}] SECURITY: flowSecret found in public config. Removed. Use THUNDERID_FLOW_SECRET env var.`,
+      );
+    }
 
     // Register server API routes
     const serverRoutes: ServerRoute[] = [
@@ -158,6 +166,7 @@ export default defineNuxtModule<ThunderIDNuxtConfig>({
       // ── Session / token ───────────────────────────────────────────────
       {handler: resolve('./runtime/server/routes/auth/session/session.get'), route: '/api/auth/session'},
       {handler: resolve('./runtime/server/routes/auth/session/token.get'), route: '/api/auth/token'},
+      {handler: resolve('./runtime/server/routes/auth/session/meta.get'), route: '/api/auth/meta'},
       // ── User ──────────────────────────────────────────────────────────
       {handler: resolve('./runtime/server/routes/auth/user/user.get'), route: '/api/auth/user'},
       {handler: resolve('./runtime/server/routes/auth/user/profile.get'), route: '/api/auth/user/profile'},
@@ -208,41 +217,40 @@ export default defineNuxtModule<ThunderIDNuxtConfig>({
       name: 'ThunderIDRoot',
     });
 
-    // Register Nuxt-specific component containers with the `ThunderID` prefix.
+    // Register Nuxt-specific component containers under their bare names —
+    // matching the unprefixed names @thunderid/react and @thunderid/vue already
+    // export (`SignInButton`, `SignIn`, `UserProfile`, etc.).
     //
     // Each container lives at `./runtime/components/<Name>.ts` and:
     //   1. Imports the corresponding BaseXxx from @thunderid/vue (not the Vue container).
     //   2. Wires composables through `#imports` (Nuxt auto-import layer).
     //   3. Uses `navigateTo` from `#app` for all navigation — SSR-safe, no window.location.
     //
-    // This mirrors the Next.js SDK pattern where Base components come from
-    // @thunderid/react and host-specific containers live in the Next.js package.
-    //
     // NOTE: Composables (useUser, useTheme, useFlow, useI18n) remain direct
     // re-exports from @thunderid/vue via addImports above — only the components
     // need Nuxt wrappers.
 
     // ── Control flow ────────────────────────────────────────────────────────
-    addComponent({filePath: resolve('./runtime/components/control/SignedIn'), name: 'ThunderIDSignedIn'});
-    addComponent({filePath: resolve('./runtime/components/control/SignedOut'), name: 'ThunderIDSignedOut'});
-    addComponent({filePath: resolve('./runtime/components/control/Loading'), name: 'ThunderIDLoading'});
+    addComponent({filePath: resolve('./runtime/components/control/SignedIn'), name: 'SignedIn'});
+    addComponent({filePath: resolve('./runtime/components/control/SignedOut'), name: 'SignedOut'});
+    addComponent({filePath: resolve('./runtime/components/control/Loading'), name: 'Loading'});
 
     // ── Action buttons ───────────────────────────────────────────────────────
-    addComponent({filePath: resolve('./runtime/components/actions/SignInButton'), name: 'ThunderIDSignInButton'});
-    addComponent({filePath: resolve('./runtime/components/actions/SignOutButton'), name: 'ThunderIDSignOutButton'});
-    addComponent({filePath: resolve('./runtime/components/actions/SignUpButton'), name: 'ThunderIDSignUpButton'});
+    addComponent({filePath: resolve('./runtime/components/actions/SignInButton'), name: 'SignInButton'});
+    addComponent({filePath: resolve('./runtime/components/actions/SignOutButton'), name: 'SignOutButton'});
+    addComponent({filePath: resolve('./runtime/components/actions/SignUpButton'), name: 'SignUpButton'});
 
     // ── Embedded auth flows ──────────────────────────────────────────────────
-    addComponent({filePath: resolve('./runtime/components/auth/SignIn'), name: 'ThunderIDSignIn'});
-    addComponent({filePath: resolve('./runtime/components/auth/SignUp'), name: 'ThunderIDSignUp'});
+    addComponent({filePath: resolve('./runtime/components/auth/SignIn'), name: 'SignIn'});
+    addComponent({filePath: resolve('./runtime/components/auth/SignUp'), name: 'SignUp'});
 
     // ── User ─────────────────────────────────────────────────────────────────
-    addComponent({filePath: resolve('./runtime/components/user/User'), name: 'ThunderIDUser'});
-    addComponent({filePath: resolve('./runtime/components/user/UserProfile'), name: 'ThunderIDUserProfile'});
-    addComponent({filePath: resolve('./runtime/components/user/UserDropdown'), name: 'ThunderIDUserDropdown'});
+    addComponent({filePath: resolve('./runtime/components/user/User'), name: 'User'});
+    addComponent({filePath: resolve('./runtime/components/user/UserProfile'), name: 'UserProfile'});
+    addComponent({filePath: resolve('./runtime/components/user/UserDropdown'), name: 'UserDropdown'});
 
     // ── Auth callback ────────────────────────────────────────────────────────
-    addComponent({filePath: resolve('./runtime/components/auth/Callback'), name: 'ThunderIDCallback'});
+    addComponent({filePath: resolve('./runtime/components/auth/Callback'), name: 'Callback'});
 
     // Tell Vite to pre-bundle the CJS-only packages that @thunderid/browser,
     // @thunderid/javascript, and @thunderid/vue carry as external dependencies.
@@ -300,6 +308,7 @@ declare module '@nuxt/schema' {
   interface RuntimeConfig {
     thunderid: {
       clientSecret: string;
+      flowSecret: string;
       sessionSecret: string;
     };
   }

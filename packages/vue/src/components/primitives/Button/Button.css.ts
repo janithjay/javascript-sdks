@@ -27,11 +27,11 @@ const BUTTON_CSS = `
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--thunder-spacing-unit) * 0.75);
-  border-radius: var(--thunder-button-borderRadius);
-  font-family: var(--thunder-typography-fontFamily);
-  font-weight: var(--thunder-button-fontWeight);
-  letter-spacing: var(--thunder-typography-letterSpacing-normal);
+  gap: calc(var(--thunderid-spacing-unit) * 0.75);
+  border-radius: var(--thunderid-button-borderRadius);
+  font-family: var(--thunderid-typography-fontFamily);
+  font-weight: var(--thunderid-button-fontWeight);
+  letter-spacing: var(--thunderid-typography-letterSpacing-normal);
   cursor: pointer;
   outline: none;
   text-decoration: none;
@@ -40,12 +40,12 @@ const BUTTON_CSS = `
   border-style: solid;
   box-sizing: border-box;
   transition:
-    background-color var(--thunder-transition-fast),
-    color var(--thunder-transition-fast),
-    border-color var(--thunder-transition-fast),
-    box-shadow var(--thunder-transition-fast),
-    opacity var(--thunder-transition-fast),
-    transform var(--thunder-transition-fast);
+    background-color var(--thunderid-transition-fast),
+    color var(--thunderid-transition-fast),
+    border-color var(--thunderid-transition-fast),
+    box-shadow var(--thunderid-transition-fast),
+    opacity var(--thunderid-transition-fast),
+    transform var(--thunderid-transition-fast);
   position: relative;
   vertical-align: middle;
   -webkit-font-smoothing: antialiased;
@@ -55,27 +55,27 @@ const BUTTON_CSS = `
 
 .thunderid-button:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 var(--thunder-focus-ring-width) var(--thunder-focus-ring-color);
+  box-shadow: 0 0 0 var(--thunderid-focus-ring-width) var(--thunderid-focus-ring-color);
 }
 
 /* -- Sizes -- */
 
 .thunderid-button--small {
-  padding: 0 var(--thunder-button-sm-paddingX);
-  font-size: var(--thunder-button-sm-fontSize);
-  height: var(--thunder-button-sm-height);
+  padding: 0 var(--thunderid-button-sm-paddingX);
+  font-size: var(--thunderid-button-sm-fontSize);
+  height: var(--thunderid-button-sm-height);
 }
 
 .thunderid-button--medium {
-  padding: 0 var(--thunder-button-md-paddingX);
-  font-size: var(--thunder-button-md-fontSize);
-  height: var(--thunder-button-md-height);
+  padding: 0 var(--thunderid-button-md-paddingX);
+  font-size: var(--thunderid-button-md-fontSize);
+  height: var(--thunderid-button-md-height);
 }
 
 .thunderid-button--large {
-  padding: 0 var(--thunder-button-lg-paddingX);
-  font-size: var(--thunder-button-lg-fontSize);
-  height: var(--thunder-button-lg-height);
+  padding: 0 var(--thunderid-button-lg-paddingX);
+  font-size: var(--thunderid-button-lg-fontSize);
+  height: var(--thunderid-button-lg-height);
 }
 
 /* -- Modifiers -- */
@@ -94,35 +94,35 @@ const BUTTON_CSS = `
 /* -- Solid variants -- */
 
 .thunderid-button--solid.thunderid-button--primary {
-  background-color: var(--thunder-color-primary-main);
-  color: var(--thunder-color-primary-contrastText);
-  border-color: var(--thunder-color-primary-main);
+  background-color: var(--thunderid-color-primary-main);
+  color: var(--thunderid-color-primary-contrastText);
+  border-color: var(--thunderid-color-primary-main);
 }
 .thunderid-button--solid.thunderid-button--primary:hover:not(:disabled) {
-  background-color: var(--thunder-color-primary-dark);
-  border-color: var(--thunder-color-primary-dark);
+  background-color: var(--thunderid-color-primary-dark);
+  border-color: var(--thunderid-color-primary-dark);
 }
 .thunderid-button--solid.thunderid-button--primary:active:not(:disabled) {
   transform: scale(0.98);
 }
 
 .thunderid-button--solid.thunderid-button--secondary {
-  background-color: var(--thunder-color-secondary-light);
-  color: var(--thunder-color-secondary-main);
-  border-color: var(--thunder-color-border);
+  background-color: var(--thunderid-color-secondary-light);
+  color: var(--thunderid-color-secondary-main);
+  border-color: var(--thunderid-color-border);
 }
 .thunderid-button--solid.thunderid-button--secondary:hover:not(:disabled) {
-  background-color: var(--thunder-color-border);
-  border-color: var(--thunder-color-border);
+  background-color: var(--thunderid-color-border);
+  border-color: var(--thunderid-color-border);
 }
 .thunderid-button--solid.thunderid-button--secondary:active:not(:disabled) {
   transform: scale(0.98);
 }
 
 .thunderid-button--solid.thunderid-button--danger {
-  background-color: var(--thunder-color-error-main);
+  background-color: var(--thunderid-color-error-main);
   color: #ffffff;
-  border-color: var(--thunder-color-error-main);
+  border-color: var(--thunderid-color-error-main);
 }
 .thunderid-button--solid.thunderid-button--danger:hover:not(:disabled) {
   filter: brightness(0.92);
@@ -135,11 +135,11 @@ const BUTTON_CSS = `
 
 .thunderid-button--outline.thunderid-button--primary {
   background-color: transparent;
-  color: var(--thunder-color-primary-main);
-  border-color: var(--thunder-color-primary-main);
+  color: var(--thunderid-color-primary-main);
+  border-color: var(--thunderid-color-primary-main);
 }
 .thunderid-button--outline.thunderid-button--primary:hover:not(:disabled) {
-  background-color: var(--thunder-color-primary-light);
+  background-color: var(--thunderid-color-primary-light);
 }
 .thunderid-button--outline.thunderid-button--primary:active:not(:disabled) {
   transform: scale(0.98);
@@ -147,12 +147,12 @@ const BUTTON_CSS = `
 
 .thunderid-button--outline.thunderid-button--secondary {
   background-color: transparent;
-  color: var(--thunder-color-secondary-main);
-  border-color: var(--thunder-color-border);
+  color: var(--thunderid-color-secondary-main);
+  border-color: var(--thunderid-color-border);
 }
 .thunderid-button--outline.thunderid-button--secondary:hover:not(:disabled) {
-  background-color: var(--thunder-color-secondary-light);
-  border-color: var(--thunder-color-secondary-main);
+  background-color: var(--thunderid-color-secondary-light);
+  border-color: var(--thunderid-color-secondary-main);
 }
 .thunderid-button--outline.thunderid-button--secondary:active:not(:disabled) {
   transform: scale(0.98);
@@ -160,11 +160,11 @@ const BUTTON_CSS = `
 
 .thunderid-button--outline.thunderid-button--danger {
   background-color: transparent;
-  color: var(--thunder-color-error-main);
-  border-color: var(--thunder-color-error-main);
+  color: var(--thunderid-color-error-main);
+  border-color: var(--thunderid-color-error-main);
 }
 .thunderid-button--outline.thunderid-button--danger:hover:not(:disabled) {
-  background-color: var(--thunder-color-error-light);
+  background-color: var(--thunderid-color-error-light);
 }
 .thunderid-button--outline.thunderid-button--danger:active:not(:disabled) {
   transform: scale(0.98);
@@ -174,31 +174,31 @@ const BUTTON_CSS = `
 
 .thunderid-button--ghost.thunderid-button--primary {
   background-color: transparent;
-  color: var(--thunder-color-primary-main);
+  color: var(--thunderid-color-primary-main);
   border-color: transparent;
 }
 .thunderid-button--ghost.thunderid-button--primary:hover:not(:disabled) {
-  background-color: var(--thunder-color-primary-light);
+  background-color: var(--thunderid-color-primary-light);
   border-color: transparent;
 }
 
 .thunderid-button--ghost.thunderid-button--secondary {
   background-color: transparent;
-  color: var(--thunder-color-secondary-main);
+  color: var(--thunderid-color-secondary-main);
   border-color: transparent;
 }
 .thunderid-button--ghost.thunderid-button--secondary:hover:not(:disabled) {
-  background-color: var(--thunder-color-action-hover);
+  background-color: var(--thunderid-color-action-hover);
   border-color: transparent;
 }
 
 .thunderid-button--ghost.thunderid-button--danger {
   background-color: transparent;
-  color: var(--thunder-color-error-main);
+  color: var(--thunderid-color-error-main);
   border-color: transparent;
 }
 .thunderid-button--ghost.thunderid-button--danger:hover:not(:disabled) {
-  background-color: var(--thunder-color-error-light);
+  background-color: var(--thunderid-color-error-light);
   border-color: transparent;
 }
 
@@ -207,30 +207,30 @@ const BUTTON_CSS = `
 .thunderid-button--text {
   border-color: transparent;
   background-color: transparent;
-  padding-left: calc(var(--thunder-spacing-unit) * 0.25);
-  padding-right: calc(var(--thunder-spacing-unit) * 0.25);
+  padding-left: calc(var(--thunderid-spacing-unit) * 0.25);
+  padding-right: calc(var(--thunderid-spacing-unit) * 0.25);
 }
 
 .thunderid-button--text.thunderid-button--primary {
-  color: var(--thunder-color-primary-main);
+  color: var(--thunderid-color-primary-main);
 }
 .thunderid-button--text.thunderid-button--primary:hover:not(:disabled) {
-  color: var(--thunder-color-primary-dark);
+  color: var(--thunderid-color-primary-dark);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .thunderid-button--text.thunderid-button--secondary {
-  color: var(--thunder-color-secondary-main);
+  color: var(--thunderid-color-secondary-main);
 }
 .thunderid-button--text.thunderid-button--secondary:hover:not(:disabled) {
-  color: var(--thunder-color-text-primary);
+  color: var(--thunderid-color-text-primary);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .thunderid-button--text.thunderid-button--danger {
-  color: var(--thunder-color-error-main);
+  color: var(--thunderid-color-error-main);
 }
 .thunderid-button--text.thunderid-button--danger:hover:not(:disabled) {
   text-decoration: underline;
@@ -266,7 +266,7 @@ const BUTTON_CSS = `
   border-right-color: transparent;
   border-radius: 50%;
   animation: thunder-spin 0.6s linear infinite;
-  margin-left: calc(var(--thunder-spacing-unit) * 0.5);
+  margin-left: calc(var(--thunderid-spacing-unit) * 0.5);
 }
 `;
 

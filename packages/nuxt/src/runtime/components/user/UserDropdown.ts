@@ -21,7 +21,7 @@ import {useThunderID, useUser} from '#imports';
  *
  * @example
  * ```vue
- * <ThunderIDUserDropdown />
+ * <UserDropdown />
  * ```
  */
 const UserDropdown: Component = defineComponent({

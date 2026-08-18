@@ -25,7 +25,7 @@ A minimal Nuxt 3 application demonstrating ThunderID authentication with OAuth 2
    NUXT_PUBLIC_THUNDERID_APPLICATION_ID=<your-application-id>
    NUXT_PUBLIC_THUNDERID_SIGN_IN_URL=/signin
    NUXT_PUBLIC_THUNDERID_SIGN_UP_URL=/signup
-   THUNDERID_CLIENT_SECRET=<your-client-secret>
+   THUNDERID_FLOW_SECRET=<your-flow-secret>
    THUNDERID_SESSION_SECRET=<run: openssl rand -base64 32>
    ```
 
@@ -58,11 +58,15 @@ To send the user to ThunderID's hosted sign-in page instead, switch to the redir
 
    ```dotenv
    NUXT_PUBLIC_THUNDERID_CLIENT_ID=<your-client-id>
+   THUNDERID_CLIENT_SECRET=<your-client-secret>
    ```
 
-   `THUNDERID_CLIENT_SECRET` is already set from step 2 above and is reused as-is by both flows. To
-   switch back to the native flow, run `node scripts/prepare-dev.cjs --flow=native` (or manually
-   re-enable the native-flow vars and comment out the one above).
-3. Fill in `NUXT_PUBLIC_THUNDERID_CLIENT_ID` in `.env`, then restart the dev server.
+   Both values come from the application's Credentials tab in the console. The redirect-based flow
+   doesn't use `THUNDERID_FLOW_SECRET` (that's only sent when the native flow starts), so it can stay
+   set in `.env` from step 2 above, unused. To switch back to the native flow, run
+   `node scripts/prepare-dev.cjs --flow=native` (or manually re-enable the native-flow vars and comment
+   out the two above).
+3. Fill in `NUXT_PUBLIC_THUNDERID_CLIENT_ID` and `THUNDERID_CLIENT_SECRET` in `.env`, then restart the
+   dev server.
 
 </details>

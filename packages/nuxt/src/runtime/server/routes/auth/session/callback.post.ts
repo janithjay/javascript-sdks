@@ -25,7 +25,7 @@ function isTokenResponse(value: unknown): value is TokenResponse {
  * POST /api/auth/callback
  *
  * Exchanges an authorization code for tokens and issues a session cookie.
- * Called by the client-side `ThunderIDCallback` component after the IDP
+ * Called by the client-side `Callback` component after the IDP
  * redirects back with `?code=...&state=...`.
  *
  * Request body:

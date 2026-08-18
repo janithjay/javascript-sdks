@@ -128,6 +128,17 @@ const BaseSignIn: Component = defineComponent({
     isLoading: {default: false, type: Boolean},
     isTimeoutDisabled: {default: false, type: Boolean},
     messageClassName: {default: '', type: String},
+    // Declared explicitly (not just in the `BaseSignInProps` TS interface) because Vue treats any
+    // undeclared `onXxx`-named prop as a DOM event-listener fallthrough rather than a component
+    // prop. Without this, `props.onSubmit` is `undefined` at runtime — the callback instead falls
+    // through onto the rendered DOM tree via `{...attrs}` and fires when a native `submit` event
+    // bubbles up from a nested `<form>`, delivering the raw `SubmitEvent` instead of the flow payload.
+    onSubmit: {
+      default: undefined,
+      type: Function as PropType<
+        (payload: EmbeddedSignInFlowRequest, component: EmbeddedFlowComponent) => Promise<void>
+      >,
+    },
     size: {
       default: 'medium',
       type: String as PropType<'small' | 'medium' | 'large'>,
@@ -340,7 +351,11 @@ const BaseSignIn: Component = defineComponent({
           validateForm,
           values: formValues.value,
         };
-        return h('div', {class: containerClass, ...attrs}, slots['default'](renderProps));
+        return h(
+          'div',
+          {...attrs, class: [containerClass, (attrs as any).class].filter(Boolean).join(' ')},
+          slots['default'](renderProps),
+        );
       }
 
       // Loading state
@@ -367,25 +382,29 @@ const BaseSignIn: Component = defineComponent({
         (flowMessages as Ref<{message: string; type: string}[]>).value || [];
       const externalError: Error | null = props.error;
 
-      return h(Card, {class: containerClass, ...attrs, variant: props.variant}, () => [
-        // Show errors and flow messages
-        (externalError || messages.length > 0) &&
-          h(
-            'div',
-            {class: [withVendorCSSClassPrefix('signin__messages'), props.messageClassName].filter(Boolean).join(' ')},
-            [
-              externalError &&
-                h(Alert, {severity: 'error'}, () => h(Typography, {variant: 'body2'}, () => externalError.message)),
-              ...messages.map((msg: {message: string; type: string}, index: number) =>
-                h(Alert, {key: index, severity: msg.type === 'error' ? 'error' : 'info'}, () =>
-                  h(Typography, {variant: 'body2'}, () => msg.message),
+      return h(
+        Card,
+        {...attrs, class: [containerClass, (attrs as any).class].filter(Boolean).join(' '), variant: props.variant},
+        () => [
+          // Show errors and flow messages
+          (externalError || messages.length > 0) &&
+            h(
+              'div',
+              {class: [withVendorCSSClassPrefix('signin__messages'), props.messageClassName].filter(Boolean).join(' ')},
+              [
+                externalError &&
+                  h(Alert, {severity: 'error'}, () => h(Typography, {variant: 'body2'}, () => externalError.message)),
+                ...messages.map((msg: {message: string; type: string}, index: number) =>
+                  h(Alert, {key: index, severity: msg.type === 'error' ? 'error' : 'info'}, () =>
+                    h(Typography, {variant: 'body2'}, () => msg.message),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        // Render flow components
-        h('div', {class: withVendorCSSClassPrefix('signin__content')}, renderComponents()),
-      ]);
+              ],
+            ),
+          // Render flow components
+          h('div', {class: withVendorCSSClassPrefix('signin__content')}, renderComponents()),
+        ],
+      );
     };
   },
 });

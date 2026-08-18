@@ -16,10 +16,10 @@ import {useThunderID} from '#imports';
  *
  * @example
  * ```vue
- * <ThunderIDSignedIn>
+ * <SignedIn>
  *   <p>Welcome!</p>
  *   <template #fallback><p>Please sign in.</p></template>
- * </ThunderIDSignedIn>
+ * </SignedIn>
  * ```
  */
 const SignedIn: Component = defineComponent({

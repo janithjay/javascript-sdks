@@ -14,10 +14,10 @@ import {useThunderID} from '#imports';
  *
  * @example
  * ```vue
- * <ThunderIDLoading>
+ * <Loading>
  *   <Spinner />
  *   <template #fallback><NuxtPage /></template>
- * </ThunderIDLoading>
+ * </Loading>
  * ```
  */
 const Loading: Component = defineComponent({

@@ -28,6 +28,7 @@ import signInAction from './actions/signInAction';
 import signOutAction from './actions/signOutAction';
 import signUpAction from './actions/signUpAction';
 import updateUserProfileAction from './actions/updateUserProfileAction';
+import getFlowMetaAction from './actions/getFlowMetaAction';
 import getClient from './getClient';
 import ThunderIDClientProvider from '../client/contexts/ThunderID/ThunderIDProvider.js';
 import {ThunderIDNextConfig} from '../models/config';
@@ -195,6 +196,7 @@ const ThunderIDServerProvider: FC<PropsWithChildren<ThunderIDServerProviderProps
       applicationId={config?.applicationId}
       baseUrl={config?.baseUrl}
       initialMeta={flowMeta}
+      fetchMeta={getFlowMetaAction}
       signIn={signInAction}
       clearSession={clearSession}
       refreshToken={refreshToken}

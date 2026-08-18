@@ -15,10 +15,10 @@ import {useThunderID} from '#imports';
  *
  * @example
  * ```vue
- * <ThunderIDSignedOut>
+ * <SignedOut>
  *   <p>Please sign in.</p>
  *   <template #fallback><p>You are signed in.</p></template>
- * </ThunderIDSignedOut>
+ * </SignedOut>
  * ```
  */
 const SignedOut: Component = defineComponent({

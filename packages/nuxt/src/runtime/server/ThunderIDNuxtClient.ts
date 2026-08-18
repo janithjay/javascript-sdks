@@ -4,10 +4,12 @@
 import {
   ThunderIDNodeClient,
   ThunderIDRuntimeError,
+  executeEmbeddedSignInFlow,
   extractUserClaimsFromIdToken,
   generateFlattenedUserProfile,
   getUsersMe,
   getUsersMeMeta,
+  isEmpty,
   resolveResourceEndpoint,
   updateMeProfile,
   type AttributeSchema,
@@ -53,6 +55,7 @@ class ThunderIDNuxtClient extends ThunderIDNodeClient<ThunderIDNuxtConfig> {
       clientSecret: config.clientSecret || undefined,
       enablePKCE: true,
       endpoints: config.endpoints,
+      flowSecret: config.flowSecret || undefined,
       scopes: config.scopes || ['openid', 'profile'],
       tokenRequest: config.tokenRequest,
     } as AuthClientConfig<ThunderIDNuxtConfig>;
@@ -92,8 +95,32 @@ class ThunderIDNuxtClient extends ThunderIDNodeClient<ThunderIDNuxtConfig> {
     );
   }
 
-  override signIn(...args: any[]): Promise<any> {
+  override async signIn(...args: any[]): Promise<any> {
     const arg0: unknown = args[0];
+    const arg1: unknown = args[1];
+
+    // An embedded (app-native) sign-in flow payload initiates or continues a `POST /flow/execute`
+    // step (identified by `applicationId` for a new flow or `executionId` to continue one). This
+    // is distinct from the OAuth authorization_code exchange handled below, which is used once a
+    // redirect-preceded flow completes and returns an authorization code.
+    const isEmbeddedFlowPayload: boolean =
+      typeof arg0 === 'object' &&
+      arg0 !== null &&
+      !isEmpty(arg0 as Record<string, unknown>) &&
+      ('executionId' in (arg0 as object) || 'applicationId' in (arg0 as object));
+
+    if (isEmbeddedFlowPayload) {
+      const request: {flowSecret?: string; url?: string} =
+        typeof arg1 === 'object' && arg1 !== null ? (arg1 as {flowSecret?: string; url?: string}) : {};
+      const configData: ThunderIDNuxtConfig = (await this.getStorageManager().getConfigData()) as ThunderIDNuxtConfig;
+
+      return executeEmbeddedSignInFlow({
+        baseUrl: configData?.baseUrl,
+        flowSecret: request.flowSecret ?? configData?.flowSecret,
+        payload: arg0,
+        url: resolveResourceEndpoint('flowExecute', configData, request.url),
+      });
+    }
 
     if (typeof arg0 === 'object' && arg0 !== null && ('code' in arg0 || 'state' in arg0)) {
       const payload: {code?: unknown; session_state?: unknown; state?: unknown} = arg0 as {

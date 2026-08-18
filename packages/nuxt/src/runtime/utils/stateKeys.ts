@@ -27,3 +27,10 @@ export const getUserProfileStateKey = (vendor?: string): string => `${getVendorP
  * Must stay in sync across the same three files as {@link getAuthStateKey}.
  */
 export const getUserSchemaStateKey = (vendor?: string): string => `${getVendorPrefix(vendor)}:user-schema`;
+
+/**
+ * Shared `useState` key for the SSR-hydrated flow metadata (`FlowMetadataResponse | null`).
+ *
+ * Must stay in sync across the same three files as {@link getAuthStateKey}.
+ */
+export const getFlowMetaStateKey = (vendor?: string): string => `${getVendorPrefix(vendor)}:flow-meta`;

@@ -161,6 +161,9 @@ export {hasAuthParamsInUrl} from './utils/hasAuthParamsInUrl';
 export {navigate} from './utils/navigate';
 export {http} from './utils/http';
 export {initiateOAuthRedirect} from './utils/oauth';
+export {extractErrorMessage, normalizeFlowResponse} from './utils/flowTransformer';
+export type {FlowErrorResponse, FlowTransformOptions} from './utils/flowTransformer';
+export {handlePasskeyAuthentication, handlePasskeyRegistration} from './utils/passkey';
 export {default as getUsersMeMeta} from './api/getUsersMeMeta';
 export * from './api/getUsersMeMeta';
 

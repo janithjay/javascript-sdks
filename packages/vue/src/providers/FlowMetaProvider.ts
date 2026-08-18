@@ -20,6 +20,7 @@ import {
   ref,
   watch,
   type Component,
+  type PropType,
   type Ref,
   type SetupContext,
   type VNode,
@@ -38,6 +39,8 @@ import type {ThunderIDContext, FlowMetaContextValue, I18nContextValue} from '../
  */
 interface FlowMetaProviderProps {
   enabled: boolean;
+  fetchMeta?: (params: {applicationId?: string; language?: string}) => Promise<FlowMetadataResponse>;
+  initialMeta?: FlowMetadataResponse | null;
 }
 
 const FlowMetaProvider: Component = defineComponent({
@@ -48,12 +51,29 @@ const FlowMetaProvider: Component = defineComponent({
      * @default true
      */
     enabled: {default: true, type: Boolean},
+    /**
+     * Overrides how flow metadata is fetched, routing the request through a caller-supplied
+     * function (e.g. a Nuxt server route called via `$fetch`) instead of this provider's default
+     * direct browser-to-`baseUrl` `fetch()`. Use this when the ThunderID server's `baseUrl` is a
+     * different origin than the app and CORS isn't (or can't be) configured for it — the override
+     * runs server-side, so the browser never talks to `baseUrl` directly.
+     *
+     * Called for both the initial fetch and `switchLanguage()`.
+     */
+    fetchMeta: {default: undefined, type: Function as PropType<FlowMetaProviderProps['fetchMeta']>},
+    /**
+     * Flow metadata resolved ahead of time (e.g. fetched server-side during SSR) and used to seed
+     * this provider's state. When present, the provider skips its own initial client-side fetch —
+     * avoiding a redundant request and the flash of untranslated i18n keys while that fetch is in
+     * flight — but still fetches normally on subsequent changes (e.g. an explicit language switch).
+     */
+    initialMeta: {default: null, type: Object as PropType<FlowMetadataResponse | null>},
   },
   setup(props: FlowMetaProviderProps, {slots}: SetupContext): () => VNode {
     const thunderIDContext: ThunderIDContext | undefined = inject(THUNDERID_KEY);
     const i18nContext: I18nContextValue | null = inject(I18N_KEY, null);
 
-    const meta: Ref<FlowMetadataResponse | null> = ref(null);
+    const meta: Ref<FlowMetadataResponse | null> = ref(props.initialMeta ?? null);
     const isLoading: Ref<boolean> = ref(false);
     const error: Ref<Error | null> = ref(null);
     const pendingLanguage: Ref<string | null> = ref(null);
@@ -74,11 +94,13 @@ const FlowMetaProvider: Component = defineComponent({
       error.value = null;
 
       try {
-        const result: FlowMetadataResponse = await getFlowMeta({
-          baseUrl,
-          url: flowMetaUrl,
-          ...(applicationId ? {id: applicationId, type: FlowMetaType.App} : {}),
-        });
+        const result: FlowMetadataResponse = props.fetchMeta
+          ? await props.fetchMeta({applicationId})
+          : await getFlowMeta({
+              baseUrl,
+              url: flowMetaUrl,
+              ...(applicationId ? {id: applicationId, type: FlowMetaType.App} : {}),
+            });
         meta.value = result;
       } catch (err: unknown) {
         error.value = err instanceof Error ? err : new Error(String(err));
@@ -94,12 +116,14 @@ const FlowMetaProvider: Component = defineComponent({
       error.value = null;
 
       try {
-        const result: FlowMetadataResponse = await getFlowMeta({
-          baseUrl,
-          url: flowMetaUrl,
-          ...(applicationId ? {id: applicationId, type: FlowMetaType.App} : {}),
-          language,
-        });
+        const result: FlowMetadataResponse = props.fetchMeta
+          ? await props.fetchMeta({applicationId, language})
+          : await getFlowMeta({
+              baseUrl,
+              url: flowMetaUrl,
+              ...(applicationId ? {id: applicationId, type: FlowMetaType.App} : {}),
+              language,
+            });
 
         // Inject translations before switching language so the i18n state is updated
         if (result.i18n?.translations && i18nContext?.injectBundles) {
@@ -164,6 +188,8 @@ const FlowMetaProvider: Component = defineComponent({
     );
 
     onMounted(() => {
+      // Seeded from SSR (or another caller) — skip the redundant first client-side fetch.
+      if (props.initialMeta) return;
       fetchFlowMeta();
     });
 

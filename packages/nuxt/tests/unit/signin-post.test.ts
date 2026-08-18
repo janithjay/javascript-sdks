@@ -28,6 +28,7 @@ const mockClientInstance = vi.hoisted(() => ({
     .fn<() => Promise<string>>()
     .mockResolvedValue('https://localhost:8090/oauth2/authorize?code_challenge=x'),
   signIn: vi.fn<() => Promise<any>>().mockResolvedValue(undefined),
+  getDecodedIdToken: vi.fn<() => Promise<any>>().mockResolvedValue({iat: 1000, exp: 4600, scope: 'openid profile'}),
 }));
 
 // ── Module mocks ──────────────────────────────────────────────────────────────
@@ -158,7 +159,7 @@ describe('POST /api/auth/signin', () => {
   });
 
   describe('embedded flow completion (SUCCESS_COMPLETED)', () => {
-    it('exchanges code and issues session cookie on flow completion', async () => {
+    it('establishes the session from the assertion and issues a session cookie on flow completion', async () => {
       const flowPayload = {
         flowId: 'flow-abc',
         selectedAuthenticator: {authenticatorId: 'BasicAuthenticator'},
@@ -169,31 +170,31 @@ describe('POST /api/auth/signin', () => {
       };
       const completedResponse = {
         flowStatus: 'COMPLETE',
-        authData: {
-          code: 'auth-code-xyz',
-          state: 'state-123',
-          session_state: 'sess-state-abc',
-        },
+        assertion: 'assertion-jwt-xyz',
       };
-      const tokenResponse = {accessToken: 'at-new', idToken: 'id-token'};
 
-      // First signIn call → completed flow response; second → token response.
-      mockClientInstance.signIn.mockResolvedValueOnce(completedResponse).mockResolvedValueOnce(tokenResponse);
+      mockClientInstance.signIn.mockResolvedValueOnce(completedResponse);
 
       vi.mocked(readBody).mockResolvedValue({payload: flowPayload});
 
       const result = await (signinHandler as any)(mockEvent);
 
-      expect(issueSessionCookie).toHaveBeenCalled();
+      expect(mockClientInstance.getDecodedIdToken).toHaveBeenCalledWith(expect.any(String), 'assertion-jwt-xyz');
+      expect(issueSessionCookie).toHaveBeenCalledWith(
+        mockEvent,
+        expect.any(String),
+        expect.objectContaining({accessToken: 'assertion-jwt-xyz', idToken: 'assertion-jwt-xyz'}),
+        expect.any(String),
+      );
       expect(deleteCookie).toHaveBeenCalled();
       expect(result).toEqual({data: {afterSignInUrl: '/dashboard'}, success: true});
     });
 
-    it('throws 502 when authorization code is missing from completed flow', async () => {
+    it('throws 502 when the completed flow response has no assertion', async () => {
       const flowPayload = {flowId: 'flow-abc', selectedAuthenticator: {authenticatorId: 'Basic'}, flowInputs: []};
-      const completedNoCode = {flowStatus: 'COMPLETE', authData: {}};
+      const completedNoAssertion = {flowStatus: 'COMPLETE'};
 
-      mockClientInstance.signIn.mockResolvedValueOnce(completedNoCode);
+      mockClientInstance.signIn.mockResolvedValueOnce(completedNoAssertion);
       vi.mocked(readBody).mockResolvedValue({payload: flowPayload});
 
       await expect((signinHandler as any)(mockEvent)).rejects.toMatchObject({

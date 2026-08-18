@@ -16,7 +16,7 @@ type TranslationFn = (key: string, params?: Record<string, string | number>) => 
 export const resolveTranslationsInObject = <T extends Record<string, any>>(
   obj: T,
   t: TranslationFn,
-  properties: string[] = ['label', 'placeholder', 'text', 'title', 'subtitle'],
+  properties: string[] = ['label', 'placeholder', 'text', 'title', 'subtitle', 'alt', 'src'],
   meta?: FlowMetadataResponse | null,
 ): T => {
   const resolved: T = {...obj};

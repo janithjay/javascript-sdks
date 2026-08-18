@@ -14,7 +14,7 @@ type CheckboxProps = Readonly<{
 }>;
 
 const Checkbox: Component = defineComponent({
-  name: 'ThunderIDCheckbox',
+  name: 'Checkbox',
   props: {
     disabled: {default: false, type: Boolean},
     error: {default: undefined, type: String},

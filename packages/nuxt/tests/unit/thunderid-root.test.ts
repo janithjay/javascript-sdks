@@ -127,9 +127,9 @@ describe('ThunderIDRoot component', () => {
     expect(root.type).toBe(I18nProvider);
     const flowMeta = findByType(root, FlowMetaProvider);
     expect(flowMeta).not.toBeNull();
-    // FlowMetaProvider defaults to V1 (`enabled: false`) — `useFlowMeta()`
-    // still resolves but the provider does not fetch v2 metadata.
-    expect(flowMeta!.props.enabled).toBe(false);
+    // FlowMetaProvider is always enabled — it fetches v2 flow metadata
+    // (theme/branding, server-side i18n translations) for `useFlowMeta()`.
+    expect(flowMeta!.props.enabled).toBe(true);
     const theme = findByType(root, ThemeProvider);
     expect(theme).not.toBeNull();
     const flow = findByType(root, FlowProvider);

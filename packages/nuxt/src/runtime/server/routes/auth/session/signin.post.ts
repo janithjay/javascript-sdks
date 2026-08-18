@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {EmbeddedSignInFlowStatus, generateSessionId, isEmpty} from '@thunderid/node';
-import type {TokenResponse} from '@thunderid/node';
+import type {IdToken, TokenResponse} from '@thunderid/node';
 import {defineEventHandler, readBody, getCookie, setCookie, deleteCookie, createError} from 'h3';
 import type {H3Event} from 'h3';
 import ThunderIDNuxtClient from '../../../ThunderIDNuxtClient';
@@ -15,14 +15,6 @@ import {
   getTempSessionCookieOptions,
 } from '../../../utils/session';
 import {useRuntimeConfig} from '#imports';
-
-function isTokenResponse(value: unknown): value is TokenResponse {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    ('accessToken' in value || 'idToken' in value || 'refreshToken' in value)
-  );
-}
 
 /**
  * POST /api/auth/signin
@@ -80,8 +72,11 @@ export default defineEventHandler(async (event: H3Event) => {
   const payload: Record<string, unknown> = body?.payload ?? {};
   const request: Record<string, unknown> = body?.request ?? {};
 
-  // ── Initiate flow (no payload or empty payload) ────────────────────────────
-  if (isEmpty(payload) || !('flowId' in payload)) {
+  // ── Initiate redirect-based sign-in (no payload) ────────────────────────────
+  // An embedded (app-native) flow always sends a payload — either `{applicationId, flowType}`
+  // to start a new flow, or `{executionId, ...}` to continue one. Only a genuinely empty payload
+  // means the caller wants the hosted-page authorize URL for a redirect-based sign-in.
+  if (isEmpty(payload)) {
     try {
       const signInUrl: string = await client.getAuthorizeRequestUrl(
         {client_secret: '{{clientSecret}}', response_mode: 'direct'},
@@ -107,34 +102,33 @@ export default defineEventHandler(async (event: H3Event) => {
     });
   }
 
-  // ── Flow complete — exchange code for tokens and issue session cookie ───────
+  // ── Flow complete — establish the session from the flow's JWT assertion ────
+  // A completed embedded flow returns a self-contained JWT `assertion` rather than an
+  // authorization code to exchange (mirrors how @thunderid/react and @thunderid/vue treat it:
+  // the assertion is used directly as the bearer session token).
   if ((response as {flowStatus?: unknown})?.flowStatus === EmbeddedSignInFlowStatus.Complete) {
-    const authData: {code?: string; session_state?: string; state?: string} =
-      (response as {authData?: {code?: string; session_state?: string; state?: string}})?.authData ?? {};
-    const {code, state, session_state: sessionState} = authData;
+    const assertion: string | undefined = (response as {assertion?: string})?.assertion;
 
-    if (!code) {
-      throw createError({statusCode: 502, statusMessage: 'Authorization code missing from completed flow response.'});
-    }
-
-    let tokenResponse: unknown;
-    try {
-      tokenResponse = await client.signIn({code, session_state: sessionState, state}, {}, sessionId);
-    } catch (err: any) {
-      throw createError({
-        statusCode: 502,
-        statusMessage: `Token exchange failed after embedded flow: ${err?.message ?? String(err)}`,
-      });
-    }
-
-    if (!isTokenResponse(tokenResponse)) {
-      throw createError({
-        statusCode: 502,
-        statusMessage: 'Token exchange failed: Invalid token response from Identity Provider.',
-      });
+    if (!assertion) {
+      throw createError({statusCode: 502, statusMessage: 'Flow completed without an assertion.'});
     }
 
     try {
+      const idToken: IdToken = await client.getDecodedIdToken(sessionId, assertion);
+      const iat: number = typeof idToken.iat === 'number' ? idToken.iat : Math.floor(Date.now() / 1000);
+      const exp: number = typeof idToken.exp === 'number' ? idToken.exp : iat + 3600;
+      const scope: string = typeof idToken.scope === 'string' ? idToken.scope : '';
+
+      const tokenResponse: TokenResponse = {
+        accessToken: assertion,
+        createdAt: iat,
+        expiresIn: String(Math.max(exp - iat, 0)),
+        idToken: assertion,
+        refreshToken: '',
+        scope,
+        tokenType: 'Bearer',
+      } as TokenResponse;
+
       await issueSessionCookie(event, sessionId, tokenResponse, sessionSecret);
       deleteCookie(event, getTempSessionCookieName(), getTempSessionCookieOptions());
     } catch (err: any) {

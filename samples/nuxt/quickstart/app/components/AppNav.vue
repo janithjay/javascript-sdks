@@ -50,14 +50,14 @@ function toggleDark() {
         </svg>
       </button>
 
-      <ThunderIDSignedIn>
-        <ThunderIDUserDropdown :menu-items="menuItems" />
-      </ThunderIDSignedIn>
-      <ThunderIDSignedOut>
-        <ThunderIDSignInButton class="btn-primary btn-sm" v-slot="{ isLoading }">
+      <SignedIn>
+        <UserDropdown :menu-items="menuItems" />
+      </SignedIn>
+      <SignedOut>
+        <SignInButton class="btn-primary btn-sm" v-slot="{ isLoading }">
           {{ isLoading ? 'Signing in…' : 'Sign in' }}
-        </ThunderIDSignInButton>
-      </ThunderIDSignedOut>
+        </SignInButton>
+      </SignedOut>
     </div>
   </nav>
 </template>

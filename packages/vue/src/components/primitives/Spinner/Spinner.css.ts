@@ -24,22 +24,22 @@ const SPINNER_CSS = `
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--thunder-color-primary-main);
+  color: var(--thunderid-color-primary-main);
 }
 
 .thunderid-spinner--small {
-  width: calc(var(--thunder-spacing-unit) * 2);
-  height: calc(var(--thunder-spacing-unit) * 2);
+  width: calc(var(--thunderid-spacing-unit) * 2);
+  height: calc(var(--thunderid-spacing-unit) * 2);
 }
 
 .thunderid-spinner--medium {
-  width: calc(var(--thunder-spacing-unit) * 2.5);
-  height: calc(var(--thunder-spacing-unit) * 2.5);
+  width: calc(var(--thunderid-spacing-unit) * 2.5);
+  height: calc(var(--thunderid-spacing-unit) * 2.5);
 }
 
 .thunderid-spinner--large {
-  width: calc(var(--thunder-spacing-unit) * 3.5);
-  height: calc(var(--thunder-spacing-unit) * 3.5);
+  width: calc(var(--thunderid-spacing-unit) * 3.5);
+  height: calc(var(--thunderid-spacing-unit) * 3.5);
 }
 
 .thunderid-spinner__svg {

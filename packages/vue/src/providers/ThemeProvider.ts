@@ -9,6 +9,7 @@ import {
   RecursivePartial,
   BrowserThemeDetection,
   DEFAULT_THEME,
+  FlowMetaTheme,
   createTheme,
   detectThemeMode,
   createClassObserver,
@@ -18,6 +19,7 @@ import {
   computed,
   defineComponent,
   h,
+  inject,
   onBeforeUnmount,
   onMounted,
   provide,
@@ -31,8 +33,9 @@ import {
   type SetupContext,
   type VNode,
 } from 'vue';
-import {THEME_KEY} from '../keys';
-import type {ThemeContextValue} from '../models/contexts';
+import {FLOW_META_KEY, THEME_KEY} from '../keys';
+import type {FlowMetaContextValue, ThemeContextValue} from '../models/contexts';
+import buildThemeConfigFromFlowMeta from '../utils/buildThemeConfigFromFlowMeta';
 
 /**
  * ThemeProvider manages theme state and provides it to child components via `useTheme()`.
@@ -76,17 +79,68 @@ const ThemeProvider: Component = defineComponent({
     theme: {default: undefined, type: Object as PropType<RecursivePartial<ThemeConfig>>},
   },
   setup(props: ThemeProviderProps, {slots}: SetupContext): () => VNode {
+    const flowMetaContext: FlowMetaContextValue | null = inject(FLOW_META_KEY, null);
+    const flowMetaTheme: Ref<FlowMetaTheme | null> = computed<FlowMetaTheme | null>(
+      () => flowMetaContext?.meta.value?.design?.theme ?? null,
+    );
+
     const initColorScheme = (): 'light' | 'dark' => {
       if (props.mode === 'light' || props.mode === 'dark') return props.mode;
-      if (props.mode === 'branding') return detectThemeMode('system', props.detection);
+      if (props.mode === 'branding')
+        return flowMetaTheme.value?.defaultColorScheme ?? detectThemeMode('system', props.detection);
       return detectThemeMode(props.mode as ThemeMode, props.detection);
     };
 
     const colorScheme: Ref<'light' | 'dark'> = ref(initColorScheme());
 
+    // In 'branding' mode, sync the color scheme once the server's default arrives.
+    watch(
+      () => flowMetaTheme.value?.defaultColorScheme,
+      (defaultColorScheme: 'light' | 'dark' | undefined): void => {
+        if (props.mode === 'branding' && defaultColorScheme) {
+          colorScheme.value = defaultColorScheme;
+        }
+      },
+    );
+
+    // Build the resolved ThemeConfig: flow meta base → user overrides on top.
     const finalThemeConfig: Ref<RecursivePartial<ThemeConfig> | undefined> = computed<
       RecursivePartial<ThemeConfig> | undefined
-    >(() => props.theme);
+    >(() => {
+      if (!flowMetaTheme.value) {
+        return props.theme;
+      }
+
+      const metaConfig: RecursivePartial<ThemeConfig> = buildThemeConfigFromFlowMeta(
+        flowMetaTheme.value,
+        colorScheme.value,
+      );
+
+      if (!props.theme) {
+        return metaConfig;
+      }
+
+      return {
+        ...metaConfig,
+        ...props.theme,
+        borderRadius: {
+          ...(metaConfig as any).borderRadius,
+          ...(props.theme as any).borderRadius,
+        },
+        colors: {
+          ...(metaConfig as any).colors,
+          ...(props.theme as any).colors,
+        },
+        ...((metaConfig as any).typography || (props.theme as any).typography
+          ? {
+              typography: {
+                ...(metaConfig as any).typography,
+                ...(props.theme as any).typography,
+              },
+            }
+          : {}),
+      };
+    });
 
     const resolvedTheme: Ref<Theme> = computed<Theme>(() =>
       createTheme(finalThemeConfig.value, colorScheme.value === 'dark'),
@@ -105,7 +159,7 @@ const ThemeProvider: Component = defineComponent({
       if (typeof document === 'undefined') return;
       const root: HTMLElement = document.documentElement;
       // Use the pre-computed cssVariables map from createTheme() which contains
-      // correctly-named CSS variables (e.g. --thunder-color-primary-main).
+      // correctly-named CSS variables (e.g. --thunderid-color-primary-main).
       Object.entries(theme.cssVariables).forEach(([key, value]: [key: string, value: string]): void => {
         root.style.setProperty(key, value);
       });

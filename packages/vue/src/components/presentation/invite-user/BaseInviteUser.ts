@@ -464,7 +464,7 @@ const BaseInviteUser: Component = defineComponent({
                 'div',
                 {
                   style:
-                    'display:flex;align-items:center;gap:0.5rem;padding:0.75rem;background:var(--thunder-color-background-secondary,#f5f5f5);border-radius:4px;word-break:break-all',
+                    'display:flex;align-items:center;gap:0.5rem;padding:0.75rem;background:var(--thunderid-color-background-secondary,#f5f5f5);border-radius:4px;word-break:break-all',
                 },
                 [
                   h(Typography, {style: 'flex:1', variant: 'body2'}, () => inviteLink.value),

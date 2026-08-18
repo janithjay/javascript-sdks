@@ -15,7 +15,7 @@ type DatePickerProps = Readonly<{
 }>;
 
 const DatePicker: Component = defineComponent({
-  name: 'ThunderIDDatePicker',
+  name: 'DatePicker',
   props: {
     disabled: {default: false, type: Boolean},
     error: {default: undefined, type: String},

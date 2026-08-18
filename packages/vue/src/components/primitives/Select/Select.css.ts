@@ -20,75 +20,75 @@ const SELECT_CSS = `
 .thunderid-select {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--thunder-spacing-unit) * 0.5);
-  font-family: var(--thunder-typography-fontFamily);
+  gap: calc(var(--thunderid-spacing-unit) * 0.5);
+  font-family: var(--thunderid-typography-fontFamily);
   width: 100%;
   box-sizing: border-box;
 }
 
 .thunderid-select__label {
-  font-size: var(--thunder-typography-fontSize-sm);
-  font-weight: var(--thunder-typography-fontWeight-medium);
-  color: var(--thunder-color-text-primary);
+  font-size: var(--thunderid-typography-fontSize-sm);
+  font-weight: var(--thunderid-typography-fontWeight-medium);
+  color: var(--thunderid-color-text-primary);
   display: block;
-  line-height: var(--thunder-typography-lineHeight-normal);
+  line-height: var(--thunderid-typography-lineHeight-normal);
 }
 
 .thunderid-select__required {
-  color: var(--thunder-color-error-main);
+  color: var(--thunderid-color-error-main);
   margin-left: 2px;
 }
 
 .thunderid-select__input {
   width: 100%;
-  height: var(--thunder-input-height);
-  padding: 0 calc(var(--thunder-spacing-unit) * 4) 0 var(--thunder-input-paddingX);
-  border: 1px solid var(--thunder-input-borderColor);
-  border-radius: var(--thunder-input-borderRadius);
-  font-family: var(--thunder-typography-fontFamily);
-  font-size: var(--thunder-input-fontSize);
-  color: var(--thunder-color-text-primary);
-  background-color: var(--thunder-color-background-surface);
+  height: var(--thunderid-input-height);
+  padding: 0 calc(var(--thunderid-spacing-unit) * 4) 0 var(--thunderid-input-paddingX);
+  border: 1px solid var(--thunderid-input-borderColor);
+  border-radius: var(--thunderid-input-borderRadius);
+  font-family: var(--thunderid-typography-fontFamily);
+  font-size: var(--thunderid-input-fontSize);
+  color: var(--thunderid-color-text-primary);
+  background-color: var(--thunderid-color-background-surface);
   appearance: none;
   -webkit-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right var(--thunder-input-paddingX) center;
+  background-position: right var(--thunderid-input-paddingX) center;
   cursor: pointer;
   box-sizing: border-box;
   transition:
-    border-color var(--thunder-transition-fast),
-    box-shadow var(--thunder-transition-fast);
+    border-color var(--thunderid-transition-fast),
+    box-shadow var(--thunderid-transition-fast);
   outline: none;
-  line-height: var(--thunder-typography-lineHeight-normal);
+  line-height: var(--thunderid-typography-lineHeight-normal);
 }
 .thunderid-select__input:focus {
-  border-color: var(--thunder-input-focusBorderColor);
-  box-shadow: var(--thunder-input-focusRing);
+  border-color: var(--thunderid-input-focusBorderColor);
+  box-shadow: var(--thunderid-input-focusRing);
 }
 .thunderid-select__input:disabled {
-  background-color: var(--thunder-color-background-disabled);
-  color: var(--thunder-color-action-disabled);
+  background-color: var(--thunderid-color-background-disabled);
+  color: var(--thunderid-color-action-disabled);
   cursor: not-allowed;
 }
 
 .thunderid-select--error .thunderid-select__input {
-  border-color: var(--thunder-color-error-main);
+  border-color: var(--thunderid-color-error-main);
 }
 .thunderid-select--error .thunderid-select__input:focus {
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
 }
 
 .thunderid-select__error {
-  font-size: var(--thunder-typography-fontSize-xs);
-  color: var(--thunder-color-error-contrastText);
-  line-height: var(--thunder-typography-lineHeight-normal);
+  font-size: var(--thunderid-typography-fontSize-xs);
+  color: var(--thunderid-color-error-contrastText);
+  line-height: var(--thunderid-typography-lineHeight-normal);
 }
 
 .thunderid-select__helper {
-  font-size: var(--thunder-typography-fontSize-xs);
-  color: var(--thunder-color-text-secondary);
-  line-height: var(--thunder-typography-lineHeight-normal);
+  font-size: var(--thunderid-typography-fontSize-xs);
+  color: var(--thunderid-color-text-secondary);
+  line-height: var(--thunderid-typography-lineHeight-normal);
 }
 `;
 

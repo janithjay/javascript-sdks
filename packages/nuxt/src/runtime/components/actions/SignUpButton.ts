@@ -16,8 +16,8 @@ import {useThunderID} from '#imports';
  *
  * @example
  * ```vue
- * <ThunderIDSignUpButton />
- * <ThunderIDSignUpButton class="btn-primary">Create account</ThunderIDSignUpButton>
+ * <SignUpButton />
+ * <SignUpButton class="btn-primary">Create account</SignUpButton>
  * ```
  */
 const SignUpButton: Component = defineComponent({

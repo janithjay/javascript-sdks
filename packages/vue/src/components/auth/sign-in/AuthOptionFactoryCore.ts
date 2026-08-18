@@ -10,6 +10,8 @@ import {
   EmbeddedFlowTextVariant,
   EmbeddedFlowEventType,
   resolveFlowTemplateLiterals,
+  resolveLogoUri,
+  ResolvedLogo,
   extractEmojiFromUri,
   isEmojiUri,
   ConsentPurposeData,
@@ -75,6 +77,8 @@ const getFieldType = (variant: EmbeddedFlowComponentType): FieldType => {
   switch (variant) {
     case EmbeddedFlowComponentType.EmailInput:
       return FieldType.Email;
+    case EmbeddedFlowComponentType.PhoneInput:
+      return FieldType.Tel;
     case EmbeddedFlowComponentType.PasswordInput:
       return FieldType.Password;
     case EmbeddedFlowComponentType.TextInput:
@@ -160,7 +164,8 @@ const createAuthComponentFromFlow = (
   switch (component.type) {
     case EmbeddedFlowComponentType.TextInput:
     case EmbeddedFlowComponentType.PasswordInput:
-    case EmbeddedFlowComponentType.EmailInput: {
+    case EmbeddedFlowComponentType.EmailInput:
+    case EmbeddedFlowComponentType.PhoneInput: {
       const identifier: string = component.ref ?? '';
       const value: string = formValues[identifier] || '';
       const isTouched: boolean = touchedFields[identifier] || false;
@@ -177,6 +182,35 @@ const createAuthComponentFromFlow = (
         placeholder: resolve(component.placeholder) || '',
         required: component.required || false,
         type: fieldType,
+        value,
+      });
+    }
+
+    case EmbeddedFlowComponentType.OtpInput: {
+      const identifier: string = component.ref ?? '';
+      const value: string = formValues[identifier] || '';
+      const isTouched: boolean = touchedFields[identifier] || false;
+      const error: string | undefined = isTouched ? formErrors[identifier] : undefined;
+
+      // The server reports the length and character set of the code it generated, so the field
+      // matches the OTP the user received. An older server omits both and the defaults apply.
+      const reportedLength: number = Number(options.additionalData?.['otpLength']);
+      const otpLength: number | undefined =
+        Number.isInteger(reportedLength) && reportedLength > 0 ? reportedLength : undefined;
+      const numericOnly: boolean = options.additionalData?.['otpNumericOnly'] !== 'false';
+
+      return createField({
+        className: options.inputClassName,
+        error,
+        label: resolve(component.label) || '',
+        length: otpLength,
+        name: identifier,
+        numericOnly,
+        onBlur: () => options.onInputBlur?.(identifier),
+        onChange: (newValue: string) => onInputChange(identifier, newValue),
+        placeholder: resolve(component.placeholder) || '',
+        required: component.required || false,
+        type: FieldType.Otp,
         value,
       });
     }
@@ -367,7 +401,24 @@ const createAuthComponentFromFlow = (
           )
           .filter(Boolean);
 
-        return h('form', {id: component.id, key}, blockChildren);
+        // The submit button's `type="submit"` (and pressing Enter in a field) would
+        // otherwise trigger the browser's native form submission — a GET request to
+        // the current URL with all field values (including passwords) as query params.
+        // Actual submission is handled entirely via `onSubmit`/`handleClick` above.
+        return h(
+          'form',
+          {
+            id: component.id,
+            key,
+            onSubmit: (event: Event): void => event.preventDefault(),
+            style: {
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'calc(var(--thunderid-spacing-unit) * 2)',
+            },
+          },
+          blockChildren,
+        );
       }
       return null;
     }
@@ -384,16 +435,45 @@ const createAuthComponentFromFlow = (
     }
 
     case EmbeddedFlowComponentType.Image: {
-      const explicitHeight: string = resolve((component as any).height?.toString());
-      const explicitWidth: string = resolve((component as any).width?.toString());
+      // Bare numbers (e.g. "48") are valid HTML width/height attributes but are
+      // unit-less and ignored as CSS style properties — normalize to px.
+      const toCSSLength = (value: string): string => (/^\d+(\.\d+)?$/.test(value) ? `${value}px` : value);
+      const explicitHeight: string = toCSSLength(resolve((component as any).height?.toString()));
+      const explicitWidth: string = toCSSLength(resolve((component as any).width?.toString()));
+      const alt: string = resolve((component as any).alt) || resolve(component.label) || 'Image';
+      const resolvedSrc: string = resolve((component as any).src);
+      // When only one dimension is explicit, let the other scale to preserve aspect
+      // ratio instead of stretching it to the block-level fallback (100% width).
+      const height: string = explicitHeight || (explicitWidth ? 'auto' : options.inStack ? '50px' : 'auto');
+      const width: string = explicitWidth || (explicitHeight ? 'auto' : options.inStack ? '50px' : '100%');
+
+      if (!resolvedSrc) {
+        return null;
+      }
+
+      const resolvedLogo: ResolvedLogo = resolveLogoUri(resolvedSrc, alt);
+
+      if (resolvedLogo.kind === 'emoji') {
+        return h(
+          'span',
+          {
+            'aria-label': alt,
+            key,
+            role: 'img',
+            style: {display: 'inline-block', fontSize: height !== 'auto' ? height : '2.5em', lineHeight: 1},
+          },
+          resolvedLogo.glyph,
+        );
+      }
+
       return h('img', {
-        alt: resolve((component as any).alt) || resolve(component.label) || 'Image',
+        alt,
         key,
-        src: resolve((component as any).src),
+        src: resolvedLogo.imgSrc,
         style: {
-          height: explicitHeight || (options.inStack ? '50px' : 'auto'),
+          height,
           objectFit: 'contain',
-          width: explicitWidth || (options.inStack ? '50px' : '100%'),
+          width,
         },
       });
     }

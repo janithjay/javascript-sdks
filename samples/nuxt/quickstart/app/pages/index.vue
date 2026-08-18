@@ -91,7 +91,7 @@ onUnmounted(() => {
   <div :class="['app', { dark }]">
     <AppNav />
 
-    <ThunderIDSignedOut>
+    <SignedOut>
       <section class="hero">
         <div class="hero-inner">
           <svg width="35" height="44" viewBox="0 0 207 257" fill="none" aria-hidden="true">
@@ -114,9 +114,9 @@ onUnmounted(() => {
           </p>
 
           <div class="hero-ctas">
-            <ThunderIDSignInButton class="btn-primary btn-lg" v-slot="{ isLoading }">
+            <SignInButton class="btn-primary btn-lg" v-slot="{ isLoading }">
               {{ isLoading ? 'Signing in…' : 'Sign in' }}
-            </ThunderIDSignInButton>
+            </SignInButton>
           </div>
 
           <hr class="hero-divider" />
@@ -137,9 +137,9 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
-    </ThunderIDSignedOut>
+    </SignedOut>
 
-    <ThunderIDSignedIn>
+    <SignedIn>
       <div class="home-shell">
         <main class="home-main">
           <div class="home-greeting">
@@ -229,6 +229,6 @@ onUnmounted(() => {
           </div>
         </main>
       </div>
-    </ThunderIDSignedIn>
+    </SignedIn>
   </div>
 </template>

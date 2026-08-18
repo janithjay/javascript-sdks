@@ -25,7 +25,7 @@ export type SignUpRenderProps = BaseSignUpRenderProps;
  *
  * @example
  * ```vue
- * <ThunderIDSignUp @complete="onComplete" @error="onError" />
+ * <SignUp @complete="onComplete" @error="onError" />
  * ```
  */
 const SignUp: Component = defineComponent({

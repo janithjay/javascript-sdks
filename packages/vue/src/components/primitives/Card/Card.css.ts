@@ -17,19 +17,19 @@ const CARD_CSS = `
    ============================================================ */
 
 .thunderid-card {
-  background-color: var(--thunder-color-background-surface);
-  border-radius: var(--thunder-card-borderRadius);
-  padding: var(--thunder-card-padding);
+  background-color: var(--thunderid-color-background-surface);
+  border-radius: var(--thunderid-card-borderRadius);
+  padding: var(--thunderid-card-padding);
   box-sizing: border-box;
-  transition: box-shadow var(--thunder-transition-normal);
+  transition: box-shadow var(--thunderid-transition-normal);
 }
 
 .thunderid-card--elevated {
-  box-shadow: var(--thunder-card-shadow);
+  box-shadow: var(--thunderid-card-shadow);
 }
 
 .thunderid-card--outlined {
-  border: 1px solid var(--thunder-card-borderColor);
+  border: 1px solid var(--thunderid-card-borderColor);
 }
 
 /* .thunderid-card--flat: no shadow or border */

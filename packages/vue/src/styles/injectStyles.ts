@@ -41,6 +41,9 @@ import SPINNER_CSS from '../components/primitives/Spinner/Spinner.css';
 import TEXT_FIELD_CSS from '../components/primitives/TextField/TextField.css';
 import TYPOGRAPHY_CSS from '../components/primitives/Typography/Typography.css';
 
+// Auth
+import BASE_SIGN_IN_CSS from '../components/auth/sign-in/BaseSignIn.css';
+
 // Presentation
 
 /**
@@ -68,6 +71,8 @@ const STYLES: string = [
   DIVIDER_CSS,
   LOGO_CSS,
   SPINNER_CSS,
+  // Auth
+  BASE_SIGN_IN_CSS,
   // Presentation
   LANGUAGE_SWITCHER_CSS,
   USER_DROPDOWN_CSS,

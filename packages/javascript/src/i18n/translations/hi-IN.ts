@@ -59,6 +59,7 @@ const translations: I18nTranslations = {
   /* Base Sign In */
   'signin.heading': 'साइन इन',
   'signin.subheading': 'जारी रखने के लिए अपनी प्रमाणिक जानकारी दर्ज करें।',
+  'signin.images.app_logo.alt': 'एप्लिकेशन लोगो',
 
   /* Base Sign Up */
   'signup.heading': 'साइन अप',

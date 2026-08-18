@@ -8,9 +8,10 @@ const root = path.join(__dirname, '..');
 
 const PREFIX = 'NUXT_PUBLIC_THUNDERID_';
 const NATIVE_FLOW_VARS = [`${PREFIX}APPLICATION_ID`, `${PREFIX}SIGN_IN_URL`, `${PREFIX}SIGN_UP_URL`];
-const REDIRECT_FLOW_VARS = [`${PREFIX}CLIENT_ID`];
+const REDIRECT_FLOW_VARS = [`${PREFIX}CLIENT_ID`, 'THUNDERID_CLIENT_SECRET'];
 const REDIRECT_FLOW_PLACEHOLDERS = {
   [`${PREFIX}CLIENT_ID`]: 'your-client-id-here',
+  THUNDERID_CLIENT_SECRET: 'your-client-secret-here',
 };
 
 const flowArg = process.argv.find((arg) => arg.startsWith('--flow='));

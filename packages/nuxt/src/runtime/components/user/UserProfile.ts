@@ -18,7 +18,7 @@ import {useUser} from '#imports';
  *
  * @example
  * ```vue
- * <ThunderIDUserProfile :editable="true" title="My Profile" />
+ * <UserProfile :editable="true" title="My Profile" />
  * ```
  */
 const UserProfile: Component = defineComponent({

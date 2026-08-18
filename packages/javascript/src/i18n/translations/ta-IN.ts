@@ -59,6 +59,7 @@ const translations: I18nTranslations = {
   /* Base Sign In */
   'signin.heading': 'உள்நுழை',
   'signin.subheading': 'தொடர உங்கள் சான்றுகளை உள்ளிடவும்.',
+  'signin.images.app_logo.alt': 'பயன்பாட்டு லோகோ',
 
   /* Base Sign Up */
   'signup.heading': 'பதிவு செய்',

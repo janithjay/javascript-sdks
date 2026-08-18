@@ -3,14 +3,14 @@
 
 import {getRedirectBasedSignUpUrl} from '@thunderid/browser';
 import {VendorConstants} from '@thunderid/node';
-import type {AttributeSchema, UserProfile} from '@thunderid/node';
+import type {AttributeSchema, FlowMetadataResponse, UserProfile} from '@thunderid/node';
 import {ThunderIDPlugin, THUNDERID_KEY} from '@thunderid/vue';
 import type {H3Event} from 'h3';
 import {computed} from 'vue';
 import type {ComputedRef, Ref} from 'vue';
 import ThunderIDRoot from '../components/ThunderIDRoot';
 import type {ThunderIDAuthState, ThunderIDSSRData} from '../types';
-import {getAuthStateKey, getUserProfileStateKey, getUserSchemaStateKey} from '../utils/stateKeys';
+import {getAuthStateKey, getFlowMetaStateKey, getUserProfileStateKey, getUserSchemaStateKey} from '../utils/stateKeys';
 import type {NuxtApp} from '#app';
 import {defineNuxtPlugin, useState, useRequestEvent, useRuntimeConfig, navigateTo} from '#app';
 
@@ -64,12 +64,13 @@ export default defineNuxtPlugin((nuxtApp: NuxtApp) => {
   // counterpart is handled by the thunderid-ssr Nitro plugin; doing both
   // covers the two places a developer will actually look.
   if (import.meta.client && import.meta.dev) {
-    if (!publicConfig?.baseUrl || !publicConfig?.clientId) {
+    if (!publicConfig?.baseUrl || (!publicConfig?.clientId && !publicConfig?.applicationId)) {
       // eslint-disable-next-line no-console
       console.warn(
-        '[@thunderid/nuxt] Missing baseUrl or clientId. ' +
-          'Set NUXT_PUBLIC_THUNDERID_BASE_URL and NUXT_PUBLIC_THUNDERID_CLIENT_ID, ' +
-          'or configure `thunderid` in nuxt.config. Auth endpoints will not function until this is resolved.',
+        '[@thunderid/nuxt] Missing baseUrl, or both clientId and applicationId. ' +
+          'Set NUXT_PUBLIC_THUNDERID_BASE_URL and either NUXT_PUBLIC_THUNDERID_CLIENT_ID (redirect flow) ' +
+          'or NUXT_PUBLIC_THUNDERID_APPLICATION_ID (native flow), or configure `thunderid` in nuxt.config. ' +
+          'Auth endpoints will not function until this is resolved.',
       );
     }
   }
@@ -92,10 +93,22 @@ export default defineNuxtPlugin((nuxtApp: NuxtApp) => {
     getUserSchemaStateKey(vendor),
     () => null,
   );
+  // Seeded from `event.context[vendor].flowMeta` (written unconditionally by the thunderid-ssr
+  // Nitro plugin, regardless of sign-in state) so `FlowMetaProvider` can skip its own initial
+  // client-side fetch — see `runtime/components/ThunderIDRoot.ts`.
+  const flowMetaState: Ref<FlowMetadataResponse | null> = useState<FlowMetadataResponse | null>(
+    getFlowMetaStateKey(vendor),
+    () => null,
+  );
 
   if (import.meta.server) {
     const event: H3Event | undefined = useRequestEvent();
-    const ssr: ThunderIDSSRData | undefined = (event?.context as Record<string, any> | undefined)?.[vendor]?.ssr;
+    const eventVendorContext: Record<string, any> | undefined = (event?.context as Record<string, any> | undefined)?.[
+      vendor
+    ];
+    const ssr: ThunderIDSSRData | undefined = eventVendorContext?.ssr;
+
+    flowMetaState.value = (eventVendorContext?.flowMeta as FlowMetadataResponse | undefined) ?? null;
 
     if (ssr) {
       // Seed from the rich SSR payload written by the thunderid-ssr Nitro plugin.

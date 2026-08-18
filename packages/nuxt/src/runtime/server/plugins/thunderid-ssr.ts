@@ -1,7 +1,13 @@
 // Copyright 2025 The ThunderID Authors
 // SPDX-License-Identifier: Apache-2.0
 
-import {VendorConstants} from '@thunderid/node';
+import {
+  FlowMetadataResponse,
+  FlowMetaType,
+  getFlowMeta,
+  resolveResourceEndpoint,
+  VendorConstants,
+} from '@thunderid/node';
 import {getRequestURL, type H3Event} from 'h3';
 import {defineNitroPlugin} from 'nitropack/runtime';
 import type {ThunderIDAuthState, ThunderIDNuxtConfig, ThunderIDSSRData} from '../../types';
@@ -52,10 +58,18 @@ export default defineNitroPlugin((nitro: {hooks: {hook: Function}}) => {
       const publicConfig: ThunderIDNuxtConfig = config.public.thunderid as ThunderIDNuxtConfig;
       const privateConfig: typeof config.thunderid = config.thunderid;
 
-      if (!publicConfig?.baseUrl || !publicConfig?.clientId) {
+      if (!publicConfig?.baseUrl) {
+        log.error('Missing required config: baseUrl. Set NUXT_PUBLIC_THUNDERID_BASE_URL.');
+        return;
+      }
+
+      // clientId (redirect flow) and applicationId (native flow) are mutually exclusive —
+      // exactly one is required depending on which flow this app uses.
+      if (!publicConfig?.clientId && !publicConfig?.applicationId) {
         log.error(
-          'Missing required config: baseUrl and clientId. ' +
-            'Set NUXT_PUBLIC_THUNDERID_BASE_URL and NUXT_PUBLIC_THUNDERID_CLIENT_ID.',
+          'Missing required config: clientId or applicationId. ' +
+            'Set NUXT_PUBLIC_THUNDERID_CLIENT_ID for the redirect flow, or ' +
+            'NUXT_PUBLIC_THUNDERID_APPLICATION_ID for the native flow.',
         );
         return;
       }
@@ -85,6 +99,7 @@ export default defineNitroPlugin((nitro: {hooks: {hook: Function}}) => {
           baseUrl: publicConfig.baseUrl,
           clientId: publicConfig.clientId,
           clientSecret: privateConfig?.clientSecret || undefined,
+          flowSecret: privateConfig?.flowSecret || undefined,
           endpoints: publicConfig.endpoints,
           platform: publicConfig.platform,
           scopes: publicConfig.scopes || ['openid', 'profile'],
@@ -111,13 +126,27 @@ export default defineNitroPlugin((nitro: {hooks: {hook: Function}}) => {
     // Nuxt plugin (`runtime/plugins/thunderid.ts`) reads from.
     const vendor: string = publicConfig?.vendor ?? VendorConstants.VENDOR_PREFIX;
 
+    // Flow metadata (design config + i18n bundle) doesn't depend on sign-in state, so it's
+    // fetched unconditionally and seeded via `useState` — same as `ThunderIDServerProvider` in
+    // `@thunderid/nextjs` — so `FlowMetaProvider` can skip its own initial client-side fetch.
+    let flowMeta: FlowMetadataResponse | null = null;
+    try {
+      flowMeta = await getFlowMeta({
+        baseUrl: publicConfig?.baseUrl,
+        url: resolveResourceEndpoint('flowMeta', publicConfig),
+        ...(publicConfig?.applicationId ? {id: publicConfig.applicationId, type: FlowMetaType.App} : {}),
+      });
+    } catch (err) {
+      log.warn('Failed to fetch flow metadata:', err);
+    }
+
     const session: Awaited<ReturnType<typeof verifyAndRehydrateSession>> = await verifyAndRehydrateSession(
       event,
       sessionSecret,
     );
     if (!session) {
       const eventContext: Record<string, unknown> = event.context;
-      eventContext[vendor] = {isSignedIn: false, session: null};
+      eventContext[vendor] = {flowMeta, isSignedIn: false, session: null};
       return;
     }
 
@@ -177,7 +206,7 @@ export default defineNitroPlugin((nitro: {hooks: {hook: Function}}) => {
     };
 
     const eventContext: Record<string, unknown> = event.context;
-    eventContext[vendor] = {isSignedIn: true, session, ssr: ssrData};
+    eventContext[vendor] = {flowMeta, isSignedIn: true, session, ssr: ssrData};
 
     // Keep legacy __thunderidAuth in place so the existing Nuxt plugin
     // (Step 3) can be updated independently without a runtime gap.

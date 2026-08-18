@@ -16,8 +16,8 @@ import {useThunderID} from '#imports';
  *
  * @example
  * ```vue
- * <ThunderIDSignOutButton />
- * <ThunderIDSignOutButton class="btn-secondary">Sign out</ThunderIDSignOutButton>
+ * <SignOutButton />
+ * <SignOutButton class="btn-secondary">Sign out</SignOutButton>
  * ```
  */
 const SignOutButton: Component = defineComponent({

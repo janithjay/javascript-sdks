@@ -18,7 +18,7 @@ const LOGO_CSS = `
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  transition: opacity var(--thunder-transition-fast);
+  transition: opacity var(--thunderid-transition-fast);
 }
 
 .thunderid-logo:hover {

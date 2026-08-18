@@ -35,28 +35,28 @@ const LANGUAGE_SWITCHER_CSS = `
 .thunderid-language-switcher__trigger {
   display: inline-flex;
   align-items: center;
-  gap: calc(var(--thunder-spacing-unit) * 0.5);
-  padding: var(--thunder-dropdown-itemPaddingY) var(--thunder-dropdown-itemPaddingX);
+  gap: calc(var(--thunderid-spacing-unit) * 0.5);
+  padding: var(--thunderid-dropdown-itemPaddingY) var(--thunderid-dropdown-itemPaddingX);
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--thunder-color-text-primary);
-  font-family: var(--thunder-typography-fontFamily);
-  font-size: var(--thunder-typography-fontSize-md);
-  border-radius: var(--thunder-dropdown-borderRadius);
-  transition: background-color var(--thunder-transition-fast);
+  color: var(--thunderid-color-text-primary);
+  font-family: var(--thunderid-typography-fontFamily);
+  font-size: var(--thunderid-typography-fontSize-md);
+  border-radius: var(--thunderid-dropdown-borderRadius);
+  transition: background-color var(--thunderid-transition-fast);
   white-space: nowrap;
   box-sizing: border-box;
 }
 
 .thunderid-language-switcher__trigger:hover {
-  background-color: var(--thunder-color-action-hover);
+  background-color: var(--thunderid-color-action-hover);
 }
 
 .thunderid-language-switcher__trigger:focus-visible {
   outline: none;
-  box-shadow: inset 0 0 0 var(--thunder-focus-ring-width) var(--thunder-focus-ring-color);
-  border-radius: var(--thunder-dropdown-borderRadius);
+  box-shadow: inset 0 0 0 var(--thunderid-focus-ring-width) var(--thunderid-focus-ring-color);
+  border-radius: var(--thunderid-dropdown-borderRadius);
 }
 
 .thunderid-language-switcher__trigger-label {
@@ -67,18 +67,18 @@ const LANGUAGE_SWITCHER_CSS = `
 
 .thunderid-language-switcher__dropdown {
   position: absolute;
-  top: calc(100% + calc(var(--thunder-spacing-unit) * 0.5));
+  top: calc(100% + calc(var(--thunderid-spacing-unit) * 0.5));
   right: 0;
   z-index: 1000;
-  background-color: var(--thunder-color-background-surface);
-  border: 1px solid var(--thunder-color-border);
-  border-radius: var(--thunder-dropdown-borderRadius);
-  box-shadow: var(--thunder-dropdown-shadow);
+  background-color: var(--thunderid-color-background-surface);
+  border: 1px solid var(--thunderid-color-border);
+  border-radius: var(--thunderid-dropdown-borderRadius);
+  box-shadow: var(--thunderid-dropdown-shadow);
   overflow: hidden;
   min-width: 130px;
   display: flex;
   flex-direction: column;
-  padding: calc(var(--thunder-spacing-unit) * 0.5) 0;
+  padding: calc(var(--thunderid-spacing-unit) * 0.5) 0;
 }
 
 /* Items ----------------------------------------------------- */
@@ -87,30 +87,30 @@ const LANGUAGE_SWITCHER_CSS = `
   display: flex;
   align-items: center;
   width: 100%;
-  padding: var(--thunder-dropdown-itemPaddingY) var(--thunder-dropdown-itemPaddingX);
+  padding: var(--thunderid-dropdown-itemPaddingY) var(--thunderid-dropdown-itemPaddingX);
   background: none;
   border: none;
   cursor: pointer;
   text-align: left;
-  font-family: var(--thunder-typography-fontFamily);
-  font-size: var(--thunder-typography-fontSize-md);
-  color: var(--thunder-color-text-primary);
-  transition: background-color var(--thunder-transition-fast);
+  font-family: var(--thunderid-typography-fontFamily);
+  font-size: var(--thunderid-typography-fontSize-md);
+  color: var(--thunderid-color-text-primary);
+  transition: background-color var(--thunderid-transition-fast);
   box-sizing: border-box;
 }
 
 .thunderid-language-switcher__item:hover {
-  background-color: var(--thunder-color-action-hover);
+  background-color: var(--thunderid-color-action-hover);
 }
 
 .thunderid-language-switcher__item--active {
-  background-color: var(--thunder-color-action-selected);
-  color: var(--thunder-color-primary-main);
-  font-weight: var(--thunder-typography-fontWeight-medium);
+  background-color: var(--thunderid-color-action-selected);
+  color: var(--thunderid-color-primary-main);
+  font-weight: var(--thunderid-typography-fontWeight-medium);
 }
 
 .thunderid-language-switcher__item--active:hover {
-  background-color: var(--thunder-color-action-focus);
+  background-color: var(--thunderid-color-action-focus);
 }
 `;
 

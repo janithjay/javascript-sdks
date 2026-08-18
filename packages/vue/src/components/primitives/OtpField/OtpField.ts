@@ -64,6 +64,31 @@ const OtpField: Component = defineComponent({
       }
     };
 
+    const handlePaste = (index: number, e: ClipboardEvent): void => {
+      e.preventDefault();
+      const rawData: string = e.clipboardData?.getData('text') || '';
+      const pasted: string = props.numericOnly
+        ? rawData.replace(NON_NUMERIC_OTP_CHARS, '')
+        : rawData.toUpperCase().replace(NON_ALPHANUMERIC_OTP_CHARS, '');
+
+      if (!pasted) return;
+
+      const current: string[] = (props.modelValue || '').split('');
+      while (current.length < props.length) current.push('');
+
+      let cursor: number = index;
+      for (const char of pasted) {
+        if (cursor >= props.length) break;
+        current[cursor] = char;
+        cursor += 1;
+      }
+
+      emit('update:modelValue', current.join(''));
+
+      const nextIndex: number = Math.min(cursor, props.length - 1);
+      nextTick(() => inputRefs.value[nextIndex]?.focus());
+    };
+
     return (): VNode => {
       const digits: string[] = (props.modelValue || '').split('');
       while (digits.length < props.length) digits.push('');
@@ -94,6 +119,7 @@ const OtpField: Component = defineComponent({
                 maxlength: 1,
                 onInput: (e: Event) => handleInput(i, e),
                 onKeydown: (e: KeyboardEvent) => handleKeydown(i, e),
+                onPaste: (e: ClipboardEvent) => handlePaste(i, e),
                 ref: (el: unknown) => setRef(el, i),
                 type: 'text',
                 value: digits[i],

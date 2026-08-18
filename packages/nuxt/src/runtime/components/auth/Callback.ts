@@ -33,7 +33,7 @@ interface CallbackSetupProps {
  * ```vue
  * <!-- pages/callback.vue -->
  * <template>
- *   <ThunderIDCallback :on-error="handleError" />
+ *   <Callback :on-error="handleError" />
  * </template>
  * ```
  */
