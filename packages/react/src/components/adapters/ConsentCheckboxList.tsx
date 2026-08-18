@@ -173,7 +173,7 @@ const ConsentCheckboxList: FC<ConsentCheckboxListProps> = ({
                 </Typography>
               </div>
               {isEssential ? (
-                <Typography variant="body2">{resolve('required')}</Typography>
+                <Typography variant="body2">{resolve('required') || 'Required'}</Typography>
               ) : (
                 <Toggle
                   id={inputId}

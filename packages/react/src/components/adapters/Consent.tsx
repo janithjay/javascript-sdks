@@ -82,16 +82,6 @@ export interface ConsentProps {
   t?: UseTranslation['t'];
 }
 
-// default config for consent related translation keys
-const defaultConfig: ConsentConfig = {
-  essential: 'essential_claims',
-  optional: 'optional_claims',
-  permission: 'authorize_scope',
-  essentialInfo: 'essential_claims_info',
-  optionalInfo: 'optional_claims_info',
-  permissionInfo: 'authorize_scope_info',
-};
-
 /**
  * Consent component renders the list of purposes and their associated attributes (essential and optional)
  * based on the data provided by the backend. It allows users to toggle optional attributes while essential
@@ -125,22 +115,19 @@ const Consent: FC<ConsentProps> = ({consentData, formValues, onInputChange, chil
     if (!text || !t) {
       return text || '';
     }
-
-    const key: string = `consent.${text}`;
-    const translated: string = t(key);
-    return translated === key ? '' : translated;
+    return t(text);
   };
 
-  const essentialInfo = resolve(defaultConfig['essentialInfo']);
-  const optionalInfo = resolve(defaultConfig['optionalInfo']);
-  const permissionInfo = resolve(defaultConfig['permissionInfo']);
+  const essentialInfo = resolve(`consent.essential_claims.info`);
+  const optionalInfo = resolve(`consent.optional_claims.info`);
+  const permissionInfo = resolve(`consent.authorize_scope.info`);
   /**
    * Falls back to default config values if essential/optional
    * keys cannot be resolved via translation files .
    */
-  const essentialLabel = resolve(defaultConfig['essential']) || 'Essential Attributes';
-  const optionalLabel = resolve(defaultConfig['optional']) || 'Optional Attributes';
-  const permissionLabel = resolve(defaultConfig['permission']) || 'Permissions';
+  const essentialLabel = resolve(`consent.essential_claims`) || 'Essential Attributes';
+  const optionalLabel = resolve(`consent.optional_claims`) || 'Optional Attributes';
+  const permissionLabel = resolve(`consent.authorize_scope`) || 'Permissions';
 
   /**
    * Method to check whether master toggle button is checked or not

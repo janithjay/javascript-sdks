@@ -143,6 +143,18 @@ export interface I18nTranslations {
   'messages.loading.placeholder': string;
 
   /* |---------------------------------------------------------------| */
+  /* |                        Consent                                | */
+  /* |---------------------------------------------------------------| */
+
+  'consent.required': string;
+  'consent.essential_claims': string;
+  'consent.optional_claims': string;
+  'consent.authorize_scope': string;
+  'consent.essential_claims.info': string;
+  'consent.optional_claims.info': string;
+  'consent.authorize_scope.info': string;
+
+  /* |---------------------------------------------------------------| */
   /* |                        Errors                                 | */
   /* |---------------------------------------------------------------| */
 

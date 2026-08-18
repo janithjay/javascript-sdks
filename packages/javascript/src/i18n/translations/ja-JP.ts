@@ -140,6 +140,18 @@ const translations: I18nTranslations = {
   'messages.loading.placeholder': '読み込み中…',
 
   /* |---------------------------------------------------------------| */
+  /* |                        Consent                                | */
+  /* |---------------------------------------------------------------| */
+
+  'consent.required': '必須',
+  'consent.essential_claims': '必須属性',
+  'consent.optional_claims': '任意属性',
+  'consent.authorize_scope': '権限',
+  'consent.essential_claims.info': 'これらの属性は、サービスが正常に機能するために必要です。',
+  'consent.optional_claims.info': 'これらの属性は任意であり、お客様の判断で提供できます。',
+  'consent.authorize_scope.info': 'これらの権限により、サービスが追加機能にアクセスできるようになります。',
+
+  /* |---------------------------------------------------------------| */
   /* |                        Errors                                 | */
   /* |---------------------------------------------------------------| */
 

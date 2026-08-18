@@ -140,6 +140,18 @@ const translations: I18nTranslations = {
   'messages.loading.placeholder': 'A carregar...',
 
   /* |---------------------------------------------------------------| */
+  /* |                        Consent                                | */
+  /* |---------------------------------------------------------------| */
+
+  'consent.required': 'Obrigatório',
+  'consent.essential_claims': 'Atributos essenciais',
+  'consent.optional_claims': 'Atributos opcionais',
+  'consent.authorize_scope': 'Permissões',
+  'consent.essential_claims.info': 'Estes atributos são necessários para o correto funcionamento do serviço.',
+  'consent.optional_claims.info': 'Estes atributos são opcionais e podem ser fornecidos ao seu critério.',
+  'consent.authorize_scope.info': 'Estas permissões permitem que o serviço aceda a funcionalidades adicionais.',
+
+  /* |---------------------------------------------------------------| */
   /* |                        Errors                                 | */
   /* |---------------------------------------------------------------| */
 
