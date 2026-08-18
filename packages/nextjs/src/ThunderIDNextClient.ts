@@ -4,6 +4,7 @@
 import {
   ThunderIDNodeClient,
   ThunderIDRuntimeError,
+  AttributeSchema,
   AuthClientConfig,
   EmbeddedSignInFlowResponse,
   ExtendedAuthorizeRequestUrlParams,
@@ -19,6 +20,7 @@ import {
   extractUserClaimsFromIdToken,
   generateFlattenedUserProfile,
   getUsersMe,
+  getUsersMeMeta,
   updateMeProfile,
   resolveResourceEndpoint,
 } from '@thunderid/node';
@@ -151,6 +153,27 @@ class ThunderIDNextClient<T extends ThunderIDNextConfig = ThunderIDNextConfig> e
         flattenedProfile: extractUserClaimsFromIdToken(await super.getDecodedIdToken(userId)),
         profile: extractUserClaimsFromIdToken(await super.getDecodedIdToken(userId)),
       };
+    }
+  }
+
+  async getUserSchema(userId?: string): Promise<Record<string, AttributeSchema> | null> {
+    await this.ensureInitialized();
+
+    try {
+      const configData: AuthClientConfig<T> = await this.getStorageManager().getConfigData();
+      const baseUrl: string | undefined = configData?.baseUrl;
+
+      const {schema} = await getUsersMeMeta({
+        baseUrl,
+        url: resolveResourceEndpoint('usersMeMeta', configData),
+        headers: {
+          Authorization: `Bearer ${await this.getAccessToken(userId)}`,
+        },
+      });
+
+      return schema ?? null;
+    } catch (error) {
+      return null;
     }
   }
 

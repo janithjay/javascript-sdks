@@ -4,6 +4,7 @@
 'use client';
 
 import {
+  AttributeSchema,
   EmbeddedFlowExecuteRequestConfig,
   FlowMetadataResponse,
   generateFlattenedUserProfile,
@@ -69,6 +70,7 @@ export type ThunderIDClientProviderProps = Partial<Omit<ThunderIDProviderProps, 
     ) => Promise<{data: {user: User}; error: string; success: boolean}>;
     user: User | null;
     userProfile: UserProfile;
+    userSchema?: Record<string, AttributeSchema> | null;
   };
 
 const ThunderIDClientProvider: FC<PropsWithChildren<ThunderIDClientProviderProps>> = ({
@@ -86,6 +88,7 @@ const ThunderIDClientProvider: FC<PropsWithChildren<ThunderIDClientProviderProps
   signUpUrl,
   user: _user,
   userProfile: _userProfile,
+  userSchema: _userSchema = null,
   updateProfile,
   applicationId,
   organizationHandle,
@@ -100,10 +103,15 @@ const ThunderIDClientProvider: FC<PropsWithChildren<ThunderIDClientProviderProps
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(_user);
   const [userProfile, setUserProfile] = useState<UserProfile>(_userProfile);
+  const [userSchema, setUserSchema] = useState<Record<string, AttributeSchema> | null>(_userSchema);
 
   useEffect(() => {
     setUserProfile(_userProfile);
   }, [_userProfile]);
+
+  useEffect(() => {
+    setUserSchema(_userSchema);
+  }, [_userSchema]);
 
   useEffect(() => {
     setUser(_user);
@@ -368,7 +376,7 @@ const ThunderIDClientProvider: FC<PropsWithChildren<ThunderIDClientProviderProps
       signUp: handleSignUp,
       signUpUrl,
       user,
-      userSchema: null,
+      userSchema,
       vendor: getVendorPrefix(vendor),
     }),
     [
@@ -382,6 +390,7 @@ const ThunderIDClientProvider: FC<PropsWithChildren<ThunderIDClientProviderProps
       signInUrl,
       signUpUrl,
       user,
+      userSchema,
       initialMeta,
       vendor,
     ],
@@ -398,7 +407,12 @@ const ThunderIDClientProvider: FC<PropsWithChildren<ThunderIDClientProviderProps
           >
             <ThemeProvider theme={preferences?.theme?.overrides} mode={getActiveTheme(preferences?.theme?.mode as any)}>
               <FlowProvider>
-                <UserProvider profile={userProfile} onUpdateProfile={handleProfileUpdate} updateProfile={updateProfile}>
+                <UserProvider
+                  profile={userProfile}
+                  userSchema={userSchema}
+                  onUpdateProfile={handleProfileUpdate}
+                  updateProfile={updateProfile}
+                >
                   {children}
                 </UserProvider>
               </FlowProvider>
