@@ -1,12 +1,7 @@
 // Copyright 2026 The ThunderID Authors
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  type ConsentPurposeData,
-  FlowMetadataResponse,
-  PromptElement,
-  resolveFlowTemplateLiterals,
-} from '@thunderid/browser';
+import {type ConsentPurposeData, PromptElement} from '@thunderid/browser';
 import {type ChangeEvent, FC, ReactNode} from 'react';
 import ConsentCheckboxList, {getConsentOptionalKey} from './ConsentCheckboxList';
 import Typography from '../primitives/Typography/Typography';
@@ -80,15 +75,6 @@ export interface ConsentProps {
    * Callback invoked when a user toggles an optional attribute.
    */
   onInputChange: (name: string, value: string) => void;
-  /**
-   * Config to modified detail in consent page
-   */
-  config?: Record<string, unknown>;
-
-  /**
-   * Config of meta response
-   */
-  meta?: FlowMetadataResponse | null;
 
   /**
    * translation data
@@ -111,15 +97,7 @@ const defaultConfig: ConsentConfig = {
  * based on the data provided by the backend. It allows users to toggle optional attributes while essential
  * attributes are displayed as read-only.
  */
-const Consent: FC<ConsentProps> = ({
-  consentData,
-  formValues,
-  config: suppliedConfig = {},
-  onInputChange,
-  children,
-  meta,
-  t,
-}: ConsentProps) => {
+const Consent: FC<ConsentProps> = ({consentData, formValues, onInputChange, children, t}: ConsentProps) => {
   // Computed per render (not at module scope): a CSP nonce configured on <ThunderIDProvider>
   // isn't known until the provider renders, and Emotion needs it applied before any style
   // insertion happens. These are static, so Emotion's own cache dedupes the repeat calls to a
@@ -142,39 +120,27 @@ const Consent: FC<ConsentProps> = ({
   });
   const optionalSectionLabelClass: string = css({alignItems: 'center', display: 'flex', gap: '4px'});
 
-  /** Resolve any remaining {{t()}} or {{meta()}} template expressions in a string at render time. */
+  /** Resolve i18n keys */
   const resolve = (text: string | undefined): string => {
-    if (!text || (!t && !meta)) {
+    if (!text || !t) {
       return text || '';
     }
-    // first check if the key is present in the translation file,
-    // if not then resolve the template literals
-    const consentKey = `consent.${text}`;
-    const translated: string = t ? t(consentKey) : consentKey;
 
-    // if the translated value is same as the consent key,
-    // then resolve the template literals
-    const resolvedValue =
-      translated === consentKey
-        ? resolveFlowTemplateLiterals(text, {meta, t: t || ((k: string): string => k)})
-        : translated;
-
-    // if the resolved value is same as the original text,
-    // then return empty string
-    return resolvedValue === text ? '' : resolvedValue;
+    const key: string = `consent.${text}`;
+    const translated: string = t(key);
+    return translated === key ? '' : translated;
   };
 
-  const config: ConsentConfig = {...defaultConfig, ...suppliedConfig};
-  const essentialInfo = resolve(config['essentialInfo']);
-  const optionalInfo = resolve(config['optionalInfo']);
-  const permissionInfo = resolve(config['permissionInfo']);
+  const essentialInfo = resolve(defaultConfig['essentialInfo']);
+  const optionalInfo = resolve(defaultConfig['optionalInfo']);
+  const permissionInfo = resolve(defaultConfig['permissionInfo']);
   /**
-   * Falls back to default config values if essential/optional keys
-   * cannot be resolved via translation files or meta template literals.
+   * Falls back to default config values if essential/optional
+   * keys cannot be resolved via translation files .
    */
-  const essentialLabel = resolve(config['essential']) || 'Essential Attributes';
-  const optionalLabel = resolve(config['optional']) || 'Optional Attributes';
-  const permissionLabel = resolve(config['permission']) || 'Permissions';
+  const essentialLabel = resolve(defaultConfig['essential']) || 'Essential Attributes';
+  const optionalLabel = resolve(defaultConfig['optional']) || 'Optional Attributes';
+  const permissionLabel = resolve(defaultConfig['permission']) || 'Permissions';
 
   /**
    * Method to check whether master toggle button is checked or not

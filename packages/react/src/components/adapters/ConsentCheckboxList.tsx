@@ -103,14 +103,14 @@ const ConsentCheckboxList: FC<ConsentCheckboxListProps> = ({
   const {theme, colorScheme}: ReturnType<typeof useTheme> = useTheme();
   const styles: Record<string, string> = useStyles(theme, colorScheme);
 
-  /** Resolve any remaining {{t()}} or {{meta()}} template expressions in a string at render time. */
   const resolve = (text: string | undefined): string => {
     if (!text || !t) {
       return text || '';
     }
 
-    const translated: string = t(`consent.${text}`);
-    return translated === `consent.${text}` ? text : translated;
+    const key: string = `consent.${text}`;
+    const translated: string = t(key);
+    return translated === key ? text : translated;
   };
 
   const attributes: string[] = (variant === 'ESSENTIAL' ? purpose.essential : purpose.optional).map(
