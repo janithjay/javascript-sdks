@@ -58,10 +58,11 @@ runs:
       # the THUNDERID_ADMIN_* env vars. It always finishes by trying to attach its interactive
       # REPL, which needs a real TTY this runner doesn't have, so it fails; that's expected, and
       # by then the release is already downloaded and fully set up on disk, so the exit code is
-      # ignored. We start it ourselves afterward with `start.sh`, since npx thunderid's own
-      # (REPL-attached) background process doesn't outlive the npx invocation. This is the first
-      # thing on this fresh runner to touch the ThunderID CLI's state, so there is no risk of it
-      # picking up a stale "active version" the way a long-lived dev machine could.
+      # ignored. npx thunderid already health-checked the server it started before that point, so
+      # we only start it ourselves with `start.sh` if it isn't actually reachable (e.g. the REPL
+      # failure tore it down) instead of racing a second instance onto the same port. This is the
+      # first thing on this fresh runner to touch the ThunderID CLI's state, so there is no risk
+      # of it picking up a stale "active version" the way a long-lived dev machine could.
       run: |
         # setsid detaches into a new session with no controlling terminal, so npx thunderid's
         # REPL (which opens /dev/tty directly, bypassing stdin redirection) fails to attach
@@ -78,7 +79,7 @@ runs:
         echo "dist_home=$DIST_HOME" >> "$GITHUB_OUTPUT"
 
         chmod +x "$DIST_HOME/start.sh"
-        (cd "$DIST_HOME" && setsid ./start.sh &)
+        curl -skf https://localhost:8090/health/liveness > /dev/null || (cd "$DIST_HOME" && setsid ./start.sh &)
         for i in $(seq 1 60); do
           curl -skf https://localhost:8090/health/liveness && exit 0
           sleep 2
