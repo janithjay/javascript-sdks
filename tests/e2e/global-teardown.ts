@@ -12,20 +12,22 @@ import {send} from './utils/api-request';
 
 async function globalTeardown(): Promise<void> {
   const username = process.env.TEST_USER_USERNAME;
-  if (!username) return;
 
   console.log('🧹 Deleting shared E2E test user...');
-  const searchRes = await send('GET', `/users?attribute=username&value=${encodeURIComponent(username)}`);
+  const filter = `username eq "${username}"`;
+  const searchRes = await send('GET', `/users?filter=${encodeURIComponent(filter)}`);
   if (!searchRes.ok) {
-    console.warn(`⚠️  Could not look up test user "${username}" for cleanup (HTTP ${searchRes.status})`);
-    return;
+    throw new Error(
+      `Failed to look up test user "${username}" for cleanup: HTTP ${searchRes.status}: ${await searchRes.text()}`,
+    );
   }
-  const {users} = (await searchRes.json()) as {users?: {id: string}[]};
-  const user = users?.[0];
-  if (!user) {
+  const {users} = (await searchRes.json()) as {users?: {attributes?: {username?: string}; id: string}[]};
+  const matches = (users ?? []).filter((candidate) => candidate.attributes?.username === username);
+  if (matches.length === 0) {
     console.warn(`⚠️  Test user "${username}" not found — nothing to clean up`);
     return;
   }
+  const user = matches[0];
 
   const deleteRes = await send('DELETE', `/users/${user.id}`);
   if (!deleteRes.ok) {

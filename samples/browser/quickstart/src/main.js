@@ -1,7 +1,7 @@
 import './style.css'
 import auth, { missingEnvVars } from './auth.js'
 import { renderSignedOutNav, renderSignedInNav, attachNavHandlers, attachSignedOutNavHandlers } from './components/nav.js'
-import { renderProfileDialog, attachProfileDialogHandlers } from './components/profileDialog.js'
+import { renderProfileDialog, attachProfileDialogHandlers, fetchProfileFormContext } from './components/profileDialog.js'
 import { renderSignedOut, renderHome, renderConfigNeeded, startCountdown, attachSignedOutHandlers, attachConfigNeededHandlers } from './pages/home.js'
 import { renderTokenDebug, attachTokenHandlers } from './pages/token.js'
 
@@ -46,16 +46,25 @@ function renderSignedInPage() {
   }
 }
 
-function openManageProfile() {
+async function openManageProfile() {
   const app = document.getElementById('app')
   if (!app) return
 
-  app.insertAdjacentHTML('beforeend', renderProfileDialog(user))
+  const { schema, profile } = await fetchProfileFormContext({
+    baseUrl: import.meta.env.VITE_THUNDERID_BASE_URL,
+    auth,
+  })
+
+  app.insertAdjacentHTML('beforeend', renderProfileDialog(user, { schema, profile }))
   attachProfileDialogHandlers({
     user,
     auth,
+    schema,
+    profile,
     onSaved: (updatedUser) => {
       user = updatedUser
+    },
+    onClose: () => {
       renderSignedInPage()
     },
   })
