@@ -105,6 +105,29 @@ const translations: I18nTranslations = {
   'user.profile.update.generic.error': 'ప్రొఫైల్ అప్‌డేట్ చేస్తూ లోపం వచ్చింది. దయచేసి మళ్లీ ప్రయత్నించండి.',
 
   /* |---------------------------------------------------------------| */
+  /* |                        Change Password                        | */
+  /* |---------------------------------------------------------------| */
+
+  'user.change_password.heading': '{credential} మార్చండి',
+  'user.change_password.current.label': 'ప్రస్తుత {credential}',
+  'user.change_password.current.placeholder': 'మీ ప్రస్తుత {credentialLower} నమోదు చేయండి',
+  'user.change_password.new.label': 'కొత్త {credential}',
+  'user.change_password.new.placeholder': 'మీ కొత్త {credentialLower} నమోదు చేయండి',
+  'user.change_password.confirm.label': 'కొత్త {credential} నిర్ధారించండి',
+  'user.change_password.confirm.placeholder': 'మీ కొత్త {credentialLower} మళ్లీ నమోదు చేయండి',
+  'user.change_password.requirements.heading': 'మీ {credentialLower} లో ఉండవలసినవి:',
+  'user.change_password.submit': '{credential} నవీకరించండి',
+  'user.change_password.success': 'మీ {credentialLower} నవీకరించబడింది.',
+  'user.change_password.mismatch.error': '{credential} సరిపోలడం లేదు.',
+  'user.change_password.same.as.current.error':
+    'మీ కొత్త {credentialLower} ప్రస్తుత {credentialLower} కు భిన్నంగా ఉండాలి.',
+  'user.change_password.current.invalid.error': 'మీ ప్రస్తుత {credentialLower} తప్పు.',
+  'user.change_password.generic.error': 'మీ {credentialLower} నవీకరిస్తూ లోపం వచ్చింది. దయచేసి మళ్లీ ప్రయత్నించండి.',
+  'user.change_password.unavailable.heading': '{credential} మార్పు అందుబాటులో లేదు',
+  'user.change_password.unavailable.description': 'ఈ ఖాతా {credentialLower} ఉపయోగించదు.',
+  'validation.password.pattern': 'అవసరమైన ఆకృతికి సరిపోతుంది',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

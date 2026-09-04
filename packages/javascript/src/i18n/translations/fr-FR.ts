@@ -106,6 +106,30 @@ const translations: I18nTranslations = {
     'Une erreur est survenue lors de la mise à jour de votre profil. Veuillez réessayer.',
 
   /* |---------------------------------------------------------------| */
+  /* |                        Change Password                        | */
+  /* |---------------------------------------------------------------| */
+
+  'user.change_password.heading': 'Changer le {credential}',
+  'user.change_password.current.label': '{credential} actuel',
+  'user.change_password.current.placeholder': 'Saisissez votre {credentialLower} actuel',
+  'user.change_password.new.label': 'Nouveau {credential}',
+  'user.change_password.new.placeholder': 'Saisissez votre nouveau {credentialLower}',
+  'user.change_password.confirm.label': 'Confirmer le nouveau {credential}',
+  'user.change_password.confirm.placeholder': 'Saisissez a nouveau votre nouveau {credentialLower}',
+  'user.change_password.requirements.heading': 'Votre {credentialLower} doit contenir :',
+  'user.change_password.submit': 'Mettre a jour le {credential}',
+  'user.change_password.success': 'Votre {credentialLower} a ete mis a jour.',
+  'user.change_password.mismatch.error': 'Les {credential} ne correspondent pas.',
+  'user.change_password.same.as.current.error':
+    'Votre nouveau {credentialLower} doit etre different du {credentialLower} actuel.',
+  'user.change_password.current.invalid.error': 'Votre {credentialLower} actuel est incorrect.',
+  'user.change_password.generic.error':
+    'Une erreur est survenue lors de la mise a jour de votre {credentialLower}. Veuillez reessayer.',
+  'user.change_password.unavailable.heading': 'Modification du {credential} indisponible',
+  'user.change_password.unavailable.description': "Ce compte n'utilise pas de {credentialLower}.",
+  'validation.password.pattern': 'Correspond au format requis',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

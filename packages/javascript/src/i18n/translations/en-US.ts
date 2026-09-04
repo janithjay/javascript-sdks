@@ -104,6 +104,29 @@ const translations: I18nTranslations = {
   'user.profile.update.generic.error': 'An error occurred while updating your profile. Please try again.',
 
   /* |---------------------------------------------------------------| */
+  /* |                        Change Password                        | */
+  /* |---------------------------------------------------------------| */
+
+  'user.change_password.heading': 'Change {credential}',
+  'user.change_password.current.label': 'Current {credential}',
+  'user.change_password.current.placeholder': 'Enter your current {credentialLower}',
+  'user.change_password.new.label': 'New {credential}',
+  'user.change_password.new.placeholder': 'Enter your new {credentialLower}',
+  'user.change_password.confirm.label': 'Confirm New {credential}',
+  'user.change_password.confirm.placeholder': 'Re-enter your new {credentialLower}',
+  'user.change_password.requirements.heading': 'Your {credentialLower} must have:',
+  'user.change_password.submit': 'Update {credential}',
+  'user.change_password.success': 'Your {credentialLower} has been updated.',
+  'user.change_password.mismatch.error': '{credential}s do not match.',
+  'user.change_password.same.as.current.error':
+    'Your new {credentialLower} must be different from your current {credentialLower}.',
+  'user.change_password.current.invalid.error': 'Your current {credentialLower} is incorrect.',
+  'user.change_password.generic.error': 'An error occurred while updating your {credentialLower}. Please try again.',
+  'user.change_password.unavailable.heading': '{credential} changes unavailable',
+  'user.change_password.unavailable.description': 'This account does not use a {credentialLower}.',
+  'validation.password.pattern': 'Matches the required format',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

@@ -104,6 +104,28 @@ const translations: I18nTranslations = {
   'user.profile.update.generic.error': 'Ocorreu um erro ao actualizar o seu perfil. Tente novamente.',
 
   /* |---------------------------------------------------------------| */
+  /* |                        Change Password                        | */
+  /* |---------------------------------------------------------------| */
+
+  'user.change_password.heading': 'Alterar {credential}',
+  'user.change_password.current.label': '{credential} actual',
+  'user.change_password.current.placeholder': 'Introduza a sua {credentialLower} actual',
+  'user.change_password.new.label': 'Nova {credential}',
+  'user.change_password.new.placeholder': 'Introduza a sua nova {credentialLower}',
+  'user.change_password.confirm.label': 'Confirmar nova {credential}',
+  'user.change_password.confirm.placeholder': 'Introduza novamente a sua nova {credentialLower}',
+  'user.change_password.requirements.heading': 'A sua {credentialLower} deve ter:',
+  'user.change_password.submit': 'Actualizar {credential}',
+  'user.change_password.success': 'A sua {credentialLower} foi actualizada.',
+  'user.change_password.mismatch.error': 'As {credential} não coincidem.',
+  'user.change_password.same.as.current.error': 'A sua nova {credentialLower} deve ser diferente da actual.',
+  'user.change_password.current.invalid.error': 'A sua {credentialLower} actual está incorrecta.',
+  'user.change_password.generic.error': 'Ocorreu um erro ao actualizar a sua {credentialLower}. Tente novamente.',
+  'user.change_password.unavailable.heading': 'Alteração de {credential} indisponível',
+  'user.change_password.unavailable.description': 'Esta conta não utiliza {credentialLower}.',
+  'validation.password.pattern': 'Corresponde ao formato exigido',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

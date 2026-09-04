@@ -104,6 +104,29 @@ const translations: I18nTranslations = {
   'user.profile.update.generic.error': 'प्रोफ़ाइल अपडेट करते समय त्रुटि हुई। कृपया पुनः प्रयास करें।',
 
   /* |---------------------------------------------------------------| */
+  /* |                        Change Password                        | */
+  /* |---------------------------------------------------------------| */
+
+  'user.change_password.heading': '{credential} बदलें',
+  'user.change_password.current.label': 'वर्तमान {credential}',
+  'user.change_password.current.placeholder': 'अपना वर्तमान {credentialLower} दर्ज करें',
+  'user.change_password.new.label': 'नया {credential}',
+  'user.change_password.new.placeholder': 'अपना नया {credentialLower} दर्ज करें',
+  'user.change_password.confirm.label': 'नए {credential} की पुष्टि करें',
+  'user.change_password.confirm.placeholder': 'अपना नया {credentialLower} फिर से दर्ज करें',
+  'user.change_password.requirements.heading': 'आपके {credentialLower} में होना चाहिए:',
+  'user.change_password.submit': '{credential} अपडेट करें',
+  'user.change_password.success': 'आपका {credentialLower} अपडेट कर दिया गया है।',
+  'user.change_password.mismatch.error': '{credential} मेल नहीं खाते।',
+  'user.change_password.same.as.current.error':
+    'आपका नया {credentialLower} वर्तमान {credentialLower} से अलग होना चाहिए।',
+  'user.change_password.current.invalid.error': 'आपका वर्तमान {credentialLower} गलत है।',
+  'user.change_password.generic.error': '{credentialLower} अपडेट करते समय त्रुटि हुई। कृपया पुनः प्रयास करें।',
+  'user.change_password.unavailable.heading': '{credential} बदलना उपलब्ध नहीं है',
+  'user.change_password.unavailable.description': 'यह खाता {credentialLower} का उपयोग नहीं करता।',
+  'validation.password.pattern': 'आवश्यक प्रारूप से मेल खाता है',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

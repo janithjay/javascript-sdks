@@ -133,6 +133,12 @@ export * from './components/presentation/User/BaseUser';
 export {default as User} from './components/presentation/User/User';
 export * from './components/presentation/User/User';
 
+export {default as BaseChangeCredential} from './components/presentation/ChangeCredential/BaseChangeCredential';
+export * from './components/presentation/ChangeCredential/BaseChangeCredential';
+
+export {default as ChangeCredential} from './components/presentation/ChangeCredential/ChangeCredential';
+export * from './components/presentation/ChangeCredential/ChangeCredential';
+
 export {default as BaseUserProfile} from './components/presentation/UserProfile/BaseUserProfile';
 export * from './components/presentation/UserProfile/BaseUserProfile';
 
@@ -225,6 +231,9 @@ export {default as LogOut} from './components/primitives/Icons/LogOut';
 export {createField, FieldFactory, validateFieldValue} from './components/factories/FieldFactory';
 
 export {default as BuildingAlt} from './components/primitives/Icons/BuildingAlt';
+
+export {default as updateMeCredentials} from './api/updateMeCredentials';
+export type {UpdateMeCredentialsConfig} from './api/updateMeCredentials';
 
 export {default as updateMeProfile} from './api/updateMeProfile';
 export type {UpdateMeProfileConfig} from './api/updateMeProfile';

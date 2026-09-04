@@ -104,6 +104,30 @@ const translations: I18nTranslations = {
   'user.profile.update.generic.error': 'ඔබේ පැතිකඩ යාවත්කාලීන කිරීමේදී දෝෂයක් ඇතිවිය.කරුණාකර නැවත උත්සාහ කරන්න',
 
   /* |---------------------------------------------------------------| */
+  /* |                        Change Password                        | */
+  /* |---------------------------------------------------------------| */
+
+  'user.change_password.heading': '{credential} වෙනස් කරන්න',
+  'user.change_password.current.label': 'වත්මන් {credential}',
+  'user.change_password.current.placeholder': 'ඔබේ වත්මන් {credentialLower} ඇතුළත් කරන්න',
+  'user.change_password.new.label': 'නව {credential}',
+  'user.change_password.new.placeholder': 'ඔබේ නව {credentialLower} ඇතුළත් කරන්න',
+  'user.change_password.confirm.label': 'නව {credential} තහවුරු කරන්න',
+  'user.change_password.confirm.placeholder': 'ඔබේ නව {credentialLower} නැවත ඇතුළත් කරන්න',
+  'user.change_password.requirements.heading': 'ඔබේ {credentialLower} හි තිබිය යුතුය:',
+  'user.change_password.submit': '{credential} යාවත්කාලීන කරන්න',
+  'user.change_password.success': 'ඔබේ {credentialLower} යාවත්කාලීන කර ඇත.',
+  'user.change_password.mismatch.error': '{credential} නොගැලපේ.',
+  'user.change_password.same.as.current.error':
+    'ඔබේ නව {credentialLower} වත්මන් {credentialLower} ට වඩා වෙනස් විය යුතුය.',
+  'user.change_password.current.invalid.error': 'ඔබේ වත්මන් {credentialLower} වැරදියි.',
+  'user.change_password.generic.error':
+    'ඔබේ {credentialLower} යාවත්කාලීන කිරීමේදී දෝෂයක් ඇතිවිය. කරුණාකර නැවත උත්සාහ කරන්න.',
+  'user.change_password.unavailable.heading': '{credential} වෙනස් කිරීම නොමැත',
+  'user.change_password.unavailable.description': 'මෙම ගිණුම {credentialLower} භාවිතා නොකරයි.',
+  'validation.password.pattern': 'අවශ්‍ය ආකෘතියට ගැලපේ',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 
