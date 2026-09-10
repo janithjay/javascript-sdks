@@ -14,6 +14,7 @@ import {
   Storage,
   TokenExchangeRequestConfig,
   TokenResponse,
+  UpdateMeCredentialsConfig,
   User,
   UserProfile,
   executeEmbeddedSignInFlow,
@@ -21,6 +22,7 @@ import {
   generateFlattenedUserProfile,
   getUsersMe,
   getUsersMeMeta,
+  updateMeCredentials,
   updateMeProfile,
   resolveResourceEndpoint,
 } from '@thunderid/node';
@@ -200,6 +202,27 @@ class ThunderIDNextClient<T extends ThunderIDNextConfig = ThunderIDNextConfig> e
         'An error occurred while updating the user profile. Please check your configuration and network connection.',
       );
     }
+  }
+
+  /**
+   * Changes one or more of the signed-in user's own credentials via
+   * `POST /users/me/update-credentials`. The `ThunderIDAPIError` thrown on a non-2xx
+   * response is left unwrapped so its status code (403 for a rejected current value,
+   * 400 for a malformed request) reaches the caller.
+   */
+  async updateUserCredentials(config: UpdateMeCredentialsConfig, userId?: string): Promise<void> {
+    await this.ensureInitialized();
+
+    const configData: AuthClientConfig<T> = await this.getStorageManager().getConfigData();
+
+    await updateMeCredentials({
+      baseUrl: configData?.baseUrl,
+      url: resolveResourceEndpoint('usersMeCredentials', configData),
+      headers: {
+        Authorization: `Bearer ${await this.getAccessToken(userId)}`,
+      },
+      payload: config.payload,
+    });
   }
 
   override isLoading(): boolean {

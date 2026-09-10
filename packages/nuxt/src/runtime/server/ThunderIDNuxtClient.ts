@@ -11,6 +11,7 @@ import {
   getUsersMeMeta,
   isEmpty,
   resolveResourceEndpoint,
+  updateMeCredentials,
   updateMeProfile,
   type AttributeSchema,
   type AuthClientConfig,
@@ -20,6 +21,7 @@ import {
   type TokenResponse,
   type User,
   type UserProfile,
+  type UpdateMeCredentialsConfig,
   type UpdateMeProfileConfig,
   type ExtendedAuthorizeRequestUrlParams,
   type SignUpOptions,
@@ -242,6 +244,25 @@ class ThunderIDNuxtClient extends ThunderIDNodeClient<ThunderIDNuxtConfig> {
         'An error occurred while updating the user profile. Please check your configuration and network connection.',
       );
     }
+  }
+
+  /**
+   * Changes one or more of the signed-in user's own credentials via
+   * `POST /users/me/update-credentials`. The `ThunderIDAPIError` thrown on a non-2xx
+   * response is left unwrapped so the route can forward its status code (403 for a
+   * rejected current value, 400 for a malformed request).
+   */
+  async updateUserCredentials(config: UpdateMeCredentialsConfig, sessionId?: string): Promise<void> {
+    const configData: AuthClientConfig<ThunderIDNuxtConfig> = await this.getStorageManager().getConfigData();
+
+    await updateMeCredentials({
+      baseUrl: configData?.baseUrl,
+      url: resolveResourceEndpoint('usersMeCredentials', configData),
+      headers: {
+        Authorization: `Bearer ${await this.getAccessToken(sessionId)}`,
+      },
+      payload: config.payload,
+    });
   }
 
   async getUserSchema(sessionId?: string): Promise<Record<string, AttributeSchema> | null> {
