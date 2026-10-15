@@ -24,6 +24,7 @@ import ANIMATIONS_CSS from './animations.css';
 import DEFAULTS_CSS from './defaults.css';
 
 // Primitives
+import ACTIVE_SESSIONS_CSS from '../components/account/active-sessions/ActiveSessions.css';
 import CHANGE_CREDENTIAL_CSS from '../components/account/change-credential/ChangeCredential.css';
 import ORGANIZATION_UNIT_SWITCHER_CSS from '../components/account/organization-unit-switcher/OrganizationUnitSwitcher.css';
 import USER_DROPDOWN_CSS from '../components/account/user-dropdown/UserDropdown.css';
@@ -87,6 +88,7 @@ const STYLES: string = [
   FLOW_EXPIRED_CSS,
   BASE_DEVICE_GRANT_CSS,
   // Presentation
+  ACTIVE_SESSIONS_CSS,
   CHANGE_CREDENTIAL_CSS,
   ORGANIZATION_UNIT_SWITCHER_CSS,
   LANGUAGE_SWITCHER_CSS,

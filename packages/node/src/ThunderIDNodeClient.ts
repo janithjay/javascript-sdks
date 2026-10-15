@@ -16,6 +16,7 @@ import {
   executeEmbeddedSelfFlow,
   ExtendedAuthorizeRequestUrlParams,
   getFlows,
+  getMeSessions,
   getUsers,
   getUserTypes,
   IdToken,
@@ -27,7 +28,10 @@ import {
   ManagedUserTypeListResponse,
   OIDCEndpoints,
   resolveResourceEndpoint,
+  revokeMeSession,
+  revokeMeSessions,
   SessionData,
+  SSOSessionListResponse,
   Storage,
   ThunderIDAuthException,
   ThunderIDJavaScriptClient,
@@ -627,11 +631,11 @@ class ThunderIDNodeClient<T extends ThunderIDNodeConfig = ThunderIDNodeConfig> e
   }
 
   /**
-   * The URL inputs and bearer token for a management request made on behalf of the session identified by
+   * The URL inputs and bearer token for an API request made on behalf of the session identified by
    * `userId`. The access token stays on the server.
    */
   private async managementRequestConfig(
-    key: 'flows' | 'users' | 'userTypes',
+    key: 'flows' | 'users' | 'usersMeSessions' | 'userTypes',
     userId?: string,
   ): Promise<{baseUrl: string | undefined; headers: {Authorization: string}; url: string | undefined}> {
     const configData: AuthClientConfig<T> = await this.getStorageManager().getConfigData();
@@ -740,6 +744,33 @@ class ThunderIDNodeClient<T extends ThunderIDNodeConfig = ThunderIDNodeConfig> e
     userId?: string,
   ): Promise<ManagedUserTypeListResponse> {
     return getUserTypes({...options, ...(await this.managementRequestConfig('userTypes', userId))});
+  }
+
+  /**
+   * Returns a page of the signed-in user's live SSO sessions. The session the user's access token
+   * was issued in has `isCurrent` set.
+   */
+  public async getUserSessions(
+    options: {limit?: number; offset?: number} = {},
+    userId?: string,
+  ): Promise<SSOSessionListResponse> {
+    return getMeSessions({...options, ...(await this.managementRequestConfig('usersMeSessions', userId))});
+  }
+
+  /**
+   * Revokes one of the signed-in user's SSO sessions. Revoking the current session ends the user's
+   * access token too.
+   */
+  public async revokeUserSession(sessionId: string, userId?: string): Promise<void> {
+    return revokeMeSession({sessionId, ...(await this.managementRequestConfig('usersMeSessions', userId))});
+  }
+
+  /**
+   * Revokes the signed-in user's SSO sessions. With `exceptCurrent`, the session the user's access
+   * token was issued in is kept, so the user stays signed in.
+   */
+  public async revokeUserSessions(options: {exceptCurrent?: boolean} = {}, userId?: string): Promise<void> {
+    return revokeMeSessions({...options, ...(await this.managementRequestConfig('usersMeSessions', userId))});
   }
 }
 

@@ -42,6 +42,9 @@ export type {UserProfileProps} from './components/account/UserProfile/UserProfil
 export {default as ChangeCredential} from './components/account/ChangeCredential/ChangeCredential';
 export type {ChangeCredentialProps} from './components/account/ChangeCredential/ChangeCredential';
 
+export {default as ActiveSessions} from './components/account/ActiveSessions/ActiveSessions';
+export type {ActiveSessionsProps} from './components/account/ActiveSessions/ActiveSessions';
+
 export {default as OrganizationUnitSwitcher} from './components/account/OrganizationUnitSwitcher/OrganizationUnitSwitcher';
 export type {OrganizationUnitSwitcherProps} from './components/account/OrganizationUnitSwitcher/OrganizationUnitSwitcher';
 export {default as VerifyAttribute} from './components/account/VerifyAttribute/VerifyAttribute';

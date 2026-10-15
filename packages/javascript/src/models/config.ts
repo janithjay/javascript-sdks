@@ -286,7 +286,7 @@ export interface BaseConfig<T = unknown> extends WithPreferences, WithExtensions
    *   `endSession`, `wellKnown`) — by default derived from the well-known discovery document at
    *   `{baseUrl}/oauth2/token/.well-known/openid-configuration`. Individual overrides take
    *   precedence over values resolved from the discovery document.
-   * - **Resource-server endpoints** (`flowExecute`, `flowMeta`, `usersMe`, `usersMeCredentials`, and the
+   * - **Resource-server endpoints** (`flowExecute`, `flowMeta`, `usersMe`, `usersMeCredentials`, `usersMeSessions`, and the
    *   management collections `applications`, `users`, `userTypes`, `flows`, `agents`, `agentTypes`, `roles`, `groups`,
    *   `organizationUnits`, `resourceServers`, `connections`, `notificationTemplates`, `design`, `i18n`,
    *   `serverConfig`, `gateways`, `variables`, `secrets`, `configurationVersions`, `import`, `export`,
@@ -529,6 +529,12 @@ export interface BaseConfig<T = unknown> extends WithPreferences, WithExtensions
      * If not provided, defaults to `{baseUrl}/users/me/ous`.
      */
     usersMeOrganizationUnits?: string;
+    /**
+     * The self-service sessions collection URL used to list and revoke the signed-in user's SSO
+     * sessions. A single session is addressed as `{usersMeSessions}/{id}`.
+     * If not provided, defaults to `{baseUrl}/users/me/sessions`.
+     */
+    usersMeSessions?: string;
     /**
      * The user types collection URL used by the user type listing operation.
      * If not provided, defaults to `{baseUrl}/user-types`.

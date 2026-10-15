@@ -28,6 +28,12 @@ export {default as getUsersMeMeta} from './api/account/getUsersMeMeta';
 export type {GetUsersMeMetaConfig, UsersMeMetaResponse, AttributeSchema} from './api/account/getUsersMeMeta';
 export {default as getAccessibleOrganizationUnits} from './api/account/getAccessibleOrganizationUnits';
 export type {GetAccessibleOrganizationUnitsConfig} from './api/account/getAccessibleOrganizationUnits';
+export {default as getMeSessions} from './api/account/getMeSessions';
+export type {GetMeSessionsConfig} from './api/account/getMeSessions';
+export {default as revokeMeSession} from './api/account/revokeMeSession';
+export type {RevokeMeSessionConfig} from './api/account/revokeMeSession';
+export {default as revokeMeSessions} from './api/account/revokeMeSessions';
+export type {RevokeMeSessionsConfig} from './api/account/revokeMeSessions';
 export {default as updateMeCredentials} from './api/account/updateMeCredentials';
 export type {UpdateMeCredentialsConfig} from './api/account/updateMeCredentials';
 export {default as updateMeProfile} from './api/account/updateMeProfile';
@@ -563,6 +569,7 @@ export type {
   CurrentOrganizationUnit,
   SwitchOrganizationUnitOptions,
 } from './models/accessible-organization-unit';
+export type {SSOSession, SSOSessionListResponse, SSOSessionParticipant} from './models/sso-session';
 
 export {
   EmbeddedFlowComponentType,
@@ -1071,6 +1078,8 @@ export {default as base64urlToArrayBuffer} from './utils/base64urlToArrayBuffer'
 export {default as bem} from './utils/bem';
 export {default as formatDate} from './utils/formatDate';
 export {default as deepMerge} from './utils/deepMerge';
+export {default as describeUserAgent} from './utils/describeUserAgent';
+export type {UserAgentDescription} from './utils/describeUserAgent';
 export {default as extractUserClaimsFromIdToken} from './utils/extractUserClaimsFromIdToken';
 export {default as validateLogoutTokenClaims} from './utils/validateLogoutTokenClaims';
 export {default as isRecognizedBaseUrlPattern} from './utils/isRecognizedBaseUrlPattern';
@@ -1121,6 +1130,8 @@ export {default as mergeOptionsBatch} from './utils/mergeOptionsBatch';
 export {default as loadUntilOptionsGrow} from './utils/loadUntilOptionsGrow';
 export {default as capPageSize} from './utils/capPageSize';
 export {default as resolvePageSize} from './utils/resolvePageSize';
+export {default as resolvePlatformIcon} from './utils/resolvePlatformIcon';
+export type {PlatformIcon, PlatformIconElement} from './utils/resolvePlatformIcon';
 export {default as parseSelectPageQuery} from './utils/parseSelectPageQuery';
 export {default as parseSelfFlowRequest} from './utils/parseSelfFlowRequest';
 export type {SelfFlowRequestParseResult} from './utils/parseSelfFlowRequest';

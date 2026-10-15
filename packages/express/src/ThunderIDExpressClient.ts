@@ -7,6 +7,7 @@ import {
   ExtendedAuthorizeRequestUrlParams,
   ThunderIDNodeManagementClient,
   ThunderIDRuntimeError,
+  SSOSessionListResponse,
   Storage,
   TokenResponse,
   User,
@@ -81,6 +82,30 @@ class ThunderIDExpressClient<T extends ExpressClientConfig = ExpressClientConfig
     const cookies = req.cookies as Record<string, string | undefined> | undefined;
     const sessionId: string | undefined = cookies?.[this.getSessionCookieName()];
     return this.updateUserCredentials(payload, sessionId);
+  }
+
+  public async getUserSessionsFromRequest(
+    req: express.Request,
+    options: {limit?: number; offset?: number} = {},
+  ): Promise<SSOSessionListResponse> {
+    const cookies = req.cookies as Record<string, string | undefined> | undefined;
+    const sessionId: string | undefined = cookies?.[this.getSessionCookieName()];
+    return this.getUserSessions(options, sessionId);
+  }
+
+  public async revokeUserSessionFromRequest(req: express.Request, ssoSessionId: string): Promise<void> {
+    const cookies = req.cookies as Record<string, string | undefined> | undefined;
+    const sessionId: string | undefined = cookies?.[this.getSessionCookieName()];
+    return this.revokeUserSession(ssoSessionId, sessionId);
+  }
+
+  public async revokeUserSessionsFromRequest(
+    req: express.Request,
+    options: {exceptCurrent?: boolean} = {},
+  ): Promise<void> {
+    const cookies = req.cookies as Record<string, string | undefined> | undefined;
+    const sessionId: string | undefined = cookies?.[this.getSessionCookieName()];
+    return this.revokeUserSessions(options, sessionId);
   }
 
   public override async signIn(
