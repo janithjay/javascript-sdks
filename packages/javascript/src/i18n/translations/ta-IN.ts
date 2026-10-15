@@ -137,6 +137,31 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'தேவையான வடிவமைப்பிற்கு பொருந்துகிறது',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'செயலில் உள்ள அமர்வுகள்',
+  'user.sessions.summary': '{count} செயலில் உள்ள அமர்வுகள் · நீங்கள் அறியாதவற்றைத் திரும்பப் பெறவும்',
+  'user.sessions.summary.only': 'இது உங்கள் ஒரே செயலில் உள்ள அமர்வு',
+  'user.sessions.current': 'இந்தச் சாதனம்',
+  'user.sessions.ip': 'IP முகவரி',
+  'user.sessions.signed_in': 'உள்நுழைந்தது',
+  'user.sessions.unknown': 'தெரியவில்லை',
+  'user.sessions.device': '{os} இல் {browser}',
+  'user.sessions.unknown_device': 'அறியப்படாத சாதனம்',
+  'user.sessions.last_active': 'கடைசியாக செயலில்',
+  'user.sessions.applications': 'பயன்பாடுகள்',
+  'user.sessions.revoke': 'திரும்பப் பெறு',
+  'user.sessions.revoke_others': 'மற்ற அனைத்தையும் திரும்பப் பெறு',
+  'user.sessions.revoke_others.confirm':
+    'மற்ற எல்லா அமர்வுகளையும் திரும்பப் பெறவா? நீங்கள் இங்கே உள்நுழைந்தே இருப்பீர்கள்.',
+  'user.sessions.revoke.confirm': '{device} இல் உள்ள அமர்வைத் திரும்பப் பெறவா?',
+  'user.sessions.cancel': 'ரத்துசெய்',
+  'user.sessions.empty': 'செயலில் உள்ள அமர்வுகள் இல்லை.',
+  'user.sessions.load.error': 'உங்கள் அமர்வுகளை ஏற்றும்போது பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.',
+  'user.sessions.revoke.error': 'அமர்வைத் திரும்பப் பெறும்போது பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

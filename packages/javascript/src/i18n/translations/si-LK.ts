@@ -136,6 +136,30 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'අවශ්‍ය ආකෘතියට ගැලපේ',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'සක්‍රිය සැසි',
+  'user.sessions.summary': 'සක්‍රිය සැසි {count} · ඔබ හඳුනා නොගන්නා ඒවා අහෝසි කරන්න',
+  'user.sessions.summary.only': 'මෙය ඔබගේ එකම සක්‍රිය සැසියයි',
+  'user.sessions.current': 'මෙම උපාංගය',
+  'user.sessions.ip': 'IP ලිපිනය',
+  'user.sessions.signed_in': 'පුරනය වූයේ',
+  'user.sessions.unknown': 'නොදනී',
+  'user.sessions.device': '{os} මත {browser}',
+  'user.sessions.unknown_device': 'නොදන්නා උපාංගය',
+  'user.sessions.last_active': 'අවසන් වරට සක්‍රිය',
+  'user.sessions.applications': 'යෙදුම්',
+  'user.sessions.revoke': 'අහෝසි කරන්න',
+  'user.sessions.revoke_others': 'අනෙක් සියල්ල අහෝසි කරන්න',
+  'user.sessions.revoke_others.confirm': 'අනෙක් සියලු සැසි අහෝසි කරන්නද? ඔබ මෙහි පුරනය වී සිටිනු ඇත.',
+  'user.sessions.revoke.confirm': '{device} හි සැසිය අහෝසි කරන්නද?',
+  'user.sessions.cancel': 'අවලංගු කරන්න',
+  'user.sessions.empty': 'සක්‍රිය සැසි නොමැත.',
+  'user.sessions.load.error': 'ඔබගේ සැසි පූරණය කිරීමේදී දෝෂයක් ඇති විය. කරුණාකර නැවත උත්සාහ කරන්න.',
+  'user.sessions.revoke.error': 'සැසිය අහෝසි කිරීමේදී දෝෂයක් ඇති විය. කරුණාකර නැවත උත්සාහ කරන්න.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

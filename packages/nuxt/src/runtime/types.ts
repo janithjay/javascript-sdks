@@ -8,6 +8,7 @@ import type {
   I18nPreferences,
   SelectPageErrorResult,
   SelectPage,
+  SSOSessionListResponse,
   TokenEndpointAuthMethod,
   User,
   UserProfile,
@@ -152,3 +153,22 @@ export type ThunderIDGetAuthFlowsResult = ThunderIDSelectPageResult;
 
 /** Result of `GET /api/auth/user-types`. */
 export type ThunderIDGetUserTypesResult = ThunderIDSelectPageResult;
+
+/**
+ * Result of `GET /api/auth/user/sessions`: one page of the signed-in user's SSO sessions, or why it could not be
+ * loaded. Always carried in the body of a `200` response, like {@link ThunderIDSelectPageResult}.
+ */
+export type ThunderIDGetUserSessionsResult =
+  | {page: SSOSessionListResponse; success: true}
+  | ({success: false} & SelectPageErrorResult);
+
+/**
+ * Result of `DELETE /api/auth/user/sessions`. A failure carries a message built on the server and the status, never
+ * the text of the upstream reply.
+ */
+export type ThunderIDRevokeUserSessionsResult =
+  | {success: true}
+  | {message: string; statusCode?: number; success: false};
+
+/** Result of `DELETE /api/auth/user/sessions/:sessionId`. `statusCode` 404 means the session is already gone. */
+export type ThunderIDRevokeUserSessionResult = ThunderIDRevokeUserSessionsResult;

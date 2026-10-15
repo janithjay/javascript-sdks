@@ -138,6 +138,30 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'Correspond au format requis',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'Sessions actives',
+  'user.sessions.summary': '{count} sessions actives · révoquez celles que vous ne reconnaissez pas',
+  'user.sessions.summary.only': 'Ceci est votre seule session active',
+  'user.sessions.current': 'Cet appareil',
+  'user.sessions.ip': 'Adresse IP',
+  'user.sessions.signed_in': 'Connexion',
+  'user.sessions.unknown': 'Inconnu',
+  'user.sessions.device': '{browser} sur {os}',
+  'user.sessions.unknown_device': 'Appareil inconnu',
+  'user.sessions.last_active': 'Dernière activité',
+  'user.sessions.applications': 'Applications',
+  'user.sessions.revoke': 'Révoquer',
+  'user.sessions.revoke_others': 'Révoquer toutes les autres',
+  'user.sessions.revoke_others.confirm': 'Révoquer toutes les autres sessions ? Vous resterez connecté ici.',
+  'user.sessions.revoke.confirm': 'Révoquer la session sur {device} ?',
+  'user.sessions.cancel': 'Annuler',
+  'user.sessions.empty': 'Aucune session active.',
+  'user.sessions.load.error': 'Une erreur est survenue lors du chargement de vos sessions. Veuillez réessayer.',
+  'user.sessions.revoke.error': 'Une erreur est survenue lors de la révocation de la session. Veuillez réessayer.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

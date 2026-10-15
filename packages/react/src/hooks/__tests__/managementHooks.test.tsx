@@ -12,6 +12,7 @@ import useCreateApplication from '../applications/useCreateApplication';
 import useGetApplication from '../applications/useGetApplication';
 import useGetApplications from '../applications/useGetApplications';
 import useUpdateApplication from '../applications/useUpdateApplication';
+import useGetMeSessions from '../sessions/useGetMeSessions';
 import useGetUsers from '../users/useGetUsers';
 
 type FetcherMock = Mock<ApiFetcher>;
@@ -90,6 +91,17 @@ describe('management query hooks', () => {
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(fetcher.mock.calls[0][0]).toBe('https://rs.example.com/applications/app-1');
+  });
+
+  it("targets the sessionsMe override for the signed-in user's sessions", async () => {
+    const fetcher: FetcherMock = createFetcher({count: 0, sessions: [], startIndex: 1, totalResults: 0});
+
+    const {result} = renderHook(() => useGetMeSessions({limit: 5}), {
+      wrapper: createWrapper({endpoints: {sessionsMe: 'https://rs.example.com/sessions/me'}, fetcher}),
+    });
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(fetcher.mock.calls[0][0]).toBe('https://rs.example.com/sessions/me?limit=5');
   });
 
   it('exposes a failed request as an error with a distinct code', async () => {

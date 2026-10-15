@@ -18,6 +18,7 @@ import {
   ManagedFlowListResponse,
   ManagedUserListResponse,
   ManagedUserTypeListResponse,
+  SSOSessionListResponse,
   UserProfile,
   executeEmbeddedSignInFlow,
   extractUserClaimsFromIdToken,
@@ -277,6 +278,42 @@ class ThunderIDNextClient<T extends ThunderIDNextConfig = ThunderIDNextConfig> e
     await this.ensureInitialized();
 
     return super.getUserTypes(options, userId);
+  }
+
+  /**
+   * Retrieves one page of the signed-in user's SSO sessions for the session identified by `userId`.
+   *
+   * Ensures the client is initialized first, like `getUsers`. Errors are not caught so the calling server action can map the real `ThunderIDAPIError`.
+   */
+  override async getUserSessions(
+    options: {limit?: number; offset?: number} = {},
+    userId?: string,
+  ): Promise<SSOSessionListResponse> {
+    await this.ensureInitialized();
+
+    return super.getUserSessions(options, userId);
+  }
+
+  /**
+   * Revokes one of the signed-in user's SSO sessions for the session identified by `userId`.
+   *
+   * Ensures the client is initialized first, like `getUsers`. Errors are not caught so the calling server action can map the real `ThunderIDAPIError`.
+   */
+  override async revokeUserSession(sessionId: string, userId?: string): Promise<void> {
+    await this.ensureInitialized();
+
+    return super.revokeUserSession(sessionId, userId);
+  }
+
+  /**
+   * Revokes the signed-in user's SSO sessions for the session identified by `userId`.
+   *
+   * Ensures the client is initialized first, like `getUsers`. Errors are not caught so the calling server action can map the real `ThunderIDAPIError`.
+   */
+  override async revokeUserSessions(options: {exceptCurrent?: boolean} = {}, userId?: string): Promise<void> {
+    await this.ensureInitialized();
+
+    return super.revokeUserSessions(options, userId);
   }
 
   override isLoading(): boolean {

@@ -29,6 +29,7 @@ const NuxtAPIRoutes: {
   USER: string;
   USER_CREDENTIALS: string;
   USER_PROFILE: string;
+  USER_SESSIONS: string;
   USER_TYPES: string;
   USERS: string;
 } = {
@@ -56,6 +57,8 @@ const NuxtAPIRoutes: {
   USER_CREDENTIALS: '/api/auth/user/credentials',
   /** Fetches (GET) and updates (PATCH) the user profile. */
   USER_PROFILE: '/api/auth/user/profile',
+  /** Lists (GET) and revokes (DELETE) the signed-in user's SSO sessions; `/:sessionId` revokes (DELETE) one. */
+  USER_SESSIONS: '/api/auth/user/sessions',
   /** Loads one page of user types for a `USER_TYPE_SELECT` picker, using the signed-in session. */
   USER_TYPES: '/api/auth/user-types',
   /** Loads one page of the user directory for a `USER_SELECT` picker, using the signed-in session. */

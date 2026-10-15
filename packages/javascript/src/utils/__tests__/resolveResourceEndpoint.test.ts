@@ -60,6 +60,7 @@ describe('resolveResourceEndpoint', (): void => {
       'flowExecute',
       'flowMeta',
       'flows',
+      'sessionsMe',
       'userTypes',
       'users',
       'usersMe',

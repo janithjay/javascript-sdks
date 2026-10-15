@@ -135,6 +135,30 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'Corresponde ao formato exigido',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'Sessões ativas',
+  'user.sessions.summary': '{count} sessões ativas · revogue as que não reconhece',
+  'user.sessions.summary.only': 'Esta é a sua única sessão ativa',
+  'user.sessions.current': 'Este dispositivo',
+  'user.sessions.ip': 'Endereço IP',
+  'user.sessions.signed_in': 'Sessão iniciada',
+  'user.sessions.unknown': 'Desconhecido',
+  'user.sessions.device': '{browser} em {os}',
+  'user.sessions.unknown_device': 'Dispositivo desconhecido',
+  'user.sessions.last_active': 'Última atividade',
+  'user.sessions.applications': 'Aplicações',
+  'user.sessions.revoke': 'Revogar',
+  'user.sessions.revoke_others': 'Revogar todas as outras',
+  'user.sessions.revoke_others.confirm': 'Revogar todas as outras sessões? Continuará com sessão iniciada aqui.',
+  'user.sessions.revoke.confirm': 'Revogar a sessão em {device}?',
+  'user.sessions.cancel': 'Cancelar',
+  'user.sessions.empty': 'Nenhuma sessão ativa.',
+  'user.sessions.load.error': 'Ocorreu um erro ao carregar as suas sessões. Tente novamente.',
+  'user.sessions.revoke.error': 'Ocorreu um erro ao revogar a sessão. Tente novamente.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

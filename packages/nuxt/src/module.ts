@@ -25,7 +25,7 @@ const PACKAGE_NAME = '@thunderid/nuxt';
 
 interface ServerRoute {
   handler: string;
-  method?: 'patch' | 'post';
+  method?: 'delete' | 'get' | 'patch' | 'post';
   route: string;
 }
 
@@ -188,6 +188,21 @@ export default defineNuxtModule<ThunderIDNuxtConfig>({
         method: 'patch' as const,
         route: NuxtAPIRoutes.USER_CREDENTIALS,
       },
+      {
+        handler: resolve('./runtime/server/routes/auth/user/sessions.get'),
+        method: 'get' as const,
+        route: NuxtAPIRoutes.USER_SESSIONS,
+      },
+      {
+        handler: resolve('./runtime/server/routes/auth/user/sessions.delete'),
+        method: 'delete' as const,
+        route: NuxtAPIRoutes.USER_SESSIONS,
+      },
+      {
+        handler: resolve('./runtime/server/routes/auth/user/session.delete'),
+        method: 'delete' as const,
+        route: `${NuxtAPIRoutes.USER_SESSIONS}/:sessionId`,
+      },
     ];
 
     // Opt-in: the route accepts unauthenticated requests, so it is served only when asked for.
@@ -271,6 +286,7 @@ export default defineNuxtModule<ThunderIDNuxtConfig>({
     addComponent({filePath: resolve('./runtime/components/user/UserProfile'), name: 'UserProfile'});
     addComponent({filePath: resolve('./runtime/components/user/UserDropdown'), name: 'UserDropdown'});
     addComponent({filePath: resolve('./runtime/components/user/ChangeCredential'), name: 'ChangeCredential'});
+    addComponent({filePath: resolve('./runtime/components/user/ActiveSessions'), name: 'ActiveSessions'});
 
     // ── Management pickers ──────────────────────────────────────────────────
     // Opt-in: each picker's route lists a management resource with the signed-in user's session, so the route and its

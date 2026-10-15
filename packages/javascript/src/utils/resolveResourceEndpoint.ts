@@ -18,6 +18,7 @@ export type ResourceEndpointKey =
   | 'flowExecute'
   | 'flowMeta'
   | 'flows'
+  | 'sessionsMe'
   | 'users'
   | 'usersMe'
   | 'usersMeCredentials'
@@ -34,6 +35,7 @@ export const RESOURCE_ENDPOINT_KEYS: readonly ResourceEndpointKey[] = [
   'flowExecute',
   'flowMeta',
   'flows',
+  'sessionsMe',
   'users',
   'usersMe',
   'usersMeCredentials',

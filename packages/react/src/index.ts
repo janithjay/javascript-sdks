@@ -76,6 +76,10 @@ export {default as useCreateUser} from './hooks/users/useCreateUser';
 export {default as useUpdateUser} from './hooks/users/useUpdateUser';
 export type {UpdateUserVariables} from './hooks/users/useUpdateUser';
 export {default as useDeleteUser} from './hooks/users/useDeleteUser';
+export {default as useGetMeSessions} from './hooks/sessions/useGetMeSessions';
+export {default as useRevokeMeSession} from './hooks/sessions/useRevokeMeSession';
+export {default as useRevokeMeSessions} from './hooks/sessions/useRevokeMeSessions';
+export type {RevokeMeSessionsVariables} from './hooks/sessions/useRevokeMeSessions';
 export {default as useGetAgents} from './hooks/agents/useGetAgents';
 export type {UseGetAgentsParams} from './hooks/agents/useGetAgents';
 export {default as useGetAgent} from './hooks/agents/useGetAgent';
@@ -174,6 +178,12 @@ export * from './components/presentation/ChangeCredential/BaseChangeCredential';
 
 export {default as ChangeCredential} from './components/presentation/ChangeCredential/ChangeCredential';
 export * from './components/presentation/ChangeCredential/ChangeCredential';
+
+export {default as BaseActiveSessions} from './components/presentation/ActiveSessions/BaseActiveSessions';
+export * from './components/presentation/ActiveSessions/BaseActiveSessions';
+
+export {default as ActiveSessions} from './components/presentation/ActiveSessions/ActiveSessions';
+export * from './components/presentation/ActiveSessions/ActiveSessions';
 
 export {default as BaseUserAvatar} from './components/presentation/UserAvatar/BaseUserAvatar';
 export * from './components/presentation/UserAvatar/BaseUserAvatar';
