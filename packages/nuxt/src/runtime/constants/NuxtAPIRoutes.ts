@@ -32,6 +32,7 @@ const NuxtAPIRoutes: {
   USER_ORGANIZATION_UNITS: string;
   USER_PROFILE: string;
   USER_SELF_FLOW: string;
+  USER_SESSIONS: string;
   USER_TYPES: string;
   USERS: string;
 } = {
@@ -65,6 +66,8 @@ const NuxtAPIRoutes: {
   USER_PROFILE: '/api/auth/user/profile',
   /** Executes (POST) one step of a `SELF` flow, such as attribute verification, for the signed-in user. */
   USER_SELF_FLOW: '/api/auth/user/self-flow',
+  /** Lists (GET) and revokes (DELETE) the signed-in user's SSO sessions; `/:sessionId` revokes (DELETE) one. */
+  USER_SESSIONS: '/api/auth/user/sessions',
   /** Loads one page of user types for a `USER_TYPE_SELECT` picker, using the signed-in session. */
   USER_TYPES: '/api/auth/user-types',
   /** Loads one page of the user directory for a `USER_SELECT` picker, using the signed-in session. */

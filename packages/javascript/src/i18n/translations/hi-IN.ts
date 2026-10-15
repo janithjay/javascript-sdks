@@ -161,6 +161,34 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'आवश्यक प्रारूप से मेल खाता है',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'सक्रिय सत्र',
+  'user.sessions.summary': '{count} सक्रिय सत्र · जिन्हें आप नहीं पहचानते उन्हें निरस्त करें',
+  'user.sessions.summary.only': 'यह आपका एकमात्र सक्रिय सत्र है',
+  'user.sessions.current': 'यह डिवाइस',
+  'user.sessions.ip': 'IP पता',
+  'user.sessions.signed_in': 'साइन इन किया',
+  'user.sessions.unknown': 'अज्ञात',
+  'user.sessions.device': '{os} पर {browser}',
+  'user.sessions.unknown_device': 'अज्ञात डिवाइस',
+  'user.sessions.last_active': 'नवीनतम SSO',
+  'user.sessions.applications': 'एप्लिकेशन',
+  'user.sessions.applications.scroll_left': 'एप्लिकेशन बाईं ओर स्क्रॉल करें',
+  'user.sessions.applications.scroll_right': 'एप्लिकेशन दाईं ओर स्क्रॉल करें',
+  'user.sessions.ago': '{time} पहले',
+  'user.sessions.just_now': 'अभी-अभी',
+  'user.sessions.revoke': 'निरस्त करें',
+  'user.sessions.revoke_others': 'अन्य सभी निरस्त करें',
+  'user.sessions.revoke_others.confirm': 'अन्य सभी सत्र निरस्त करें? आप यहाँ साइन इन रहेंगे।',
+  'user.sessions.revoke.confirm': '{device} पर सत्र निरस्त करें?',
+  'user.sessions.cancel': 'रद्द करें',
+  'user.sessions.empty': 'कोई सक्रिय सत्र नहीं।',
+  'user.sessions.load.error': 'आपके सत्र लोड करते समय एक त्रुटि हुई। कृपया पुनः प्रयास करें।',
+  'user.sessions.revoke.error': 'सत्र निरस्त करते समय एक त्रुटि हुई। कृपया पुनः प्रयास करें।',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

@@ -19,7 +19,7 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
 
     //   white-space: nowrap;
     const boxStyles: string = css`
-      position: absolute;
+      position: fixed;
       background-color: #333;
       color: #fff;
       padding: 6px 12px;
@@ -29,39 +29,12 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
       animation: ${fadeInAnimation} 0.15s ease-in-out;
 
-      min-width: 250px;
+      width: max-content;
+      max-width: 250px;
       white-space: normal;
       word-break: break-word;
       overflow-wrap: break-word;
       text-align: start;
-    `;
-
-    const topStyles: string = css`
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      margin-bottom: 8px;
-    `;
-
-    const bottomStyles: string = css`
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      margin-top: 8px;
-    `;
-
-    const leftStyles: string = css`
-      right: 100%;
-      top: 50%;
-      transform: translateY(-50%);
-      margin-right: 8px;
-    `;
-
-    const rightStyles: string = css`
-      left: 100%;
-      top: 50%;
-      transform: translateY(-50%);
-      margin-left: 8px;
     `;
 
     const arrowStyles: string = css`
@@ -106,10 +79,6 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
     return {
       container: containerStyles,
       box: boxStyles,
-      top: topStyles,
-      bottom: bottomStyles,
-      left: leftStyles,
-      right: rightStyles,
       arrow: arrowStyles,
       'top-arrow': topArrowStyles,
       'bottom-arrow': bottomArrowStyles,

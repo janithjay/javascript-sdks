@@ -24,6 +24,7 @@ import ANIMATIONS_CSS from './animations.css';
 import DEFAULTS_CSS from './defaults.css';
 
 // Primitives
+import ACTIVE_SESSIONS_CSS from '../components/account/active-sessions/ActiveSessions.css';
 import CHANGE_CREDENTIAL_CSS from '../components/account/change-credential/ChangeCredential.css';
 import ORGANIZATION_UNIT_SWITCHER_CSS from '../components/account/organization-unit-switcher/OrganizationUnitSwitcher.css';
 import USER_DROPDOWN_CSS from '../components/account/user-dropdown/UserDropdown.css';
@@ -51,6 +52,7 @@ import PASSWORD_FIELD_CSS from '../components/primitives/PasswordField/PasswordF
 import SELECT_CSS from '../components/primitives/Select/Select.css';
 import SPINNER_CSS from '../components/primitives/Spinner/Spinner.css';
 import TEXT_FIELD_CSS from '../components/primitives/TextField/TextField.css';
+import TOOLTIP_CSS from '../components/primitives/Tooltip/Tooltip.css';
 import TYPOGRAPHY_CSS from '../components/primitives/Typography/Typography.css';
 
 /**
@@ -81,12 +83,14 @@ const STYLES: string = [
   COPYABLE_TEXT_CSS,
   SPINNER_CSS,
   DATA_TABLE_CSS,
+  TOOLTIP_CSS,
   // Auth
   BASE_SIGN_IN_CSS,
   CONSENT_CSS,
   FLOW_EXPIRED_CSS,
   BASE_DEVICE_GRANT_CSS,
   // Presentation
+  ACTIVE_SESSIONS_CSS,
   CHANGE_CREDENTIAL_CSS,
   ORGANIZATION_UNIT_SWITCHER_CSS,
   LANGUAGE_SWITCHER_CSS,

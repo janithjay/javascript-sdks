@@ -86,6 +86,7 @@ describe('resolveResourceEndpoint', (): void => {
       'usersMeCredentials',
       'usersMeMeta',
       'usersMeOrganizationUnits',
+      'usersMeSessions',
       'variables',
     ]);
   });

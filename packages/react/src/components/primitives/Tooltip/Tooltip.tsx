@@ -1,8 +1,8 @@
 // Copyright 2026 The ThunderID Authors
 // SPDX-License-Identifier: Apache-2.0
 
-import {withVendorCSSClassPrefix, bem} from '@thunderid/browser';
-import {FC, InputHTMLAttributes, ReactNode, useId, useState, KeyboardEvent} from 'react';
+import {TooltipPlacement, TooltipPosition, withVendorCSSClassPrefix, bem, placeTooltip} from '@thunderid/browser';
+import {FC, InputHTMLAttributes, ReactNode, useEffect, useId, useRef, useState, KeyboardEvent} from 'react';
 import useStyles from './Tooltip.styles';
 import useTheme from '../../../contexts/Theme/useTheme';
 import {cx} from '../../../styles/emotion';
@@ -13,7 +13,7 @@ import {cx} from '../../../styles/emotion';
 export interface Tooltiprops extends Omit<InputHTMLAttributes<HTMLInputElement>, 'className' | 'type'> {
   className?: string;
   helperText?: string;
-  position?: 'top' | 'bottom' | 'left' | 'right';
+  position?: TooltipPosition;
   children?: ReactNode;
   ariaLabel?: string;
 }
@@ -39,6 +39,25 @@ const Tooltip: FC<Tooltiprops> = ({
   const {theme, colorScheme}: ReturnType<typeof useTheme> = useTheme();
   const styles: Record<string, string> = useStyles(theme, colorScheme);
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [placement, setPlacement] = useState<TooltipPlacement>();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const show = (): void => {
+    if (containerRef.current) {
+      setPlacement(placeTooltip(containerRef.current.getBoundingClientRect(), position));
+    }
+    setIsVisible(true);
+  };
+
+  // A fixed tooltip would drift from its element on scroll, so it closes instead.
+  useEffect(() => {
+    if (!isVisible) {
+      return undefined;
+    }
+    const hide = (): void => setIsVisible(false);
+    window.addEventListener('scroll', hide, true);
+    return (): void => window.removeEventListener('scroll', hide, true);
+  }, [isVisible]);
 
   // Unique ID to connect trigger button to tooltip box via ARIA
   const tooltipId = useId();
@@ -52,20 +71,25 @@ const Tooltip: FC<Tooltiprops> = ({
     // Optional: Prevent Space key from scrolling the page
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
-      setIsVisible((prev) => !prev);
+      if (isVisible) {
+        setIsVisible(false);
+      } else {
+        show();
+      }
     }
   };
   return (
     <div
+      ref={containerRef}
       tabIndex={0}
       role="button"
       aria-label={ariaLabel}
       aria-describedby={isVisible && helperText ? tooltipId : undefined}
       className={cx(withVendorCSSClassPrefix(bem('tooltip', 'container')), className, styles['container'])}
       style={style}
-      onMouseEnter={() => setIsVisible(true)}
+      onMouseEnter={show}
       onMouseLeave={() => setIsVisible(false)}
-      onFocus={() => setIsVisible(true)} /* Trigger on Tab Focus */
+      onFocus={show} /* Trigger on Tab Focus */
       onBlur={() => setIsVisible(false)} /* Hide on Tab Blur */
       onKeyDown={handleKeyDown} /* Allow ESC to dismiss */
       {...rest}
@@ -79,8 +103,8 @@ const Tooltip: FC<Tooltiprops> = ({
             withVendorCSSClassPrefix(bem('tooltip', 'box')),
             withVendorCSSClassPrefix(bem('tooltip', position)),
             styles['box'],
-            styles[position || 'bottom'],
           )}
+          style={placement}
         >
           {helperText}
           <span

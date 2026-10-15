@@ -1,7 +1,7 @@
 // Copyright 2026 The ThunderID Authors
 // SPDX-License-Identifier: Apache-2.0
 
-import {render, screen, cleanup} from '@testing-library/react';
+import {render, screen, cleanup, fireEvent} from '@testing-library/react';
 import {createTheme, ANONYMOUS_ANIMAL_ICONS} from '@thunderid/browser';
 import {ReactElement} from 'react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
@@ -48,6 +48,15 @@ describe('Avatar', () => {
   it('falls back to initials when only a name is provided', () => {
     render(withTheme(<Avatar name="Ada Lovelace" />));
     expect(screen.getByText('AL')).toBeInTheDocument();
+  });
+
+  it('falls back to initials when the image fails to load', () => {
+    render(withTheme(<Avatar imageUrl="https://example.com/missing.png" alt="Acme Store" name="Acme Store" />));
+
+    fireEvent.error(screen.getByRole('img', {name: 'Acme Store'}));
+
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    expect(screen.getByText('AS')).toBeInTheDocument();
   });
 
   it('renders the default icon when neither imageUrl nor name is provided', () => {
