@@ -25,6 +25,7 @@ import DEFAULTS_CSS from './defaults.css';
 
 // Primitives
 import BASE_SIGN_IN_CSS from '../components/auth/sign-in/BaseSignIn.css';
+import ACTIVE_SESSIONS_CSS from '../components/presentation/active-sessions/ActiveSessions.css';
 import CHANGE_CREDENTIAL_CSS from '../components/presentation/change-credential/ChangeCredential.css';
 import LANGUAGE_SWITCHER_CSS from '../components/presentation/language-switcher/LanguageSwitcher.css';
 import USER_DROPDOWN_CSS from '../components/presentation/user-dropdown/UserDropdown.css';
@@ -79,6 +80,7 @@ const STYLES: string = [
   LANGUAGE_SWITCHER_CSS,
   USER_DROPDOWN_CSS,
   USER_PROFILE_CSS,
+  ACTIVE_SESSIONS_CSS,
 ].join('\n');
 
 /**

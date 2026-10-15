@@ -65,6 +65,7 @@ describe('resolveResourceEndpoint', (): void => {
       'usersMe',
       'usersMeCredentials',
       'usersMeMeta',
+      'usersMeSessions',
     ]);
   });
 });

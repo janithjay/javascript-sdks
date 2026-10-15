@@ -135,6 +135,30 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'Matches the required format',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'Active sessions',
+  'user.sessions.summary': '{count} active sessions · revoke any you don’t recognize',
+  'user.sessions.summary.only': 'This is your only active session',
+  'user.sessions.current': 'This device',
+  'user.sessions.ip': 'IP address',
+  'user.sessions.signed_in': 'Signed in',
+  'user.sessions.unknown': 'Unknown',
+  'user.sessions.device': '{browser} on {os}',
+  'user.sessions.unknown_device': 'Unknown device',
+  'user.sessions.last_active': 'Last active',
+  'user.sessions.applications': 'Applications',
+  'user.sessions.revoke': 'Revoke',
+  'user.sessions.revoke_others': 'Revoke all others',
+  'user.sessions.revoke_others.confirm': 'Revoke all other sessions? You’ll stay signed in here.',
+  'user.sessions.revoke.confirm': 'Revoke the session on {device}?',
+  'user.sessions.cancel': 'Cancel',
+  'user.sessions.empty': 'No active sessions.',
+  'user.sessions.load.error': 'An error occurred while loading your sessions. Please try again.',
+  'user.sessions.revoke.error': 'An error occurred while revoking the session. Please try again.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

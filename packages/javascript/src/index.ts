@@ -35,6 +35,12 @@ export {default as updateApplication} from './api/applications/updateApplication
 export type {UpdateApplicationConfig} from './api/applications/updateApplication';
 export {default as deleteApplication} from './api/applications/deleteApplication';
 export type {DeleteApplicationConfig} from './api/applications/deleteApplication';
+export {default as getMeSessions} from './api/sessions/getMeSessions';
+export type {GetMeSessionsConfig} from './api/sessions/getMeSessions';
+export {default as revokeMeSession} from './api/sessions/revokeMeSession';
+export type {RevokeMeSessionConfig} from './api/sessions/revokeMeSession';
+export {default as revokeMeSessions} from './api/sessions/revokeMeSessions';
+export type {RevokeMeSessionsConfig} from './api/sessions/revokeMeSessions';
 export {default as getUsers} from './api/users/getUsers';
 export type {GetUsersConfig} from './api/users/getUsers';
 export {default as getFlows} from './api/flows/getFlows';
@@ -70,6 +76,7 @@ export {default as ConsentConstants} from './constants/ConsentConstants';
 export {default as ApplicationQueryKeys} from './constants/ApplicationQueryKeys';
 export {default as UserQueryKeys} from './constants/UserQueryKeys';
 export {default as AgentQueryKeys} from './constants/AgentQueryKeys';
+export {default as SSOSessionQueryKeys} from './constants/SSOSessionQueryKeys';
 export {default as UserSelectConstants} from './constants/UserSelectConstants';
 export {default as AuthFlowSelectConstants} from './constants/AuthFlowSelectConstants';
 export {default as UserTypeSelectConstants} from './constants/UserTypeSelectConstants';
@@ -241,6 +248,7 @@ export type {
 } from './models/managed-user';
 export type {ManagedFlow, ManagedFlowListResponse} from './models/managed-flow';
 export type {ManagedUserType, ManagedUserTypeListResponse} from './models/managed-user-type';
+export type {SSOSession, SSOSessionListResponse, SSOSessionParticipant} from './models/sso-session';
 export type {
   Agent,
   AgentInboundAuthConfig,
@@ -277,6 +285,10 @@ export {default as AuthenticationHelper} from './utils/AuthenticationHelper';
 export {default as arrayBufferToBase64url} from './utils/arrayBufferToBase64url';
 export {default as base64urlToArrayBuffer} from './utils/base64urlToArrayBuffer';
 export {default as bem} from './utils/bem';
+export {default as describeUserAgent} from './utils/describeUserAgent';
+export type {UserAgentDescription} from './utils/describeUserAgent';
+export {default as resolvePlatformIcon} from './utils/resolvePlatformIcon';
+export type {PlatformIcon, PlatformIconElement} from './utils/resolvePlatformIcon';
 export {default as formatDate} from './utils/formatDate';
 export {default as deepMerge} from './utils/deepMerge';
 export {default as extractUserClaimsFromIdToken} from './utils/extractUserClaimsFromIdToken';

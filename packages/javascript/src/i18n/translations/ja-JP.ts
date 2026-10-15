@@ -135,6 +135,30 @@ const translations: I18nTranslations = {
   'validation.password.pattern': '必要な形式に一致しています',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'アクティブなセッション',
+  'user.sessions.summary': '{count} 件のアクティブなセッション · 心当たりのないものは無効化してください',
+  'user.sessions.summary.only': 'これが唯一のアクティブなセッションです',
+  'user.sessions.current': 'このデバイス',
+  'user.sessions.ip': 'IP アドレス',
+  'user.sessions.signed_in': 'ログイン日時',
+  'user.sessions.unknown': '不明',
+  'user.sessions.device': '{os} の {browser}',
+  'user.sessions.unknown_device': '不明なデバイス',
+  'user.sessions.last_active': '最終アクティビティ',
+  'user.sessions.applications': 'アプリケーション',
+  'user.sessions.revoke': '無効化',
+  'user.sessions.revoke_others': '他のすべてを無効化',
+  'user.sessions.revoke_others.confirm': '他のすべてのセッションを無効化しますか？このデバイスはログインしたままです。',
+  'user.sessions.revoke.confirm': '{device} のセッションを無効化しますか？',
+  'user.sessions.cancel': 'キャンセル',
+  'user.sessions.empty': 'アクティブなセッションはありません。',
+  'user.sessions.load.error': 'セッションの読み込み中にエラーが発生しました。もう一度お試しください。',
+  'user.sessions.revoke.error': 'セッションの無効化中にエラーが発生しました。もう一度お試しください。',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

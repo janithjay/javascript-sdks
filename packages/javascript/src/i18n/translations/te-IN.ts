@@ -137,6 +137,30 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'అవసరమైన ఫార్మాట్‌కు సరిపోతుంది',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'సక్రియ సెషన్‌లు',
+  'user.sessions.summary': '{count} సక్రియ సెషన్‌లు · మీకు తెలియని వాటిని ఉపసంహరించండి',
+  'user.sessions.summary.only': 'ఇది మీ ఏకైక సక్రియ సెషన్',
+  'user.sessions.current': 'ఈ పరికరం',
+  'user.sessions.ip': 'IP చిరునామా',
+  'user.sessions.signed_in': 'సైన్ ఇన్ అయ్యారు',
+  'user.sessions.unknown': 'తెలియదు',
+  'user.sessions.device': '{os} లో {browser}',
+  'user.sessions.unknown_device': 'తెలియని పరికరం',
+  'user.sessions.last_active': 'చివరిగా సక్రియం',
+  'user.sessions.applications': 'అప్లికేషన్‌లు',
+  'user.sessions.revoke': 'ఉపసంహరించండి',
+  'user.sessions.revoke_others': 'ఇతర అన్నింటినీ ఉపసంహరించండి',
+  'user.sessions.revoke_others.confirm': 'మిగతా అన్ని సెషన్‌లను ఉపసంహరించాలా? మీరు ఇక్కడ సైన్ ఇన్ అయ్యే ఉంటారు.',
+  'user.sessions.revoke.confirm': '{device}లోని సెషన్‌ను ఉపసంహరించాలా?',
+  'user.sessions.cancel': 'రద్దు చేయండి',
+  'user.sessions.empty': 'సక్రియ సెషన్‌లు లేవు.',
+  'user.sessions.load.error': 'మీ సెషన్‌లను లోడ్ చేస్తున్నప్పుడు లోపం సంభవించింది. దయచేసి మళ్లీ ప్రయత్నించండి.',
+  'user.sessions.revoke.error': 'సెషన్‌ను ఉపసంహరిస్తున్నప్పుడు లోపం సంభవించింది. దయచేసి మళ్లీ ప్రయత్నించండి.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

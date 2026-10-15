@@ -127,6 +127,8 @@ export {default as BaseUserProfile} from './components/presentation/user-profile
 export {default as ChangeCredential} from './components/presentation/change-credential/ChangeCredential';
 export {default as BaseChangeCredential} from './components/presentation/change-credential/BaseChangeCredential';
 export type {ChangePasswordValues} from './components/presentation/change-credential/BaseChangeCredential';
+export {default as ActiveSessions} from './components/presentation/active-sessions/ActiveSessions';
+export {default as BaseActiveSessions} from './components/presentation/active-sessions/BaseActiveSessions';
 export {default as UserDropdown} from './components/presentation/user-dropdown/UserDropdown';
 export {default as BaseUserDropdown} from './components/presentation/user-dropdown/BaseUserDropdown';
 export {default as AcceptInvite} from './components/presentation/accept-invite/AcceptInvite';
