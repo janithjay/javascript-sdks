@@ -136,6 +136,32 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'අවශ්‍ය ආකෘතියට ගැලපේ',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'සක්‍රිය සැසි',
+  'user.sessions.summary': 'සක්‍රිය සැසි {count} · ඔබ හඳුනා නොගන්නා ඒවායින් ඉවත් වන්න',
+  'user.sessions.summary.only': 'මෙය ඔබගේ එකම සක්‍රිය සැසියයි',
+  'user.sessions.current': 'මෙම උපාංගය',
+  'user.sessions.status.active': 'සක්‍රිය',
+  'user.sessions.status.idle': 'අක්‍රිය',
+  'user.sessions.ip': 'IP ලිපිනය',
+  'user.sessions.signed_in': 'පුරනය වූයේ',
+  'user.sessions.unknown': 'නොදනී',
+  'user.sessions.device': '{os} මත {browser}',
+  'user.sessions.unknown_device': 'නොදන්නා උපාංගය',
+  'user.sessions.last_active': 'අවසන් වරට සක්‍රිය',
+  'user.sessions.applications': 'යෙදුම්',
+  'user.sessions.sign_out': 'ඉවත් වෙන්න',
+  'user.sessions.sign_out_others': 'අනෙක් සියල්ලෙන් ඉවත් වන්න',
+  'user.sessions.sign_out_others.confirm': 'අනෙක් සියලු සැසිවලින් ඉවත් වන්නද? ඔබ මෙහි පුරනය වී සිටිනු ඇත.',
+  'user.sessions.sign_out.confirm': '{device} වෙතින් ඉවත් වන්නද?',
+  'user.sessions.cancel': 'අවලංගු කරන්න',
+  'user.sessions.empty': 'සක්‍රිය සැසි නොමැත.',
+  'user.sessions.load.error': 'ඔබගේ සැසි පූරණය කිරීමේදී දෝෂයක් ඇති විය. කරුණාකර නැවත උත්සාහ කරන්න.',
+  'user.sessions.sign_out.error': 'සැසියෙන් ඉවත් වීමේදී දෝෂයක් ඇති විය. කරුණාකර නැවත උත්සාහ කරන්න.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

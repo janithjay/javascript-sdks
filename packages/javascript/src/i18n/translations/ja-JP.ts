@@ -135,6 +135,33 @@ const translations: I18nTranslations = {
   'validation.password.pattern': '必要な形式に一致しています',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'アクティブなセッション',
+  'user.sessions.summary': '{count} 件のアクティブなセッション · 心当たりのないものはログアウトしてください',
+  'user.sessions.summary.only': 'これが唯一のアクティブなセッションです',
+  'user.sessions.current': 'このデバイス',
+  'user.sessions.status.active': 'アクティブ',
+  'user.sessions.status.idle': 'アイドル',
+  'user.sessions.ip': 'IP アドレス',
+  'user.sessions.signed_in': 'ログイン日時',
+  'user.sessions.unknown': '不明',
+  'user.sessions.device': '{os} の {browser}',
+  'user.sessions.unknown_device': '不明なデバイス',
+  'user.sessions.last_active': '最終アクティビティ',
+  'user.sessions.applications': 'アプリケーション',
+  'user.sessions.sign_out': 'ログアウト',
+  'user.sessions.sign_out_others': '他のすべてからログアウト',
+  'user.sessions.sign_out_others.confirm':
+    '他のすべてのセッションからログアウトしますか？このデバイスはログインしたままです。',
+  'user.sessions.sign_out.confirm': '{device} からログアウトしますか？',
+  'user.sessions.cancel': 'キャンセル',
+  'user.sessions.empty': 'アクティブなセッションはありません。',
+  'user.sessions.load.error': 'セッションの読み込み中にエラーが発生しました。もう一度お試しください。',
+  'user.sessions.sign_out.error': 'セッションからのログアウト中にエラーが発生しました。もう一度お試しください。',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

@@ -135,6 +135,32 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'Matches the required format',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'Active sessions',
+  'user.sessions.summary': '{count} active sessions · sign out of any you don’t recognize',
+  'user.sessions.summary.only': 'This is your only active session',
+  'user.sessions.current': 'This device',
+  'user.sessions.status.active': 'Active',
+  'user.sessions.status.idle': 'Idle',
+  'user.sessions.ip': 'IP address',
+  'user.sessions.signed_in': 'Signed in',
+  'user.sessions.unknown': 'Unknown',
+  'user.sessions.device': '{browser} on {os}',
+  'user.sessions.unknown_device': 'Unknown device',
+  'user.sessions.last_active': 'Last active',
+  'user.sessions.applications': 'Applications',
+  'user.sessions.sign_out': 'Sign out',
+  'user.sessions.sign_out_others': 'Sign out all others',
+  'user.sessions.sign_out_others.confirm': 'Sign out of all other sessions? You’ll stay signed in here.',
+  'user.sessions.sign_out.confirm': 'Sign out of {device}?',
+  'user.sessions.cancel': 'Cancel',
+  'user.sessions.empty': 'No active sessions.',
+  'user.sessions.load.error': 'An error occurred while loading your sessions. Please try again.',
+  'user.sessions.sign_out.error': 'An error occurred while signing out of the session. Please try again.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

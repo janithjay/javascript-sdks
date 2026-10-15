@@ -135,6 +135,32 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'आवश्यक प्रारूप से मेल खाता है',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'सक्रिय सत्र',
+  'user.sessions.summary': '{count} सक्रिय सत्र · जिन्हें आप नहीं पहचानते उनसे साइन आउट करें',
+  'user.sessions.summary.only': 'यह आपका एकमात्र सक्रिय सत्र है',
+  'user.sessions.current': 'यह डिवाइस',
+  'user.sessions.status.active': 'सक्रिय',
+  'user.sessions.status.idle': 'निष्क्रिय',
+  'user.sessions.ip': 'IP पता',
+  'user.sessions.signed_in': 'साइन इन किया',
+  'user.sessions.unknown': 'अज्ञात',
+  'user.sessions.device': '{os} पर {browser}',
+  'user.sessions.unknown_device': 'अज्ञात डिवाइस',
+  'user.sessions.last_active': 'अंतिम सक्रियता',
+  'user.sessions.applications': 'एप्लिकेशन',
+  'user.sessions.sign_out': 'साइन आउट',
+  'user.sessions.sign_out_others': 'अन्य सभी से साइन आउट करें',
+  'user.sessions.sign_out_others.confirm': 'अन्य सभी सत्रों से साइन आउट करें? आप यहाँ साइन इन रहेंगे।',
+  'user.sessions.sign_out.confirm': '{device} से साइन आउट करें?',
+  'user.sessions.cancel': 'रद्द करें',
+  'user.sessions.empty': 'कोई सक्रिय सत्र नहीं।',
+  'user.sessions.load.error': 'आपके सत्र लोड करते समय एक त्रुटि हुई। कृपया पुनः प्रयास करें।',
+  'user.sessions.sign_out.error': 'सत्र से साइन आउट करते समय एक त्रुटि हुई। कृपया पुनः प्रयास करें।',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

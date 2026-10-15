@@ -135,6 +135,32 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'Corresponde ao formato exigido',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'Sessões ativas',
+  'user.sessions.summary': '{count} sessões ativas · saia das que você não reconhece',
+  'user.sessions.summary.only': 'Esta é sua única sessão ativa',
+  'user.sessions.current': 'Este dispositivo',
+  'user.sessions.status.active': 'Ativa',
+  'user.sessions.status.idle': 'Inativa',
+  'user.sessions.ip': 'Endereço IP',
+  'user.sessions.signed_in': 'Conectado em',
+  'user.sessions.unknown': 'Desconhecido',
+  'user.sessions.device': '{browser} no {os}',
+  'user.sessions.unknown_device': 'Dispositivo desconhecido',
+  'user.sessions.last_active': 'Última atividade',
+  'user.sessions.applications': 'Aplicativos',
+  'user.sessions.sign_out': 'Sair',
+  'user.sessions.sign_out_others': 'Sair de todas as outras',
+  'user.sessions.sign_out_others.confirm': 'Sair de todas as outras sessões? Você continuará conectado aqui.',
+  'user.sessions.sign_out.confirm': 'Sair de {device}?',
+  'user.sessions.cancel': 'Cancelar',
+  'user.sessions.empty': 'Nenhuma sessão ativa.',
+  'user.sessions.load.error': 'Ocorreu um erro ao carregar suas sessões. Tente novamente.',
+  'user.sessions.sign_out.error': 'Ocorreu um erro ao sair da sessão. Tente novamente.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

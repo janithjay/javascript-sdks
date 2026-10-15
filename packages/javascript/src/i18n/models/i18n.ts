@@ -135,6 +135,32 @@ export interface I18nTranslations {
   'validation.password.pattern': string;
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': string;
+  'user.sessions.summary': string;
+  'user.sessions.summary.only': string;
+  'user.sessions.current': string;
+  'user.sessions.status.active': string;
+  'user.sessions.status.idle': string;
+  'user.sessions.ip': string;
+  'user.sessions.signed_in': string;
+  'user.sessions.unknown': string;
+  'user.sessions.device': string;
+  'user.sessions.unknown_device': string;
+  'user.sessions.last_active': string;
+  'user.sessions.applications': string;
+  'user.sessions.sign_out': string;
+  'user.sessions.sign_out_others': string;
+  'user.sessions.sign_out_others.confirm': string;
+  'user.sessions.sign_out.confirm': string;
+  'user.sessions.cancel': string;
+  'user.sessions.empty': string;
+  'user.sessions.load.error': string;
+  'user.sessions.sign_out.error': string;
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

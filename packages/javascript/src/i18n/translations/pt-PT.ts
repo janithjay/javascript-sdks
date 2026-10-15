@@ -135,6 +135,32 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'Corresponde ao formato exigido',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'Sessões ativas',
+  'user.sessions.summary': '{count} sessões ativas · termine as que não reconhece',
+  'user.sessions.summary.only': 'Esta é a sua única sessão ativa',
+  'user.sessions.current': 'Este dispositivo',
+  'user.sessions.status.active': 'Ativa',
+  'user.sessions.status.idle': 'Inativa',
+  'user.sessions.ip': 'Endereço IP',
+  'user.sessions.signed_in': 'Sessão iniciada',
+  'user.sessions.unknown': 'Desconhecido',
+  'user.sessions.device': '{browser} em {os}',
+  'user.sessions.unknown_device': 'Dispositivo desconhecido',
+  'user.sessions.last_active': 'Última atividade',
+  'user.sessions.applications': 'Aplicações',
+  'user.sessions.sign_out': 'Terminar sessão',
+  'user.sessions.sign_out_others': 'Terminar todas as outras',
+  'user.sessions.sign_out_others.confirm': 'Terminar todas as outras sessões? Continuará com sessão iniciada aqui.',
+  'user.sessions.sign_out.confirm': 'Terminar a sessão em {device}?',
+  'user.sessions.cancel': 'Cancelar',
+  'user.sessions.empty': 'Nenhuma sessão ativa.',
+  'user.sessions.load.error': 'Ocorreu um erro ao carregar as suas sessões. Tente novamente.',
+  'user.sessions.sign_out.error': 'Ocorreu um erro ao terminar a sessão. Tente novamente.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

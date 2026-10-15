@@ -138,6 +138,32 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'Correspond au format requis',
 
   /* |---------------------------------------------------------------| */
+  /* |                           Sessions                            | */
+  /* |---------------------------------------------------------------| */
+
+  'user.sessions.heading': 'Sessions actives',
+  'user.sessions.summary': '{count} sessions actives · déconnectez celles que vous ne reconnaissez pas',
+  'user.sessions.summary.only': 'Ceci est votre seule session active',
+  'user.sessions.current': 'Cet appareil',
+  'user.sessions.status.active': 'Active',
+  'user.sessions.status.idle': 'Inactive',
+  'user.sessions.ip': 'Adresse IP',
+  'user.sessions.signed_in': 'Connexion',
+  'user.sessions.unknown': 'Inconnu',
+  'user.sessions.device': '{browser} sur {os}',
+  'user.sessions.unknown_device': 'Appareil inconnu',
+  'user.sessions.last_active': 'Dernière activité',
+  'user.sessions.applications': 'Applications',
+  'user.sessions.sign_out': 'Se déconnecter',
+  'user.sessions.sign_out_others': 'Déconnecter toutes les autres',
+  'user.sessions.sign_out_others.confirm': 'Se déconnecter de toutes les autres sessions ? Vous resterez connecté ici.',
+  'user.sessions.sign_out.confirm': 'Se déconnecter de {device} ?',
+  'user.sessions.cancel': 'Annuler',
+  'user.sessions.empty': 'Aucune session active.',
+  'user.sessions.load.error': 'Une erreur est survenue lors du chargement de vos sessions. Veuillez réessayer.',
+  'user.sessions.sign_out.error': 'Une erreur est survenue lors de la déconnexion de la session. Veuillez réessayer.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 
