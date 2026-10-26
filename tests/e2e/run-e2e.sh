@@ -310,12 +310,12 @@ EOF
 
 start_sample_apps() {
     echo "Starting sample apps..."
-    ( cd "$SAMPLES_DIR/quickstarts/browser" && pnpm exec vite --port 5173 ) &
-    ( cd "$SAMPLES_DIR/quickstarts/react" && pnpm exec vite --port 5174 ) &
-    ( cd "$SAMPLES_DIR/quickstarts/vue" && pnpm exec vite --port 5175 ) &
-    ( cd "$SAMPLES_DIR/quickstarts/nextjs" && pnpm exec next dev -p 3001 ) &
-    ( cd "$SAMPLES_DIR/quickstarts/nuxt" && pnpm exec nuxt dev --port 3002 ) &
-    ( cd "$SAMPLES_DIR/quickstarts/express" && pnpm exec node --env-file-if-exists=.env index.mjs ) &
+    ( cd "$SAMPLES_DIR/quickstarts/browser" && npx --no-install vite --port 5173 ) &
+    ( cd "$SAMPLES_DIR/quickstarts/react" && npx --no-install vite --port 5174 ) &
+    ( cd "$SAMPLES_DIR/quickstarts/vue" && npx --no-install vite --port 5175 ) &
+    ( cd "$SAMPLES_DIR/quickstarts/nextjs" && npx --no-install next dev -p 3001 ) &
+    ( cd "$SAMPLES_DIR/quickstarts/nuxt" && npx --no-install nuxt dev --port 3002 ) &
+    ( cd "$SAMPLES_DIR/quickstarts/express" && node --env-file-if-exists=.env index.mjs ) &
 
     wait_for_url "http://localhost:5173" "quickstarts/browser"
     wait_for_url "http://localhost:5174" "quickstarts/react"

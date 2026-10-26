@@ -8,8 +8,9 @@
  *
  * Each package under `packages/` is packed with `pnpm pack` (which is why `pnpm build` must run
  * first), and every `@thunderid/*` dependency in a quickstart, direct or transitive, is pinned to
- * the resulting tarball through a pnpm override. The quickstarts install exactly as an adopter's
- * app would, from packed tarballs, instead of linking into the workspace.
+ * the resulting tarball through an npm override. The quickstarts are npm projects and install
+ * with `npm install` exactly as an adopter's app would, from packed tarballs, instead of linking
+ * into the workspace.
  *
  * Environment:
  *   THUNDERID_SAMPLES_DIR   Use this local samples checkout instead of cloning (copied, never modified).
@@ -77,20 +78,22 @@ function packPackages(): Record<string, string> {
   return tarballs;
 }
 
-/** Adds an `overrides` entry per packed package to the quickstart's own pnpm-workspace.yaml. */
+/**
+ * Points every packed package at its tarball in the quickstart's package.json. npm rejects an
+ * override that conflicts with a direct dependency, so direct dependencies are rewritten too.
+ */
 function overrideWithTarballs(sampleDir: string, tarballs: Record<string, string>): void {
-  const workspaceFile = path.join(sampleDir, 'pnpm-workspace.yaml');
-  const lines = fs.existsSync(workspaceFile) ? fs.readFileSync(workspaceFile, 'utf8').split('\n') : [];
-  const entries = Object.entries(tarballs).map(([name, spec]) => `  '${name}': '${spec}'`);
+  const manifestFile = path.join(sampleDir, 'package.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestFile, 'utf8')) as Record<string, Record<string, string>>;
 
-  const overridesAt = lines.findIndex((line) => line.trimEnd() === 'overrides:');
-  if (overridesAt === -1) {
-    lines.push('', 'overrides:', ...entries, '');
-  } else {
-    lines.splice(overridesAt + 1, 0, ...entries);
+  manifest.overrides = {...manifest.overrides, ...tarballs};
+  for (const field of ['dependencies', 'devDependencies']) {
+    for (const name of Object.keys(manifest[field] ?? {})) {
+      if (tarballs[name]) manifest[field][name] = tarballs[name];
+    }
   }
 
-  fs.writeFileSync(workspaceFile, lines.join('\n'));
+  fs.writeFileSync(manifestFile, `${JSON.stringify(manifest, null, 2)}\n`);
 }
 
 const source = resolveSource();
@@ -112,7 +115,7 @@ try {
     overrideWithTarballs(to, tarballs);
     console.log(`Installing quickstarts/${name} against the local SDK packages...`);
     // The samples repo's lockfile pins the published releases, which the overrides replace.
-    run('pnpm', ['install', '--no-frozen-lockfile'], to);
+    run('npm', ['install'], to);
   }
 } finally {
   source.cleanup?.();
