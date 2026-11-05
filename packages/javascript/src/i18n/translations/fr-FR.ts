@@ -165,6 +165,43 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'Correspond au format requis',
 
   /* |---------------------------------------------------------------| */
+  /* |                            Passkeys                           | */
+  /* |---------------------------------------------------------------| */
+
+  'user.passkeys.heading': "Clés d'accès",
+  'user.passkeys.description':
+    "Connectez-vous avec votre empreinte, votre visage ou le verrouillage de l'écran au lieu d'un mot de passe.",
+  'user.passkeys.empty': "Vous n'avez encore ajouté aucune clé d'accès.",
+  'user.passkeys.unnamed': "Clé d'accès",
+  'user.passkeys.add': "Ajouter une clé d'accès",
+  'user.passkeys.add.name.label': 'Nom',
+  'user.passkeys.add.name.placeholder': 'Par exemple, Ordinateur du bureau',
+  'user.passkeys.add.name.helper': "Facultatif. Vous aide à distinguer vos clés d'accès.",
+  'user.passkeys.add.continue': 'Continuer',
+  'user.passkeys.cancel': 'Annuler',
+  'user.passkeys.add.success': "Clé d'accès ajoutée.",
+  'user.passkeys.remove': 'Supprimer',
+  'user.passkeys.remove.confirm.heading': "Supprimer la clé d'accès",
+  'user.passkeys.remove.confirm.description': 'Vous ne pourrez plus vous connecter avec {name}.',
+  'user.passkeys.remove.confirm.last':
+    "C'est votre dernière clé d'accès. Vous aurez besoin d'un autre moyen de connexion, comme votre mot de passe.",
+  'user.passkeys.remove.success': "Clé d'accès supprimée.",
+  'user.passkeys.error.load': "Impossible de charger vos clés d'accès. Veuillez réessayer.",
+  'user.passkeys.error.add': "Impossible d'ajouter la clé d'accès. Veuillez réessayer.",
+  'user.passkeys.error.remove': "Impossible de supprimer la clé d'accès. Veuillez réessayer.",
+  'user.passkeys.error.cancelled': "L'ajout de la clé d'accès a été annulé ou a expiré.",
+  'user.passkeys.error.already_registered': "Cet appareil possède déjà une clé d'accès pour votre compte.",
+  'user.passkeys.error.unsupported': "Ce navigateur ne prend pas en charge les clés d'accès.",
+  'user.passkeys.error.name_too_long': 'Utilisez un nom de 64 caractères au maximum.',
+  'user.passkeys.error.delegated':
+    "Les clés d'accès ne peuvent pas être modifiées lorsque vous agissez pour le compte d'un autre utilisateur.",
+  'user.passkeys.error.relying_party':
+    "Les clés d'accès ne peuvent pas être ajoutées sur ce domaine. Veuillez contacter votre administrateur.",
+  'user.passkeys.error.forbidden':
+    "Votre compte ne peut pas modifier ses clés d'accès pour le moment. Veuillez contacter votre administrateur.",
+  'user.passkeys.error.not_found': "Cette clé d'accès n'existe plus.",
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

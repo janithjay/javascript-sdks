@@ -7,6 +7,7 @@ export {default as CircleCheck} from './CircleCheck';
 export {default as Eye} from './Eye';
 export {default as EyeOff} from './EyeOff';
 export {default as Info} from './Info';
+export {default as KeyRound} from './KeyRound';
 export {default as LogOut} from './LogOut';
 export {default as Plus} from './Plus';
 export {default as Timer} from './Timer';

@@ -32,6 +32,14 @@ export {default as updateMeCredentials} from './api/account/updateMeCredentials'
 export type {UpdateMeCredentialsConfig} from './api/account/updateMeCredentials';
 export {default as updateMeProfile} from './api/account/updateMeProfile';
 export type {UpdateMeProfileConfig} from './api/account/updateMeProfile';
+export {default as getMePasskeys} from './api/account/getMePasskeys';
+export type {GetMePasskeysConfig} from './api/account/getMePasskeys';
+export {default as startMePasskeyRegistration} from './api/account/startMePasskeyRegistration';
+export type {StartMePasskeyRegistrationConfig} from './api/account/startMePasskeyRegistration';
+export {default as finishMePasskeyRegistration} from './api/account/finishMePasskeyRegistration';
+export type {FinishMePasskeyRegistrationConfig} from './api/account/finishMePasskeyRegistration';
+export {default as deleteMePasskey} from './api/account/deleteMePasskey';
+export type {DeleteMePasskeyConfig} from './api/account/deleteMePasskey';
 
 export {default as getApplications} from './api/management/applications/getApplications';
 export type {GetApplicationsConfig} from './api/management/applications/getApplications';
@@ -753,6 +761,12 @@ export type {
   UserUsagesResponse,
 } from './models/managed-user';
 export type {
+  Passkey,
+  PasskeyListResponse,
+  PasskeyRegistrationCredential,
+  PasskeyRegistrationStartResponse,
+} from './models/passkey';
+export type {
   AccountLifecycleAction,
   AccountLifecycleOptions,
   AccountLifecycleResult,
@@ -1151,6 +1165,7 @@ export {default as resolveChangeCredentialPolicy} from './utils/resolveChangeCre
 export {default as supportsCredential} from './utils/supportsCredential';
 export {default as mapCredentialUpdateError} from './utils/mapCredentialUpdateError';
 export type {CredentialUpdateErrorField, CredentialUpdateErrorResult} from './utils/mapCredentialUpdateError';
+export {default as resolvePasskeyErrorKey} from './utils/resolvePasskeyErrorKey';
 export {default as mapSelectPageError} from './utils/mapSelectPageError';
 export type {SelectPageErrorResult} from './utils/mapSelectPageError';
 export {default as resolveMeta} from './utils/resolveMeta';

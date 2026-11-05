@@ -164,6 +164,38 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'అవసరమైన ఫార్మాట్‌కు సరిపోతుంది',
 
   /* |---------------------------------------------------------------| */
+  /* |                            Passkeys                           | */
+  /* |---------------------------------------------------------------| */
+
+  'user.passkeys.heading': 'పాస్‌కీలు',
+  'user.passkeys.description': 'పాస్‌వర్డ్‌కు బదులుగా మీ వేలిముద్ర, ముఖం లేదా స్క్రీన్ లాక్‌తో సైన్ ఇన్ చేయండి.',
+  'user.passkeys.empty': 'మీరు ఇంకా ఏ పాస్‌కీని జోడించలేదు.',
+  'user.passkeys.unnamed': 'పాస్‌కీ',
+  'user.passkeys.add': 'పాస్‌కీని జోడించండి',
+  'user.passkeys.add.name.label': 'పేరు',
+  'user.passkeys.add.name.placeholder': 'ఉదాహరణకు, ఆఫీస్ ల్యాప్‌టాప్',
+  'user.passkeys.add.name.helper': 'ఐచ్ఛికం. మీ పాస్‌కీలను వేరుగా గుర్తించడంలో సహాయపడుతుంది.',
+  'user.passkeys.add.continue': 'కొనసాగించండి',
+  'user.passkeys.cancel': 'రద్దు చేయండి',
+  'user.passkeys.add.success': 'పాస్‌కీ జోడించబడింది.',
+  'user.passkeys.remove': 'తీసివేయండి',
+  'user.passkeys.remove.confirm.heading': 'పాస్‌కీని తీసివేయండి',
+  'user.passkeys.remove.confirm.description': 'మీరు ఇకపై {name}తో సైన్ ఇన్ చేయలేరు.',
+  'user.passkeys.remove.confirm.last': 'ఇది మీ చివరి పాస్‌కీ. సైన్ ఇన్ చేయడానికి మీ పాస్‌వర్డ్ వంటి మరో మార్గం అవసరం.',
+  'user.passkeys.remove.success': 'పాస్‌కీ తీసివేయబడింది.',
+  'user.passkeys.error.load': 'మీ పాస్‌కీలను లోడ్ చేయలేకపోయాం. దయచేసి మళ్లీ ప్రయత్నించండి.',
+  'user.passkeys.error.add': 'పాస్‌కీని జోడించలేకపోయాం. దయచేసి మళ్లీ ప్రయత్నించండి.',
+  'user.passkeys.error.remove': 'పాస్‌కీని తీసివేయలేకపోయాం. దయచేసి మళ్లీ ప్రయత్నించండి.',
+  'user.passkeys.error.cancelled': 'పాస్‌కీ జోడించడం రద్దు చేయబడింది లేదా సమయం ముగిసింది.',
+  'user.passkeys.error.already_registered': 'ఈ పరికరంలో మీ ఖాతాకు ఇప్పటికే ఒక పాస్‌కీ ఉంది.',
+  'user.passkeys.error.unsupported': 'ఈ బ్రౌజర్ పాస్‌కీలకు మద్దతు ఇవ్వదు.',
+  'user.passkeys.error.name_too_long': '64 లేదా అంతకంటే తక్కువ అక్షరాల పేరును ఉపయోగించండి.',
+  'user.passkeys.error.delegated': 'మరొక వినియోగదారు తరపున పని చేస్తున్నప్పుడు పాస్‌కీలను మార్చలేరు.',
+  'user.passkeys.error.relying_party': 'ఈ డొమైన్‌లో పాస్‌కీలను జోడించలేరు. దయచేసి మీ నిర్వాహకుడిని సంప్రదించండి.',
+  'user.passkeys.error.forbidden': 'మీ ఖాతా ప్రస్తుతం దాని పాస్‌కీలను మార్చలేదు. దయచేసి మీ నిర్వాహకుడిని సంప్రదించండి.',
+  'user.passkeys.error.not_found': 'ఈ పాస్‌కీ ఇప్పుడు లేదు.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

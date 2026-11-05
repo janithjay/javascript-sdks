@@ -102,6 +102,7 @@ export {
   TriangleAlertIcon,
   XIcon,
   PlusIcon,
+  KeyRoundIcon,
   LogOutIcon,
   ArrowLeftRightIcon,
   BuildingIcon,
@@ -169,6 +170,9 @@ export type {
   BaseOrganizationUnitSwitcherProps,
   OrganizationUnitSwitcherRenderProps,
 } from './components/account/organization-unit-switcher/BaseOrganizationUnitSwitcher';
+export {default as Passkeys} from './components/account/passkeys/Passkeys';
+export {default as BasePasskeys} from './components/account/passkeys/BasePasskeys';
+export type {BasePasskeysRenderProps} from './components/account/passkeys/BasePasskeys';
 export {default as UserDropdown} from './components/account/user-dropdown/UserDropdown';
 export {default as BaseUserDropdown} from './components/account/user-dropdown/BaseUserDropdown';
 export {default as AcceptInvite} from './components/auth/accept-invite/AcceptInvite';

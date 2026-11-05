@@ -163,6 +163,38 @@ const translations: I18nTranslations = {
   'validation.password.pattern': 'අවශ්‍ය ආකෘතියට ගැලපේ',
 
   /* |---------------------------------------------------------------| */
+  /* |                            Passkeys                           | */
+  /* |---------------------------------------------------------------| */
+
+  'user.passkeys.heading': 'මුරයතුරු',
+  'user.passkeys.description': 'මුරපදයක් වෙනුවට ඔබේ ඇඟිලි සලකුණ, මුහුණ හෝ තිර අගුල මඟින් පුරනය වන්න.',
+  'user.passkeys.empty': 'ඔබ තවමත් මුරයතුරු කිසිවක් එක් කර නැත.',
+  'user.passkeys.unnamed': 'මුරයතුර',
+  'user.passkeys.add': 'මුරයතුරක් එක් කරන්න',
+  'user.passkeys.add.name.label': 'නම',
+  'user.passkeys.add.name.placeholder': 'උදාහරණයක් ලෙස, කාර්යාල ලැප්ටොප්',
+  'user.passkeys.add.name.helper': 'අත්‍යවශ්‍ය නොවේ. ඔබේ මුරයතුරු වෙන්කර හඳුනා ගැනීමට උපකාරී වේ.',
+  'user.passkeys.add.continue': 'ඉදිරියට',
+  'user.passkeys.cancel': 'අවලංගු කරන්න',
+  'user.passkeys.add.success': 'මුරයතුර එක් කළා.',
+  'user.passkeys.remove': 'ඉවත් කරන්න',
+  'user.passkeys.remove.confirm.heading': 'මුරයතුර ඉවත් කරන්න',
+  'user.passkeys.remove.confirm.description': 'ඔබට තවදුරටත් {name} මඟින් පුරනය විය නොහැක.',
+  'user.passkeys.remove.confirm.last': 'මෙය ඔබේ අවසන් මුරයතුරයි. පුරනය වීමට ඔබේ මුරපදය වැනි වෙනත් ක්‍රමයක් අවශ්‍ය වේ.',
+  'user.passkeys.remove.success': 'මුරයතුර ඉවත් කළා.',
+  'user.passkeys.error.load': 'ඔබේ මුරයතුරු පූරණය කළ නොහැකි විය. කරුණාකර නැවත උත්සාහ කරන්න.',
+  'user.passkeys.error.add': 'මුරයතුර එක් කළ නොහැකි විය. කරුණාකර නැවත උත්සාහ කරන්න.',
+  'user.passkeys.error.remove': 'මුරයතුර ඉවත් කළ නොහැකි විය. කරුණාකර නැවත උත්සාහ කරන්න.',
+  'user.passkeys.error.cancelled': 'මුරයතුර එක් කිරීම අවලංගු විය හෝ කල් ඉකුත් විය.',
+  'user.passkeys.error.already_registered': 'මෙම උපාංගයේ ඔබේ ගිණුම සඳහා දැනටමත් මුරයතුරක් ඇත.',
+  'user.passkeys.error.unsupported': 'මෙම බ්‍රව්සරය මුරයතුරු සඳහා සහාය නොදක්වයි.',
+  'user.passkeys.error.name_too_long': 'අක්ෂර 64ක් හෝ ඊට අඩු නමක් භාවිත කරන්න.',
+  'user.passkeys.error.delegated': 'වෙනත් පරිශීලකයෙකු වෙනුවෙන් ක්‍රියා කරන අතරතුර මුරයතුරු වෙනස් කළ නොහැක.',
+  'user.passkeys.error.relying_party': 'මෙම වසමේ මුරයතුරු එක් කළ නොහැක. කරුණාකර ඔබේ පරිපාලක අමතන්න.',
+  'user.passkeys.error.forbidden': 'ඔබේ ගිණුමට දැනට මුරයතුරු වෙනස් කළ නොහැක. කරුණාකර ඔබේ පරිපාලක අමතන්න.',
+  'user.passkeys.error.not_found': 'මෙම මුරයතුර තවදුරටත් නොපවතී.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

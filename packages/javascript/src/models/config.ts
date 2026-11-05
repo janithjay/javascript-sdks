@@ -529,6 +529,11 @@ export interface BaseConfig<T = unknown> extends WithPreferences, WithExtensions
      * If not provided, defaults to `{baseUrl}/users/me/ous`.
      */
     usersMeOrganizationUnits?: string;
+     * The signed-in user's passkeys collection URL. Adding a passkey uses `{usersMePasskeys}/register/start`
+     * and `{usersMePasskeys}/register/finish`, and a single passkey is addressed as `{usersMePasskeys}/{id}`.
+     * If not provided, defaults to `{baseUrl}/users/me/passkeys`.
+     */
+    usersMePasskeys?: string;
     /**
      * The user types collection URL used by the user type listing operation.
      * If not provided, defaults to `{baseUrl}/user-types`.

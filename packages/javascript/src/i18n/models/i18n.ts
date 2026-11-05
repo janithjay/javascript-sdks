@@ -162,6 +162,38 @@ export interface I18nTranslations {
   'validation.password.pattern': string;
 
   /* |---------------------------------------------------------------| */
+  /* |                            Passkeys                           | */
+  /* |---------------------------------------------------------------| */
+
+  'user.passkeys.heading': string;
+  'user.passkeys.description': string;
+  'user.passkeys.empty': string;
+  'user.passkeys.unnamed': string;
+  'user.passkeys.add': string;
+  'user.passkeys.add.name.label': string;
+  'user.passkeys.add.name.placeholder': string;
+  'user.passkeys.add.name.helper': string;
+  'user.passkeys.add.continue': string;
+  'user.passkeys.cancel': string;
+  'user.passkeys.add.success': string;
+  'user.passkeys.remove': string;
+  'user.passkeys.remove.confirm.heading': string;
+  'user.passkeys.remove.confirm.description': string;
+  'user.passkeys.remove.confirm.last': string;
+  'user.passkeys.remove.success': string;
+  'user.passkeys.error.load': string;
+  'user.passkeys.error.add': string;
+  'user.passkeys.error.remove': string;
+  'user.passkeys.error.cancelled': string;
+  'user.passkeys.error.already_registered': string;
+  'user.passkeys.error.unsupported': string;
+  'user.passkeys.error.name_too_long': string;
+  'user.passkeys.error.delegated': string;
+  'user.passkeys.error.relying_party': string;
+  'user.passkeys.error.forbidden': string;
+  'user.passkeys.error.not_found': string;
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

@@ -388,6 +388,11 @@ export * from './components/account/OrganizationUnitSwitcher/BaseOrganizationUni
 export {default as OrganizationUnitSwitcher} from './components/account/OrganizationUnitSwitcher/OrganizationUnitSwitcher';
 export * from './components/account/OrganizationUnitSwitcher/OrganizationUnitSwitcher';
 export {default as getOrganizationUnitSwitchErrorKey} from './utils/getOrganizationUnitSwitchErrorKey';
+export {default as BasePasskeys} from './components/account/Passkeys/BasePasskeys';
+export * from './components/account/Passkeys/BasePasskeys';
+
+export {default as Passkeys} from './components/account/Passkeys/Passkeys';
+export * from './components/account/Passkeys/Passkeys';
 
 export {default as BaseUserAvatar} from './components/account/UserAvatar/BaseUserAvatar';
 export * from './components/account/UserAvatar/BaseUserAvatar';
@@ -493,6 +498,7 @@ export {default as CircleCheck} from './components/primitives/Icons/CircleCheck'
 export {default as CircleAlert} from './components/primitives/Icons/CircleAlert';
 export {default as TriangleAlert} from './components/primitives/Icons/TriangleAlert';
 export {default as Info} from './components/primitives/Icons/Info';
+export {default as KeyRound} from './components/primitives/Icons/KeyRound';
 export {default as UserIcon} from './components/primitives/Icons/User';
 export {default as LogOut} from './components/primitives/Icons/LogOut';
 
