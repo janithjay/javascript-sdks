@@ -325,14 +325,23 @@ const useStyles = (
           outline: none;
         }
       `,
+      'error-icon': css`
+        background-color: transparent;
+        color: ${theme.vars.colors.error.main};
+        border-color: transparent;
+        &:hover:not(:disabled),
+        &:focus-visible:not(:disabled) {
+          border-color: transparent;
+          background-color: ${theme.vars.colors.action.hover};
+        }
+      `,
       'error-outline': css`
         background-color: transparent;
         color: ${theme.vars.colors.error.main};
         border-color: ${theme.vars.colors.error.main};
         &:hover:not(:disabled),
         &:focus-visible:not(:disabled) {
-          background-color: ${theme.vars.colors.error.main};
-          color: ${theme.vars.colors.error.contrastText};
+          background-color: ${theme.vars.colors.action.hover};
         }
       `,
       'error-solid': css`

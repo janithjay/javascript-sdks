@@ -75,6 +75,24 @@ export const handlePasskeyRegistration = async (challengeData: string): Promise<
     }
 
     if (error instanceof Error) {
+      if (error.name === 'NotAllowedError') {
+        throw new ThunderIDRuntimeError(
+          'Passkey registration was cancelled or timed out. Please try again.',
+          'browser-webauthn-user-cancelled',
+          'browser',
+          'The user cancelled the WebAuthn registration request or the request timed out.',
+        );
+      }
+
+      if (error.name === 'InvalidStateError') {
+        throw new ThunderIDRuntimeError(
+          'This device already has a passkey for this account.',
+          'browser-webauthn-already-registered',
+          'browser',
+          'The authenticator already holds one of the credentials in excludeCredentials.',
+        );
+      }
+
       throw new ThunderIDRuntimeError(
         'Passkey registration failed. Please try again.',
         'browser-webauthn-registration-error',

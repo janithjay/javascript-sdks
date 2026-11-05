@@ -26,6 +26,7 @@ import DEFAULTS_CSS from './defaults.css';
 // Primitives
 import CHANGE_CREDENTIAL_CSS from '../components/account/change-credential/ChangeCredential.css';
 import ORGANIZATION_UNIT_SWITCHER_CSS from '../components/account/organization-unit-switcher/OrganizationUnitSwitcher.css';
+import PASSKEYS_CSS from '../components/account/passkeys/Passkeys.css';
 import USER_DROPDOWN_CSS from '../components/account/user-dropdown/UserDropdown.css';
 import USER_PROFILE_CSS from '../components/account/user-profile/UserProfile.css';
 import VERIFY_ATTRIBUTE_CSS from '../components/account/verify-attribute/VerifyAttribute.css';
@@ -89,6 +90,7 @@ const STYLES: string = [
   // Presentation
   CHANGE_CREDENTIAL_CSS,
   ORGANIZATION_UNIT_SWITCHER_CSS,
+  PASSKEYS_CSS,
   LANGUAGE_SWITCHER_CSS,
   USER_DROPDOWN_CSS,
   USER_PROFILE_CSS,
