@@ -382,6 +382,12 @@ export * from './components/account/ChangeCredential/BaseChangeCredential';
 export {default as ChangeCredential} from './components/account/ChangeCredential/ChangeCredential';
 export * from './components/account/ChangeCredential/ChangeCredential';
 
+export {default as BaseActiveSessions} from './components/account/ActiveSessions/BaseActiveSessions';
+export * from './components/account/ActiveSessions/BaseActiveSessions';
+
+export {default as ActiveSessions} from './components/account/ActiveSessions/ActiveSessions';
+export * from './components/account/ActiveSessions/ActiveSessions';
+
 export {default as BaseOrganizationUnitSwitcher} from './components/account/OrganizationUnitSwitcher/BaseOrganizationUnitSwitcher';
 export * from './components/account/OrganizationUnitSwitcher/BaseOrganizationUnitSwitcher';
 
@@ -505,6 +511,12 @@ export type {UpdateMeProfileConfig} from './api/account/updateMeProfile';
 export {default as updateMeCredentials} from './api/account/updateMeCredentials';
 export {default as getAccessibleOrganizationUnits} from './api/account/getAccessibleOrganizationUnits';
 export type {GetAccessibleOrganizationUnitsConfig} from './api/account/getAccessibleOrganizationUnits';
+export {default as getMeSessions} from './api/account/getMeSessions';
+export type {GetMeSessionsConfig} from './api/account/getMeSessions';
+export {default as revokeMeSession} from './api/account/revokeMeSession';
+export type {RevokeMeSessionConfig} from './api/account/revokeMeSession';
+export {default as revokeMeSessions} from './api/account/revokeMeSessions';
+export type {RevokeMeSessionsConfig} from './api/account/revokeMeSessions';
 export type {UpdateMeCredentialsConfig} from './api/account/updateMeCredentials';
 export {default as executeEmbeddedSelfFlow} from './api/auth/executeEmbeddedSelfFlow';
 export type {ExecuteEmbeddedSelfFlowConfig} from './api/auth/executeEmbeddedSelfFlow';

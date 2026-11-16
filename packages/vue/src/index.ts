@@ -163,6 +163,8 @@ export {default as Attribution} from './components/common/attribution/Attributio
 export {default as ChangeCredential} from './components/account/change-credential/ChangeCredential';
 export {default as BaseChangeCredential} from './components/account/change-credential/BaseChangeCredential';
 export type {ChangePasswordValues} from './components/account/change-credential/BaseChangeCredential';
+export {default as ActiveSessions} from './components/account/active-sessions/ActiveSessions';
+export {default as BaseActiveSessions} from './components/account/active-sessions/BaseActiveSessions';
 export {default as OrganizationUnitSwitcher} from './components/account/organization-unit-switcher/OrganizationUnitSwitcher';
 export {default as BaseOrganizationUnitSwitcher} from './components/account/organization-unit-switcher/BaseOrganizationUnitSwitcher';
 export type {
@@ -343,6 +345,12 @@ export {default as executeEmbeddedSelfFlow} from './api/auth/executeEmbeddedSelf
 export type {ExecuteEmbeddedSelfFlowConfig} from './api/auth/executeEmbeddedSelfFlow';
 export {default as getAccessibleOrganizationUnits} from './api/account/getAccessibleOrganizationUnits';
 export type {GetAccessibleOrganizationUnitsConfig} from './api/account/getAccessibleOrganizationUnits';
+export {default as getMeSessions} from './api/account/getMeSessions';
+export type {GetMeSessionsConfig} from './api/account/getMeSessions';
+export {default as revokeMeSession} from './api/account/revokeMeSession';
+export type {RevokeMeSessionConfig} from './api/account/revokeMeSession';
+export {default as revokeMeSessions} from './api/account/revokeMeSessions';
+export type {RevokeMeSessionsConfig} from './api/account/revokeMeSessions';
 export {
   OrganizationUnitSwitchErrorCodes,
   type AccessibleOrganizationUnit,

@@ -1,8 +1,11 @@
 // Copyright 2026 The ThunderID Authors
 // SPDX-License-Identifier: Apache-2.0
 
+import type {SSOSession} from '@thunderid/browser';
 import {
+  ActiveSessions,
   Alert,
+  BaseActiveSessions,
   BaseSignIn,
   BaseSignInButton,
   BaseSignOutButton,
@@ -70,6 +73,67 @@ const SAMPLE_PROFILE: Record<string, string> = {
   givenName: 'Liam',
   username: 'liam.chen',
 };
+
+const minutesAgo = (minutes: number): string => new Date(Date.now() - minutes * 60_000).toISOString();
+
+const SAMPLE_SESSIONS: SSOSession[] = [
+  {
+    authenticatedAt: minutesAgo(45),
+    createdAt: minutesAgo(45),
+    creationIp: '203.0.113.24',
+    id: 'sess_current',
+    isCurrent: true,
+    lastActiveAt: minutesAgo(2),
+    lastActiveIp: '203.0.113.24',
+    participants: [
+      {appId: 'app_portal', appName: 'Acme Portal', firstJoinedAt: minutesAgo(45), lastActiveAt: minutesAgo(2)},
+      {appId: 'app_docs', appName: 'Acme Docs', firstJoinedAt: minutesAgo(30), lastActiveAt: minutesAgo(10)},
+    ],
+    userAgent:
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
+    userId: 'usr_8f2c41',
+  },
+  {
+    authenticatedAt: minutesAgo(60 * 26),
+    createdAt: minutesAgo(60 * 26),
+    creationIp: '198.51.100.7',
+    id: 'sess_iphone',
+    isCurrent: false,
+    lastActiveAt: minutesAgo(60 * 3),
+    lastActiveIp: '198.51.100.19',
+    participants: [
+      {
+        appId: 'app_portal',
+        appName: 'Acme Portal',
+        firstJoinedAt: minutesAgo(60 * 26),
+        lastActiveAt: minutesAgo(60 * 3),
+      },
+    ],
+    userAgent:
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1',
+    userId: 'usr_8f2c41',
+  },
+  {
+    authenticatedAt: minutesAgo(60 * 24 * 4),
+    createdAt: minutesAgo(60 * 24 * 4),
+    creationIp: '192.0.2.44',
+    id: 'sess_windows',
+    isCurrent: false,
+    lastActiveAt: minutesAgo(60 * 24 * 2),
+    lastActiveIp: '192.0.2.44',
+    participants: [
+      {
+        appId: 'app_docs',
+        appName: 'Acme Docs',
+        firstJoinedAt: minutesAgo(60 * 24 * 4),
+        lastActiveAt: minutesAgo(60 * 48),
+      },
+    ],
+    userAgent:
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0',
+    userId: 'usr_8f2c41',
+  },
+];
 
 const SIZE: readonly string[] = ['small', 'medium', 'large'];
 
@@ -1056,6 +1120,53 @@ export const COMPONENTS: ComponentDef[] = [
       {args: {source: 'live'}, id: 'live', name: 'Signed-in user (sends a code)'},
     ],
   }),
+  {
+    code: (args: Args) =>
+      str(args, 'source') === 'live'
+        ? {
+            imports: ['ActiveSessions'],
+            jsx: jsx('ActiveSessions', omit(args, 'source', 'loading'), {defaults: {cardLayout: true}}),
+          }
+        : {
+            imports: ['BaseActiveSessions'],
+            jsx: jsx('BaseActiveSessions', omit(args, 'source'), {
+              extra: ['sessions={sessions}', 'onRevoke={handleRevoke}', 'onRevokeOthers={handleRevokeOthers}'],
+            }),
+          },
+    controls: [
+      SOURCE_CONTROL,
+      {control: 'text', description: 'Overrides the "Active sessions" heading.', name: 'title', type: 'string'},
+      {control: 'bool', description: 'Wraps the list in a card.', name: 'cardLayout', type: 'boolean'},
+      {control: 'bool', description: 'Shows the loading state (sample data only).', name: 'loading', type: 'boolean'},
+    ],
+    defaults: {cardLayout: true, loading: false, source: 'base', title: ''},
+    group: 'User',
+    id: 'activesessions',
+    live: true,
+    name: 'ActiveSessions',
+    render: (args: Args, action: Action) =>
+      str(args, 'source') === 'live' ? (
+        <Narrow width={560}>
+          <ActiveSessions title={str(args, 'title') || undefined} cardLayout={bool(args, 'cardLayout')} />
+        </Narrow>
+      ) : (
+        <Narrow width={560}>
+          <BaseActiveSessions
+            title={str(args, 'title') || undefined}
+            cardLayout={bool(args, 'cardLayout')}
+            loading={bool(args, 'loading')}
+            sessions={SAMPLE_SESSIONS}
+            onRevoke={(sessionId: string) => action('onRevoke', sessionId)}
+            onRevokeOthers={() => action('onRevokeOthers')}
+          />
+        </Narrow>
+      ),
+    stories: [
+      {id: 'base', name: 'Sample sessions'},
+      {args: {loading: true}, id: 'loading', name: 'Loading'},
+      {args: {source: 'live'}, id: 'live', name: 'Signed-in user'},
+    ],
+  },
   {
     code: () => ({
       imports: ['User'],
