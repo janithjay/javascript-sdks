@@ -6,10 +6,12 @@
  * and an application can reuse them as keys in its own data fetching cache.
  */
 const UserQueryKeys: {
+  MY_PASSKEYS: 'my-passkeys';
   USER: 'user';
   USERS: 'users';
   USER_TYPES: 'user-types';
 } = {
+  MY_PASSKEYS: 'my-passkeys',
   USER: 'user',
   USERS: 'users',
   USER_TYPES: 'user-types',

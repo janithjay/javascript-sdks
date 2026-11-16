@@ -186,6 +186,49 @@ const translations: I18nTranslations = {
   'user.sessions.revoke.error': 'An error occurred while revoking the session. Please try again.',
 
   /* |---------------------------------------------------------------| */
+  /* |                            Passkeys                           | */
+  /* |---------------------------------------------------------------| */
+
+  'user.passkeys.heading': 'Passkeys',
+  'user.passkeys.description': 'Sign in with your fingerprint, face or screen lock instead of a password.',
+  'user.passkeys.empty': 'No passkeys yet.',
+  'user.passkeys.unnamed': 'Passkey',
+  'user.passkeys.add': 'Add a passkey',
+  'user.passkeys.add.name.label': 'Passkey name',
+  'user.passkeys.add.name.placeholder': 'For example, Work laptop',
+  'user.passkeys.add.intro.description':
+    "You'll be asked to unlock this device with your fingerprint, face or screen lock. The passkey is saved to this device or your password manager.",
+  'user.passkeys.add.intro.no_password': 'No password to remember or type',
+  'user.passkeys.add.intro.phishing': "Works only on this site, so it can't be phished",
+  'user.passkeys.add.waiting.heading': 'Waiting for your device',
+  'user.passkeys.add.waiting.description': "Follow the prompt to verify it's you.",
+  'user.passkeys.add.created.heading': 'Passkey created',
+  'user.passkeys.add.created.description': 'Give it a name so you can tell your passkeys apart.',
+  'user.passkeys.add.skip': 'Skip',
+  'user.passkeys.add.save': 'Save',
+  'user.passkeys.add.continue': 'Continue',
+  'user.passkeys.cancel': 'Cancel',
+  'user.passkeys.add.success': 'Passkey added.',
+  'user.passkeys.remove': 'Remove',
+  'user.passkeys.remove.confirm.heading': 'Remove passkey',
+  'user.passkeys.remove.confirm.description': "You won't be able to sign in with {name} anymore.",
+  'user.passkeys.remove.confirm.last':
+    "This is your last passkey. You'll need another way to sign in, such as your password.",
+  'user.passkeys.remove.success': 'Passkey removed.',
+  'user.passkeys.error.load': "Couldn't load your passkeys. Please try again.",
+  'user.passkeys.error.add': "Couldn't add the passkey. Please try again.",
+  'user.passkeys.error.remove': "Couldn't remove the passkey. Please try again.",
+  'user.passkeys.error.cancelled': 'Adding the passkey was cancelled or timed out.',
+  'user.passkeys.error.already_registered': 'This device already has a passkey for your account.',
+  'user.passkeys.error.unsupported': "This browser doesn't support passkeys.",
+  'user.passkeys.error.name_too_long': 'Use a name of 64 characters or fewer.',
+  'user.passkeys.error.delegated': "Passkeys can't be changed while acting on behalf of another user.",
+  'user.passkeys.error.relying_party': "Passkeys can't be added on this domain. Please contact your administrator.",
+  'user.passkeys.error.forbidden':
+    "Your account can't change its passkeys right now. Please contact your administrator.",
+  'user.passkeys.error.not_found': 'This passkey no longer exists.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

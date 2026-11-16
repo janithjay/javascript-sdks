@@ -185,6 +185,48 @@ const translations: I18nTranslations = {
   'user.sessions.revoke.error': 'सत्र निरस्त करते समय एक त्रुटि हुई। कृपया पुनः प्रयास करें।',
 
   /* |---------------------------------------------------------------| */
+  /* |                            Passkeys                           | */
+  /* |---------------------------------------------------------------| */
+
+  'user.passkeys.heading': 'पासकी',
+  'user.passkeys.description': 'पासवर्ड के बजाय अपने फ़िंगरप्रिंट, चेहरे या स्क्रीन लॉक से साइन इन करें।',
+  'user.passkeys.empty': 'आपने अभी तक कोई पासकी नहीं जोड़ी है।',
+  'user.passkeys.unnamed': 'पासकी',
+  'user.passkeys.add': 'पासकी जोड़ें',
+  'user.passkeys.add.name.label': 'नाम',
+  'user.passkeys.add.name.placeholder': 'उदाहरण के लिए, ऑफ़िस लैपटॉप',
+  'user.passkeys.add.intro.description':
+    'आपसे अपने फ़िंगरप्रिंट, चेहरे या स्क्रीन लॉक से इस डिवाइस को अनलॉक करने के लिए कहा जाएगा। पासकी इस डिवाइस या आपके पासवर्ड मैनेजर में सहेजी जाती है।',
+  'user.passkeys.add.intro.no_password': 'कोई पासवर्ड याद रखने या टाइप करने की ज़रूरत नहीं',
+  'user.passkeys.add.intro.phishing': 'केवल इसी साइट पर काम करती है, इसलिए इसे फ़िश नहीं किया जा सकता',
+  'user.passkeys.add.waiting.heading': 'आपके डिवाइस की प्रतीक्षा की जा रही है',
+  'user.passkeys.add.waiting.description': 'अपनी पहचान सत्यापित करने के लिए निर्देशों का पालन करें।',
+  'user.passkeys.add.created.heading': 'पासकी बनाई गई',
+  'user.passkeys.add.created.description': 'इसे एक नाम दें ताकि आप अपनी पासकी को अलग पहचान सकें।',
+  'user.passkeys.add.skip': 'छोड़ें',
+  'user.passkeys.add.save': 'सहेजें',
+  'user.passkeys.add.continue': 'जारी रखें',
+  'user.passkeys.cancel': 'रद्द करें',
+  'user.passkeys.add.success': 'पासकी जोड़ी गई।',
+  'user.passkeys.remove': 'हटाएं',
+  'user.passkeys.remove.confirm.heading': 'पासकी हटाएं',
+  'user.passkeys.remove.confirm.description': 'आप अब {name} से साइन इन नहीं कर पाएंगे।',
+  'user.passkeys.remove.confirm.last':
+    'यह आपकी आखिरी पासकी है। आपको साइन इन करने के लिए किसी और तरीके की ज़रूरत होगी, जैसे आपका पासवर्ड।',
+  'user.passkeys.remove.success': 'पासकी हटाई गई।',
+  'user.passkeys.error.load': 'आपकी पासकी लोड नहीं हो सकीं। कृपया फिर से कोशिश करें।',
+  'user.passkeys.error.add': 'पासकी नहीं जोड़ी जा सकी। कृपया फिर से कोशिश करें।',
+  'user.passkeys.error.remove': 'पासकी नहीं हटाई जा सकी। कृपया फिर से कोशिश करें।',
+  'user.passkeys.error.cancelled': 'पासकी जोड़ना रद्द हो गया या समय समाप्त हो गया।',
+  'user.passkeys.error.already_registered': 'इस डिवाइस पर आपके खाते के लिए पहले से एक पासकी है।',
+  'user.passkeys.error.unsupported': 'यह ब्राउज़र पासकी का समर्थन नहीं करता।',
+  'user.passkeys.error.name_too_long': '64 या उससे कम अक्षरों वाला नाम इस्तेमाल करें।',
+  'user.passkeys.error.delegated': 'किसी दूसरे उपयोगकर्ता की ओर से काम करते समय पासकी नहीं बदली जा सकतीं।',
+  'user.passkeys.error.relying_party': 'इस डोमेन पर पासकी नहीं जोड़ी जा सकतीं। कृपया अपने व्यवस्थापक से संपर्क करें।',
+  'user.passkeys.error.forbidden': 'आपका खाता अभी अपनी पासकी नहीं बदल सकता। कृपया अपने व्यवस्थापक से संपर्क करें।',
+  'user.passkeys.error.not_found': 'यह पासकी अब मौजूद नहीं है।',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

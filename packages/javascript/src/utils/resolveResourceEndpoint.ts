@@ -44,6 +44,7 @@ export type ResourceEndpointKey =
   | 'usersMeMeta'
   | 'usersMeOrganizationUnits'
   | 'usersMeSessions'
+  | 'usersMePasskeys'
   | 'userTypes'
   | 'variables';
 
@@ -83,6 +84,7 @@ export const RESOURCE_ENDPOINT_KEYS: readonly ResourceEndpointKey[] = [
   'usersMeMeta',
   'usersMeOrganizationUnits',
   'usersMeSessions',
+  'usersMePasskeys',
   'userTypes',
   'variables',
 ];

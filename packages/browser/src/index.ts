@@ -41,6 +41,8 @@ export {default as createHttpClientFetcher} from './utils/createHttpClientFetche
 export {default as copyTextToClipboard} from './utils/copyTextToClipboard';
 export {getCurrentProjectStorageKey, readCurrentProject, writeCurrentProject} from './utils/currentProjectStorage';
 export {default as handleWebAuthnAuthentication} from './utils/handleWebAuthnAuthentication';
+export {default as isWebAuthnSupported} from './utils/isWebAuthnSupported';
+export {default as signalUnknownPasskey} from './utils/signalUnknownPasskey';
 export {default as resolveEmojiUrisInHtml} from './utils/resolveEmojiUrisInHtml';
 export {default as isAvatarUri, AVATAR_URI_SCHEME} from './utils/isAvatarUri';
 export {default as extractAvatarParamsFromUri} from './utils/extractAvatarParamsFromUri';

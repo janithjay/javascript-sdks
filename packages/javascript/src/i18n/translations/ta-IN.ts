@@ -189,6 +189,51 @@ const translations: I18nTranslations = {
   'user.sessions.revoke.error': 'அமர்வைத் திரும்பப் பெறும்போது பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.',
 
   /* |---------------------------------------------------------------| */
+  /* |                            Passkeys                           | */
+  /* |---------------------------------------------------------------| */
+
+  'user.passkeys.heading': 'பாஸ்கீகள்',
+  'user.passkeys.description':
+    'கடவுச்சொல்லுக்கு பதிலாக உங்கள் கைரேகை, முகம் அல்லது திரைப் பூட்டு மூலம் உள்நுழையுங்கள்.',
+  'user.passkeys.empty': 'நீங்கள் இன்னும் எந்த பாஸ்கீயையும் சேர்க்கவில்லை.',
+  'user.passkeys.unnamed': 'பாஸ்கீ',
+  'user.passkeys.add': 'பாஸ்கீயைச் சேர்',
+  'user.passkeys.add.name.label': 'பெயர்',
+  'user.passkeys.add.name.placeholder': 'எடுத்துக்காட்டாக, அலுவலக லேப்டாப்',
+  'user.passkeys.add.intro.description':
+    'உங்கள் கைரேகை, முகம் அல்லது திரைப் பூட்டு மூலம் இந்தச் சாதனத்தைத் திறக்கக் கேட்கப்படுவீர்கள். பாஸ்கீ இந்தச் சாதனத்தில் அல்லது உங்கள் கடவுச்சொல் நிர்வாகியில் சேமிக்கப்படும்.',
+  'user.passkeys.add.intro.no_password': 'நினைவில் வைக்கவோ தட்டச்சு செய்யவோ கடவுச்சொல் இல்லை',
+  'user.passkeys.add.intro.phishing': 'இந்தத் தளத்தில் மட்டுமே செயல்படும், எனவே ஃபிஷிங் செய்ய முடியாது',
+  'user.passkeys.add.waiting.heading': 'உங்கள் சாதனத்திற்காகக் காத்திருக்கிறது',
+  'user.passkeys.add.waiting.description': 'நீங்கள்தான் என்பதைச் சரிபார்க்க வழிமுறைகளைப் பின்பற்றவும்.',
+  'user.passkeys.add.created.heading': 'பாஸ்கீ உருவாக்கப்பட்டது',
+  'user.passkeys.add.created.description': 'உங்கள் பாஸ்கீகளை வேறுபடுத்தி அறிய இதற்கு ஒரு பெயர் கொடுங்கள்.',
+  'user.passkeys.add.skip': 'தவிர்',
+  'user.passkeys.add.save': 'சேமி',
+  'user.passkeys.add.continue': 'தொடர்க',
+  'user.passkeys.cancel': 'ரத்துசெய்',
+  'user.passkeys.add.success': 'பாஸ்கீ சேர்க்கப்பட்டது.',
+  'user.passkeys.remove': 'அகற்று',
+  'user.passkeys.remove.confirm.heading': 'பாஸ்கீயை அகற்று',
+  'user.passkeys.remove.confirm.description': 'இனி {name} மூலம் உள்நுழைய முடியாது.',
+  'user.passkeys.remove.confirm.last':
+    'இது உங்கள் கடைசி பாஸ்கீ. உள்நுழைய உங்கள் கடவுச்சொல் போன்ற வேறு வழி தேவைப்படும்.',
+  'user.passkeys.remove.success': 'பாஸ்கீ அகற்றப்பட்டது.',
+  'user.passkeys.error.load': 'உங்கள் பாஸ்கீகளை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
+  'user.passkeys.error.add': 'பாஸ்கீயைச் சேர்க்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
+  'user.passkeys.error.remove': 'பாஸ்கீயை அகற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
+  'user.passkeys.error.cancelled': 'பாஸ்கீ சேர்ப்பது ரத்துசெய்யப்பட்டது அல்லது நேரம் முடிந்தது.',
+  'user.passkeys.error.already_registered': 'இந்தச் சாதனத்தில் உங்கள் கணக்கிற்கு ஏற்கனவே ஒரு பாஸ்கீ உள்ளது.',
+  'user.passkeys.error.unsupported': 'இந்த உலாவி பாஸ்கீகளை ஆதரிக்கவில்லை.',
+  'user.passkeys.error.name_too_long': '64 எழுத்துகள் அல்லது அதற்குக் குறைவான பெயரைப் பயன்படுத்தவும்.',
+  'user.passkeys.error.delegated': 'மற்றொரு பயனரின் சார்பாகச் செயல்படும்போது பாஸ்கீகளை மாற்ற முடியாது.',
+  'user.passkeys.error.relying_party':
+    'இந்த டொமைனில் பாஸ்கீகளைச் சேர்க்க முடியாது. உங்கள் நிர்வாகியைத் தொடர்பு கொள்ளவும்.',
+  'user.passkeys.error.forbidden':
+    'உங்கள் கணக்கால் இப்போது பாஸ்கீகளை மாற்ற முடியாது. உங்கள் நிர்வாகியைத் தொடர்பு கொள்ளவும்.',
+  'user.passkeys.error.not_found': 'இந்த பாஸ்கீ இனி இல்லை.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

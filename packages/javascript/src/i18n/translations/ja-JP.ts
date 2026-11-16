@@ -186,6 +186,47 @@ const translations: I18nTranslations = {
   'user.sessions.revoke.error': 'セッションの無効化中にエラーが発生しました。もう一度お試しください。',
 
   /* |---------------------------------------------------------------| */
+  /* |                            Passkeys                           | */
+  /* |---------------------------------------------------------------| */
+
+  'user.passkeys.heading': 'パスキー',
+  'user.passkeys.description': 'パスワードの代わりに、指紋、顔、または画面ロックでサインインします。',
+  'user.passkeys.empty': 'パスキーはまだ追加されていません。',
+  'user.passkeys.unnamed': 'パスキー',
+  'user.passkeys.add': 'パスキーを追加',
+  'user.passkeys.add.name.label': '名前',
+  'user.passkeys.add.name.placeholder': '例: 仕事用ノートPC',
+  'user.passkeys.add.intro.description':
+    '指紋、顔、または画面ロックでこのデバイスのロックを解除するよう求められます。パスキーはこのデバイスまたはパスワードマネージャーに保存されます。',
+  'user.passkeys.add.intro.no_password': 'パスワードを覚えたり入力したりする必要はありません',
+  'user.passkeys.add.intro.phishing': 'このサイトでのみ機能するため、フィッシングされません',
+  'user.passkeys.add.waiting.heading': 'デバイスを待っています',
+  'user.passkeys.add.waiting.description': '画面の指示に従って本人確認を行ってください。',
+  'user.passkeys.add.created.heading': 'パスキーを作成しました',
+  'user.passkeys.add.created.description': 'パスキーを見分けられるように名前を付けてください。',
+  'user.passkeys.add.skip': 'スキップ',
+  'user.passkeys.add.save': '保存',
+  'user.passkeys.add.continue': '続行',
+  'user.passkeys.cancel': 'キャンセル',
+  'user.passkeys.add.success': 'パスキーを追加しました。',
+  'user.passkeys.remove': '削除',
+  'user.passkeys.remove.confirm.heading': 'パスキーを削除',
+  'user.passkeys.remove.confirm.description': '{name} ではサインインできなくなります。',
+  'user.passkeys.remove.confirm.last': 'これが最後のパスキーです。パスワードなど、別のサインイン方法が必要になります。',
+  'user.passkeys.remove.success': 'パスキーを削除しました。',
+  'user.passkeys.error.load': 'パスキーを読み込めませんでした。もう一度お試しください。',
+  'user.passkeys.error.add': 'パスキーを追加できませんでした。もう一度お試しください。',
+  'user.passkeys.error.remove': 'パスキーを削除できませんでした。もう一度お試しください。',
+  'user.passkeys.error.cancelled': 'パスキーの追加がキャンセルされたか、タイムアウトしました。',
+  'user.passkeys.error.already_registered': 'このデバイスには、すでにこのアカウントのパスキーがあります。',
+  'user.passkeys.error.unsupported': 'このブラウザはパスキーに対応していません。',
+  'user.passkeys.error.name_too_long': '名前は64文字以内にしてください。',
+  'user.passkeys.error.delegated': '他のユーザーの代理で操作している間は、パスキーを変更できません。',
+  'user.passkeys.error.relying_party': 'このドメインではパスキーを追加できません。管理者にお問い合わせください。',
+  'user.passkeys.error.forbidden': '現在、このアカウントではパスキーを変更できません。管理者にお問い合わせください。',
+  'user.passkeys.error.not_found': 'このパスキーはもう存在しません。',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 

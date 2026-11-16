@@ -63,6 +63,13 @@ export const TriangleAlertIcon = (): VNode =>
   ]);
 
 export const SendIcon = (): VNode => icon([h('path', {d: 'm22 2-7 20-4-9-9-4Z'}), h('path', {d: 'M22 2 11 13'})]);
+export const KeyRoundIcon = (): VNode =>
+  icon([
+    h('path', {
+      d: 'M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z',
+    }),
+    h('circle', {cx: '16.5', cy: '7.5', fill: 'currentColor', r: '.5'}),
+  ]);
 
 export const PlusIcon = (): VNode =>
   icon([h('line', {x1: '12', x2: '12', y1: '5', y2: '19'}), h('line', {x1: '5', x2: '19', y1: '12', y2: '12'})]);
@@ -103,6 +110,13 @@ export const GlobeIcon = (): VNode =>
     h('circle', {cx: '12', cy: '12', r: '10'}),
     h('line', {x1: '2', x2: '22', y1: '12', y2: '12'}),
     h('path', {d: 'M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'}),
+  ]);
+
+export const TrashIcon = (): VNode =>
+  icon([
+    h('path', {d: 'M3 6h18'}),
+    h('path', {d: 'M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6'}),
+    h('path', {d: 'M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'}),
   ]);
 
 export const PencilIcon = (): VNode =>

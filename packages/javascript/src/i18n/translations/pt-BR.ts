@@ -186,6 +186,50 @@ const translations: I18nTranslations = {
   'user.sessions.revoke.error': 'Ocorreu um erro ao revogar a sessão. Tente novamente.',
 
   /* |---------------------------------------------------------------| */
+  /* |                            Passkeys                           | */
+  /* |---------------------------------------------------------------| */
+
+  'user.passkeys.heading': 'Chaves de acesso',
+  'user.passkeys.description': 'Entre com sua digital, rosto ou bloqueio de tela em vez de uma senha.',
+  'user.passkeys.empty': 'Você ainda não adicionou nenhuma chave de acesso.',
+  'user.passkeys.unnamed': 'Chave de acesso',
+  'user.passkeys.add': 'Adicionar uma chave de acesso',
+  'user.passkeys.add.name.label': 'Nome',
+  'user.passkeys.add.name.placeholder': 'Por exemplo, Notebook do trabalho',
+  'user.passkeys.add.intro.description':
+    'Você precisará desbloquear este dispositivo com sua impressão digital, rosto ou bloqueio de tela. A chave de acesso fica salva neste dispositivo ou no seu gerenciador de senhas.',
+  'user.passkeys.add.intro.no_password': 'Nenhuma senha para lembrar ou digitar',
+  'user.passkeys.add.intro.phishing': 'Funciona apenas neste site, por isso não pode ser alvo de phishing',
+  'user.passkeys.add.waiting.heading': 'Aguardando seu dispositivo',
+  'user.passkeys.add.waiting.description': 'Siga as instruções para confirmar que é você.',
+  'user.passkeys.add.created.heading': 'Chave de acesso criada',
+  'user.passkeys.add.created.description': 'Dê um nome a ela para diferenciar suas chaves de acesso.',
+  'user.passkeys.add.skip': 'Pular',
+  'user.passkeys.add.save': 'Salvar',
+  'user.passkeys.add.continue': 'Continuar',
+  'user.passkeys.cancel': 'Cancelar',
+  'user.passkeys.add.success': 'Chave de acesso adicionada.',
+  'user.passkeys.remove': 'Remover',
+  'user.passkeys.remove.confirm.heading': 'Remover chave de acesso',
+  'user.passkeys.remove.confirm.description': 'Você não poderá mais entrar com {name}.',
+  'user.passkeys.remove.confirm.last':
+    'Esta é sua última chave de acesso. Você precisará de outra forma de entrar, como sua senha.',
+  'user.passkeys.remove.success': 'Chave de acesso removida.',
+  'user.passkeys.error.load': 'Não foi possível carregar suas chaves de acesso. Tente novamente.',
+  'user.passkeys.error.add': 'Não foi possível adicionar a chave de acesso. Tente novamente.',
+  'user.passkeys.error.remove': 'Não foi possível remover a chave de acesso. Tente novamente.',
+  'user.passkeys.error.cancelled': 'A adição da chave de acesso foi cancelada ou expirou.',
+  'user.passkeys.error.already_registered': 'Este dispositivo já tem uma chave de acesso para sua conta.',
+  'user.passkeys.error.unsupported': 'Este navegador não oferece suporte a chaves de acesso.',
+  'user.passkeys.error.name_too_long': 'Use um nome com até 64 caracteres.',
+  'user.passkeys.error.delegated': 'As chaves de acesso não podem ser alteradas ao agir em nome de outro usuário.',
+  'user.passkeys.error.relying_party':
+    'Não é possível adicionar chaves de acesso neste domínio. Entre em contato com o administrador.',
+  'user.passkeys.error.forbidden':
+    'Sua conta não pode alterar as chaves de acesso no momento. Entre em contato com o administrador.',
+  'user.passkeys.error.not_found': 'Esta chave de acesso não existe mais.',
+
+  /* |---------------------------------------------------------------| */
   /* |                     Organization Switcher                     | */
   /* |---------------------------------------------------------------| */
 
