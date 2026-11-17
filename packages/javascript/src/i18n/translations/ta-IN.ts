@@ -176,8 +176,12 @@ const translations: I18nTranslations = {
   'user.sessions.unknown': 'தெரியவில்லை',
   'user.sessions.device': '{os} இல் {browser}',
   'user.sessions.unknown_device': 'அறியப்படாத சாதனம்',
-  'user.sessions.last_active': 'கடைசியாக செயலில்',
+  'user.sessions.last_active': 'சமீபத்திய SSO',
   'user.sessions.applications': 'பயன்பாடுகள்',
+  'user.sessions.applications.scroll_left': 'பயன்பாடுகளை இடதுபுறம் உருட்டு',
+  'user.sessions.applications.scroll_right': 'பயன்பாடுகளை வலதுபுறம் உருட்டு',
+  'user.sessions.ago': '{time} முன்பு',
+  'user.sessions.just_now': 'இப்போது',
   'user.sessions.revoke': 'திரும்பப் பெறு',
   'user.sessions.revoke_others': 'மற்ற அனைத்தையும் திரும்பப் பெறு',
   'user.sessions.revoke_others.confirm':

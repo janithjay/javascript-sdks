@@ -232,9 +232,15 @@ const ACTIVE_SESSIONS_CSS = `
   align-items: center;
 }
 
+.thunderid-active-sessions .thunderid-active-sessions__detail-ago {
+  flex-basis: 100%;
+  font-family: var(--thunderid-typography-fontFamily);
+  font-size: var(--thunderid-typography-fontSize-xs);
+  color: var(--thunderid-color-text-secondary);
+}
+
 .thunderid-active-sessions .thunderid-active-sessions__apps-row {
   display: flex;
-  flex-wrap: wrap;
   gap: calc(var(--thunderid-spacing-unit) * 1.25);
   align-items: center;
   padding: calc(var(--thunderid-spacing-unit) * 1.25) calc(var(--thunderid-spacing-unit) * 2);
@@ -247,18 +253,127 @@ const ACTIVE_SESSIONS_CSS = `
   letter-spacing: 0.5px;
   text-transform: uppercase;
   color: var(--thunderid-color-text-secondary);
+  flex-shrink: 0;
 }
 
+.thunderid-active-sessions .thunderid-active-sessions__apps-strip {
+  position: relative;
+  display: flex;
+  min-width: 0;
+}
+
+/* Padding keeps the icons' rings and focus outlines inside the scroll area, which would clip them. */
 .thunderid-active-sessions .thunderid-active-sessions__apps {
   display: flex;
-  flex-wrap: wrap;
-  gap: calc(var(--thunderid-spacing-unit) * 0.75);
+  align-items: center;
+  min-width: 0;
   margin: 0;
-  padding: 0;
+  padding: calc(var(--thunderid-spacing-unit) * 0.5);
   list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
-.thunderid-active-sessions .thunderid-active-sessions__app {
+.thunderid-active-sessions .thunderid-active-sessions__apps::-webkit-scrollbar {
+  display: none;
+}
+
+/* Fades each side that has more to scroll to. A mask, so it works on any background. */
+.thunderid-active-sessions .thunderid-active-sessions__apps--fade-left {
+  mask-image: linear-gradient(to right, transparent, black calc(var(--thunderid-spacing-unit) * 3));
+}
+
+.thunderid-active-sessions .thunderid-active-sessions__apps--fade-right {
+  mask-image: linear-gradient(to left, transparent, black calc(var(--thunderid-spacing-unit) * 3));
+}
+
+.thunderid-active-sessions .thunderid-active-sessions__apps--fade-left.thunderid-active-sessions__apps--fade-right {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black calc(var(--thunderid-spacing-unit) * 3),
+    black calc(100% - var(--thunderid-spacing-unit) * 3),
+    transparent
+  );
+}
+
+.thunderid-active-sessions .thunderid-active-sessions__apps-scroll {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--thunderid-spacing-unit) * 0.25);
+  border: 1px solid var(--thunderid-color-border);
+  border-radius: 50%;
+  background: var(--thunderid-color-background-surface);
+  color: var(--thunderid-color-text-primary);
+  cursor: pointer;
+}
+
+.thunderid-active-sessions .thunderid-active-sessions__apps-scroll:hover {
+  background: color-mix(in srgb, var(--thunderid-color-text-primary) 6%, var(--thunderid-color-background-surface));
+}
+
+.thunderid-active-sessions .thunderid-active-sessions__apps-scroll:focus-visible {
+  outline: 2px solid var(--thunderid-color-primary-main);
+  outline-offset: 2px;
+}
+
+.thunderid-active-sessions .thunderid-active-sessions__apps-scroll svg {
+  width: 14px;
+  height: 14px;
+}
+
+.thunderid-active-sessions .thunderid-active-sessions__apps-scroll--left {
+  left: 0;
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.thunderid-active-sessions .thunderid-active-sessions__apps-scroll--right {
+  right: 0;
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.thunderid-active-sessions li.thunderid-active-sessions__app {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.thunderid-active-sessions li.thunderid-active-sessions__app + li.thunderid-active-sessions__app {
+  margin-left: calc(var(--thunderid-spacing-unit) * -0.75);
+}
+
+.thunderid-active-sessions li.thunderid-active-sessions__app:hover,
+.thunderid-active-sessions li.thunderid-active-sessions__app:focus-within {
+  z-index: 1;
+}
+
+.thunderid-active-sessions .thunderid-active-sessions__app-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px var(--thunderid-color-background-surface);
+}
+
+.thunderid-active-sessions .thunderid-active-sessions__app-icon--glyph {
+  font-size: var(--thunderid-typography-fontSize-lg);
+}
+
+.thunderid-active-sessions .thunderid-active-sessions__app-icon--initial {
+  background: color-mix(in srgb, var(--thunderid-color-text-primary) 10%, var(--thunderid-color-background-surface));
+  color: var(--thunderid-color-text-primary);
+  font-size: var(--thunderid-typography-fontSize-xs);
+  font-weight: var(--thunderid-typography-fontWeight-medium);
+}
+
+.thunderid-active-sessions span.thunderid-active-sessions__app {
   padding: calc(var(--thunderid-spacing-unit) * 0.25) calc(var(--thunderid-spacing-unit) * 1.125);
   border: 1px solid var(--thunderid-color-border);
   border-radius: var(--thunderid-border-radius-small);

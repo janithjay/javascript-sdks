@@ -234,9 +234,15 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
       align-items: center;
     `;
 
+    const detailAgo: string = css`
+      flex-basis: 100%;
+      font-family: ${typography.fontFamily};
+      font-size: ${typography.fontSizes.xs};
+      color: ${colors.text.secondary};
+    `;
+
     const appsRow: string = css`
       display: flex;
-      flex-wrap: wrap;
       gap: ${space(1.25)};
       align-items: center;
       padding: ${space(1.25)} ${space(2)};
@@ -245,15 +251,97 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
 
     const appsLabel: string = css`
       ${label}
+      flex-shrink: 0;
     `;
 
+    const appsStrip: string = css`
+      position: relative;
+      display: flex;
+      min-width: 0;
+    `;
+
+    // Padding keeps the icons' rings and focus outlines inside the scroll area, which would clip them.
     const apps: string = css`
       display: flex;
-      flex-wrap: wrap;
-      gap: ${space(0.75)};
+      align-items: center;
+      min-width: 0;
       margin: 0;
-      padding: 0;
+      padding: ${space(0.5)};
       list-style: none;
+      overflow-x: auto;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    `;
+
+    // Fades each side that has more to scroll to. A mask, so it works on any background.
+    const fade = (left: boolean, right: boolean): string =>
+      `linear-gradient(to right, ${left ? 'transparent' : 'black'}, black ${space(3)}, black calc(100% - ${space(3)}), ${right ? 'transparent' : 'black'})`;
+
+    const appsFadeLeft: string = css`
+      mask-image: ${fade(true, false)};
+    `;
+
+    const appsFadeRight: string = css`
+      mask-image: ${fade(false, true)};
+    `;
+
+    const appsFadeBoth: string = css`
+      mask-image: ${fade(true, true)};
+    `;
+
+    const appsScroll: string = css`
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: ${space(0.25)};
+      border: 1px solid ${colors.border};
+      border-radius: 50%;
+      background: ${colors.background.surface};
+      color: ${colors.text.primary};
+      cursor: pointer;
+
+      &:hover {
+        background: ${mix(colors.text.primary, 6, colors.background.surface)};
+      }
+
+      &:focus-visible {
+        outline: 2px solid ${colors.primary.main};
+        outline-offset: 2px;
+      }
+    `;
+
+    const appsScrollLeft: string = css`
+      left: 0;
+      transform: translateY(-50%) rotate(90deg);
+    `;
+
+    const appsScrollRight: string = css`
+      right: 0;
+      transform: translateY(-50%) rotate(-90deg);
+    `;
+
+    const appItem: string = css`
+      flex-shrink: 0;
+      display: flex;
+
+      & + & {
+        margin-left: -${space(0.75)};
+      }
+
+      &:hover,
+      &:focus-within {
+        z-index: 1;
+      }
+    `;
+
+    const appIcon: string = css`
+      box-shadow: 0 0 0 2px ${colors.background.surface};
     `;
 
     const app: string = css`
@@ -267,7 +355,16 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
 
     return {
       app,
+      appIcon,
+      appItem,
       apps,
+      appsFadeBoth,
+      appsFadeLeft,
+      appsFadeRight,
+      appsScroll,
+      appsScrollLeft,
+      appsScrollRight,
+      appsStrip,
       appsLabel,
       appsRow,
       browserIcon,
@@ -278,6 +375,7 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
       confirmRevoke,
       current,
       dateTime,
+      detailAgo,
       detail,
       detailLabel,
       detailValue,

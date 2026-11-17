@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {withVendorCSSClassPrefix, bem, resolveLogoUri, ResolvedLogo} from '@thunderid/browser';
-import {FC, JSX, useMemo} from 'react';
+import {FC, JSX, useMemo, useState} from 'react';
 import useStyles from './Avatar.styles';
 import useTheme from '../../../contexts/Theme/useTheme';
 import {cx} from '../../../styles/emotion';
@@ -65,7 +65,11 @@ export const Avatar: FC<AvatarProps> = ({
     [imageUrl, name, alt],
   );
 
-  const hasImage: boolean = resolvedIcon?.kind !== 'emoji' && Boolean(resolvedIcon?.imgSrc);
+  // An image that failed to load, so the avatar falls back to the initials instead of a broken image.
+  const [failedImage, setFailedImage] = useState<string>();
+
+  const hasImage: boolean =
+    resolvedIcon?.kind !== 'emoji' && Boolean(resolvedIcon?.imgSrc) && resolvedIcon?.imgSrc !== failedImage;
 
   const generateBackgroundColor = (inputString: string): string => {
     const hash: number = inputString.split('').reduce((acc: number, char: string) => {
@@ -136,6 +140,7 @@ export const Avatar: FC<AvatarProps> = ({
         <img
           src={resolvedIcon?.imgSrc}
           alt={alt}
+          onError={(): void => setFailedImage(resolvedIcon?.imgSrc)}
           className={cx(withVendorCSSClassPrefix(bem('avatar', 'image')), styles['image'])}
         />
       );

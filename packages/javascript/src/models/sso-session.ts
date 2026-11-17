@@ -12,6 +12,10 @@ export interface SSOSessionParticipant {
    * The application's name. Left out when the application can't be found.
    */
   appName?: string;
+  /**
+   * The application's logo URL. Left out when the application sets none or can't be found.
+   */
+  appLogoUrl?: string;
   firstJoinedAt: string;
   lastActiveAt: string;
 }

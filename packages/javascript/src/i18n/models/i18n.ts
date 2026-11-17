@@ -176,6 +176,10 @@ export interface I18nTranslations {
   'user.sessions.unknown_device': string;
   'user.sessions.last_active': string;
   'user.sessions.applications': string;
+  'user.sessions.applications.scroll_left': string;
+  'user.sessions.applications.scroll_right': string;
+  'user.sessions.ago': string;
+  'user.sessions.just_now': string;
   'user.sessions.revoke': string;
   'user.sessions.revoke_others': string;
   'user.sessions.revoke_others.confirm': string;

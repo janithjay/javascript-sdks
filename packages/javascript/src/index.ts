@@ -1101,6 +1101,8 @@ export {default as bem} from './utils/bem';
 export {default as formatDate} from './utils/formatDate';
 export {default as deepMerge} from './utils/deepMerge';
 export {default as describeUserAgent} from './utils/describeUserAgent';
+export {default as formatDuration} from './utils/formatDuration';
+export {getClockTime, subscribeToClock} from './utils/clock';
 export type {UserAgentDescription} from './utils/describeUserAgent';
 export {default as extractUserClaimsFromIdToken} from './utils/extractUserClaimsFromIdToken';
 export {default as validateLogoutTokenClaims} from './utils/validateLogoutTokenClaims';

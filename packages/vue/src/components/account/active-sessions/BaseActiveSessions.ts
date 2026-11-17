@@ -5,7 +5,6 @@ import {
   PlatformIcon,
   PlatformIconElement,
   SSOSession,
-  SSOSessionParticipant,
   UserAgentDescription,
   bem,
   describeUserAgent,
@@ -30,6 +29,8 @@ import useI18n from '../../../composables/useI18n';
 import Alert from '../../primitives/Alert';
 import Button from '../../primitives/Button';
 import Spinner from '../../primitives/Spinner';
+import AppsStrip from './AppsStrip';
+import LiveAgo from './LiveAgo';
 
 type BaseActiveSessionsProps = Readonly<{
   cardLayout: boolean;
@@ -198,6 +199,7 @@ const BaseActiveSessions: Component = defineComponent({
         h('dd', {class: `${cls('detail-value')} ${cls('detail-value', 'datetime')}`}, [
           h('span', {class: cls('detail-date')}, formatDate(value)),
           h('span', {class: cls('detail-time')}, formatClock(value)),
+          h(LiveAgo, {class: cls('detail-ago'), locale: currentLanguage.value, translate, value}),
         ]),
       ]);
 
@@ -259,13 +261,7 @@ const BaseActiveSessions: Component = defineComponent({
           h('div', {class: cls('apps-row')}, [
             h('span', {class: cls('apps-label')}, translate('user.sessions.applications')),
             session.participants.length > 0
-              ? h(
-                  'ul',
-                  {class: cls('apps')},
-                  session.participants.map((participant: SSOSessionParticipant) =>
-                    h('li', {class: cls('app'), key: participant.appId}, participant.appName ?? participant.appId),
-                  ),
-                )
+              ? h(AppsStrip, {participants: session.participants, translate})
               : h('span', {class: cls('app')}, translate('user.sessions.unknown')),
           ]),
           confirming.value === session.id

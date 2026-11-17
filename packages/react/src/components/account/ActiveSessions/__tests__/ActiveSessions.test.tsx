@@ -104,8 +104,8 @@ describe('ActiveSessions', () => {
     expect(screen.getByText('This device')).toBeTruthy();
     expect(screen.getByText('Active sessions')).toBeTruthy();
     expect(screen.getByText('2 active sessions · revoke any you don’t recognize')).toBeTruthy();
-    expect(screen.getByText('Store')).toBeTruthy();
-    expect(screen.getByText('app-2')).toBeTruthy();
+    expect(screen.getByRole('button', {name: 'Store'})).toBeTruthy();
+    expect(screen.getByRole('button', {name: 'app-2'})).toBeTruthy();
   });
 
   it('shows the IP address and when the session signed in and was last active', async () => {
@@ -116,7 +116,7 @@ describe('ActiveSessions', () => {
     expect(screen.getByText('203.0.113.7')).toBeTruthy();
     expect(screen.getByText('Unknown')).toBeTruthy();
     expect(screen.getAllByText('Signed in')).toHaveLength(2);
-    expect(screen.getAllByText('Last active')).toHaveLength(2);
+    expect(screen.getAllByText('Latest SSO')).toHaveLength(2);
     expect(
       screen.getAllByText(new Date('2026-10-14T09:05:00Z').toLocaleDateString('en-US', {dateStyle: 'medium'})).length,
     ).toBeGreaterThan(0);

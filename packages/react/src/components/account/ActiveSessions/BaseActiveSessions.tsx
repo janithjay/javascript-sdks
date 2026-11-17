@@ -10,17 +10,22 @@ import {
   UserAgentDescription,
   bem,
   describeUserAgent,
+  formatDuration,
   resolvePlatformIcon,
   withVendorCSSClassPrefix,
 } from '@thunderid/browser';
-import {FC, MouseEvent, ReactElement, createElement, useEffect, useId, useRef, useState} from 'react';
+import {FC, MouseEvent, ReactElement, createElement, useCallback, useEffect, useId, useRef, useState} from 'react';
 import useStyles from './BaseActiveSessions.styles';
 import useTheme from '../../../contexts/Theme/useTheme';
+import useNow from '../../../hooks/useNow';
 import useTranslation from '../../../hooks/useTranslation';
 import {cx} from '../../../styles/emotion';
 import AlertPrimitive from '../../primitives/Alert/Alert';
+import Avatar from '../../primitives/Avatar/Avatar';
 import Button from '../../primitives/Button/Button';
+import ChevronDown from '../../primitives/Icons/ChevronDown';
 import Spinner from '../../primitives/Spinner/Spinner';
+import Tooltip from '../../primitives/Tooltip/Tooltip';
 import Typography from '../../primitives/Typography/Typography';
 
 export interface BaseActiveSessionsProps {
@@ -77,6 +82,8 @@ export interface BaseActiveSessionsProps {
 
 const ALL_OTHERS = 'all-others';
 
+const APP_ICON_SIZE = 28;
+
 const cls = (element?: string, modifier?: string): string =>
   withVendorCSSClassPrefix(bem('active-sessions', element, modifier));
 
@@ -87,6 +94,139 @@ const toReactAttributes = (attributes: Record<string, string>): Record<string, s
       value,
     ]),
   );
+
+type Translate = ReturnType<typeof useTranslation>['t'];
+
+interface LiveAgoProps {
+  className: string;
+  locale: string;
+  t: Translate;
+  value: string;
+}
+
+/**
+ * How long ago a timestamp was, to the minute, such as "5m ago", or "Just now" within the first minute.
+ * It is its own component so that each clock tick re-renders only this line.
+ */
+const LiveAgo: FC<LiveAgoProps> = ({className, locale, t, value}: LiveAgoProps) => {
+  const now: number = useNow();
+  const seconds: number = Math.floor((now - new Date(value).getTime()) / 1000);
+
+  return (
+    <span className={className}>
+      {seconds < 60 ? t('user.sessions.just_now') : t('user.sessions.ago', {time: formatDuration(seconds, locale)})}
+    </span>
+  );
+};
+
+interface AppsStripProps {
+  participants: SSOSessionParticipant[];
+  styles: Record<string, string>;
+  t: Translate;
+}
+
+/**
+ * The applications of a session, as a strip of overlapping icons named by tooltips. When the icons don't
+ * fit, the strip scrolls sideways, and each side that has more fades out and offers an arrow.
+ */
+const AppsStrip: FC<AppsStripProps> = ({participants, styles, t}: AppsStripProps) => {
+  const stripRef = useRef<HTMLUListElement>(null);
+  // Which sides of the strip have icons scrolled out of view.
+  const [overflow, setOverflow] = useState<{left: boolean; right: boolean}>({left: false, right: false});
+
+  const updateOverflow = useCallback((): void => {
+    const strip: HTMLUListElement | null = stripRef.current;
+    if (!strip) {
+      return;
+    }
+    // A pixel of slack absorbs the rounding of fractional scroll positions.
+    setOverflow({
+      left: strip.scrollLeft > 1,
+      right: strip.scrollLeft + strip.clientWidth < strip.scrollWidth - 1,
+    });
+  }, []);
+
+  useEffect(() => {
+    const strip: HTMLUListElement | null = stripRef.current;
+    if (!strip || typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+    updateOverflow();
+    const observer: ResizeObserver = new ResizeObserver(updateOverflow);
+    observer.observe(strip);
+    return (): void => observer.disconnect();
+  }, [updateOverflow, participants.length]);
+
+  // Half the visible width, so the icons scrolled into view appear beside ones already seen.
+  const scroll = (direction: 1 | -1): void => {
+    const strip: HTMLUListElement | null = stripRef.current;
+    strip?.scrollBy({behavior: 'smooth', left: (direction * strip.clientWidth) / 2});
+  };
+
+  const arrow = (direction: 1 | -1): ReactElement => (
+    <button
+      type="button"
+      className={cx(
+        cls('apps-scroll'),
+        cls('apps-scroll', direction < 0 ? 'left' : 'right'),
+        styles['appsScroll'],
+        direction < 0 ? styles['appsScrollLeft'] : styles['appsScrollRight'],
+      )}
+      aria-label={t(
+        direction < 0 ? 'user.sessions.applications.scroll_left' : 'user.sessions.applications.scroll_right',
+      )}
+      onClick={(): void => scroll(direction)}
+    >
+      <ChevronDown width={14} height={14} />
+    </button>
+  );
+
+  let fade: string | undefined;
+  if (overflow.left && overflow.right) {
+    fade = styles['appsFadeBoth'];
+  } else if (overflow.left) {
+    fade = styles['appsFadeLeft'];
+  } else if (overflow.right) {
+    fade = styles['appsFadeRight'];
+  }
+
+  return (
+    <div className={cx(cls('apps-strip'), styles['appsStrip'])}>
+      {overflow.left && arrow(-1)}
+      <ul
+        ref={stripRef}
+        onScroll={updateOverflow}
+        aria-label={t('user.sessions.applications')}
+        className={cx(
+          cls('apps'),
+          overflow.left && cls('apps', 'fade-left'),
+          overflow.right && cls('apps', 'fade-right'),
+          styles['apps'],
+          fade,
+        )}
+      >
+        {participants.map((participant: SSOSessionParticipant) => {
+          const appLabel: string = participant.appName ?? participant.appId;
+          return (
+            <li key={participant.appId} className={cx(cls('app'), styles['appItem'])}>
+              <Tooltip helperText={appLabel} ariaLabel={appLabel} position="top">
+                <Avatar
+                  alt={appLabel}
+                  className={cx(cls('app-icon'), styles['appIcon'])}
+                  imageUrl={participant.appLogoUrl}
+                  name={appLabel}
+                  size={APP_ICON_SIZE}
+                  variant="square"
+                />
+              </Tooltip>
+            </li>
+          );
+        })}
+      </ul>
+      {overflow.right && arrow(1)}
+    </div>
+  );
+};
 
 /**
  * Presentational list of the signed-in user's SSO sessions. Each session other than the current one can
@@ -251,6 +391,7 @@ const BaseActiveSessions: FC<BaseActiveSessionsProps> = ({
       >
         <span className={cls('detail-date')}>{formatDate(value)}</span>
         <span className={cls('detail-time')}>{formatClock(value)}</span>
+        <LiveAgo className={cx(cls('detail-ago'), styles['detailAgo'])} locale={currentLanguage} t={t} value={value} />
       </dd>
     </div>
   );
@@ -310,13 +451,7 @@ const BaseActiveSessions: FC<BaseActiveSessionsProps> = ({
         <div className={cx(cls('apps-row'), styles['appsRow'])}>
           <span className={cx(cls('apps-label'), styles['appsLabel'])}>{t('user.sessions.applications')}</span>
           {session.participants.length > 0 ? (
-            <ul className={cx(cls('apps'), styles['apps'])}>
-              {session.participants.map((participant: SSOSessionParticipant) => (
-                <li key={participant.appId} className={cx(cls('app'), styles['app'])}>
-                  {participant.appName ?? participant.appId}
-                </li>
-              ))}
-            </ul>
+            <AppsStrip participants={session.participants} styles={styles} t={t} />
           ) : (
             <span className={cx(cls('app'), styles['app'])}>{t('user.sessions.unknown')}</span>
           )}

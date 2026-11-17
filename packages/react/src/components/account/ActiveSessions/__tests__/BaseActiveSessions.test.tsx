@@ -1,8 +1,9 @@
 // Copyright 2026 The ThunderID Authors
 // SPDX-License-Identifier: Apache-2.0
 
-import {cleanup, fireEvent, render, screen} from '@testing-library/react';
+import {act, cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {SSOSession} from '@thunderid/browser';
+import {renderToString} from 'react-dom/server';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import I18nProvider from '../../../../contexts/I18n/I18nProvider';
 import ThemeProvider from '../../../../contexts/Theme/ThemeProvider';
@@ -193,6 +194,161 @@ describe('BaseActiveSessions', () => {
     );
 
     expect(screen.getByRole('button', {name: 'Revoke all others'})).toBeTruthy();
+  });
+
+  it('shows each application as an icon named by a tooltip', () => {
+    const withApps: SSOSession = {
+      ...sessions[1],
+      participants: [
+        {
+          appId: 'app-1',
+          appLogoUrl: 'https://example.com/store.png',
+          appName: 'Store',
+          firstJoinedAt: '',
+          lastActiveAt: '',
+        },
+        {appId: 'app-2', firstJoinedAt: '', lastActiveAt: ''},
+      ],
+    };
+
+    const {container} = render(
+      <I18nProvider>
+        <ThemeProvider>
+          <BaseActiveSessions sessions={[sessions[0], withApps]} />
+        </ThemeProvider>
+      </I18nProvider>,
+    );
+
+    expect(container.querySelector('img[src="https://example.com/store.png"]')).toBeTruthy();
+    expect(screen.queryByRole('tooltip')).toBeNull();
+
+    const store: HTMLElement = screen.getByRole('button', {name: 'Store'});
+    fireEvent.mouseEnter(store);
+    expect(screen.getByRole('tooltip').textContent).toBe('Store');
+    fireEvent.mouseLeave(store);
+    expect(screen.queryByRole('tooltip')).toBeNull();
+
+    fireEvent.focus(screen.getByRole('button', {name: 'app-2'}));
+    expect(screen.getByRole('tooltip').textContent).toBe('app-2');
+  });
+
+  it('shows every application in a strip with no toggle, and arrows only on the sides that overflow', async () => {
+    const withApps: SSOSession = {
+      ...sessions[1],
+      participants: ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'].map(
+        (appName: string) => ({appId: `app-${appName}`, appName, firstJoinedAt: '', lastActiveAt: ''}),
+      ),
+    };
+
+    render(
+      <div style={{width: 260}}>
+        <I18nProvider>
+          <ThemeProvider>
+            <BaseActiveSessions sessions={[withApps]} />
+          </ThemeProvider>
+        </I18nProvider>
+      </div>,
+    );
+
+    expect(screen.getByRole('button', {name: 'One'})).toBeTruthy();
+    expect(screen.getByRole('button', {name: 'Ten'})).toBeTruthy();
+    expect(screen.queryByText(/more/)).toBeNull();
+
+    const strip: HTMLElement = screen.getByRole('list', {name: 'Applications'});
+    expect(getComputedStyle(strip).overflowX).toBe('auto');
+    expect(await screen.findByRole('button', {name: 'Scroll applications right'})).toBeTruthy();
+    expect(screen.queryByRole('button', {name: 'Scroll applications left'})).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', {name: 'Scroll applications right'}));
+    await waitFor(() => expect(strip.scrollLeft).toBeGreaterThan(0));
+
+    strip.scrollLeft = strip.scrollWidth;
+    fireEvent.scroll(strip);
+    expect(await screen.findByRole('button', {name: 'Scroll applications left'})).toBeTruthy();
+    await waitFor(() => expect(screen.queryByRole('button', {name: 'Scroll applications right'})).toBeNull());
+  });
+
+  it('offers no scroll arrows when every application fits', () => {
+    const withApps: SSOSession = {
+      ...sessions[1],
+      participants: [{appId: 'app-1', appName: 'Store', firstJoinedAt: '', lastActiveAt: ''}],
+    };
+
+    render(
+      <I18nProvider>
+        <ThemeProvider>
+          <BaseActiveSessions sessions={[withApps]} />
+        </ThemeProvider>
+      </I18nProvider>,
+    );
+
+    expect(screen.queryByRole('button', {name: /Scroll applications/})).toBeNull();
+  });
+
+  it('shows how long ago the session signed in and had SSO activity, to the minute', () => {
+    const recent: SSOSession = {
+      ...sessions[1],
+      authenticatedAt: new Date(Date.now() - (2 * 60 + 30) * 1000).toISOString(),
+      lastActiveAt: new Date(Date.now() - 20 * 1000).toISOString(),
+    };
+
+    render(
+      <I18nProvider>
+        <ThemeProvider>
+          <BaseActiveSessions sessions={[recent]} />
+        </ThemeProvider>
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText('2m ago')).toBeTruthy();
+    expect(screen.getByText('Just now')).toBeTruthy();
+  });
+
+  it('keeps the times current as the minutes pass', () => {
+    vi.useFakeTimers({toFake: ['setInterval', 'clearInterval', 'Date']});
+    try {
+      const almostAMinute: SSOSession = {
+        ...sessions[1],
+        authenticatedAt: new Date(Date.now() - 50 * 1000).toISOString(),
+        lastActiveAt: new Date(Date.now() - 50 * 1000).toISOString(),
+      };
+
+      render(
+        <I18nProvider>
+          <ThemeProvider>
+            <BaseActiveSessions sessions={[almostAMinute]} />
+          </ThemeProvider>
+        </I18nProvider>,
+      );
+
+      expect(screen.getAllByText('Just now')).toHaveLength(2);
+
+      act(() => {
+        vi.advanceTimersByTime(20 * 1000);
+      });
+
+      expect(screen.getAllByText('1m ago')).toHaveLength(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('renders on the server, as frameworks such as Next.js do before hydrating', () => {
+    const withApps: SSOSession = {
+      ...sessions[1],
+      participants: [{appId: 'app-1', appName: 'Store', firstJoinedAt: '', lastActiveAt: ''}],
+    };
+
+    const html: string = renderToString(
+      <I18nProvider>
+        <ThemeProvider>
+          <BaseActiveSessions sessions={[withApps]} />
+        </ThemeProvider>
+      </I18nProvider>,
+    );
+
+    expect(html).toContain('Store');
+    expect(html).toContain('Latest SSO');
   });
 
   it('shows no summary for a lone session that is not this device', () => {

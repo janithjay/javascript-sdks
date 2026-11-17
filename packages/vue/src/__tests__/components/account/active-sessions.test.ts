@@ -2,14 +2,18 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {SSOSessionListResponse, getDefaultI18nBundles, substituteTranslationParams} from '@thunderid/browser';
-import {VueWrapper, flushPromises, mount} from '@vue/test-utils';
-import {Mock, beforeEach, describe, expect, it, vi} from 'vitest';
-import {ref} from 'vue';
+import {VueWrapper, enableAutoUnmount, flushPromises, mount} from '@vue/test-utils';
+import {Mock, afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {createSSRApp, h, nextTick, ref} from 'vue';
+import {renderToString} from 'vue/server-renderer';
 import ActiveSessions from '../../../components/account/active-sessions/ActiveSessions';
 import BaseActiveSessions from '../../../components/account/active-sessions/BaseActiveSessions';
 import {I18N_KEY, THUNDERID_KEY} from '../../../keys';
+import injectStyles from '../../../styles/injectStyles';
 import type {I18nContextValue, ThunderIDContext} from '../../../models/contexts';
 
+// Unmounted after each test, so a component left mounted cannot keep a shared timer running into the next one.
+enableAutoUnmount(afterEach);
 const fetcher: Mock = vi.fn();
 
 vi.mock('@thunderid/browser', async (importOriginal: () => Promise<Record<string, unknown>>) => ({
@@ -122,7 +126,9 @@ describe('ActiveSessions', () => {
     expect(wrapper.text()).toContain('This device');
     expect(wrapper.text()).toContain('Active sessions');
     expect(wrapper.text()).toContain('2 active sessions · revoke any you don’t recognize');
-    expect(wrapper.findAll('.thunderid-active-sessions__app').map((app) => app.text())).toEqual(['Store', 'app-2']);
+    expect(
+      wrapper.findAll('li.thunderid-active-sessions__app [role="button"]').map((app) => app.attributes('aria-label')),
+    ).toEqual(['Store', 'app-2']);
   });
 
   it('shows the IP address and when the session signed in and was last active', async () => {
@@ -131,7 +137,7 @@ describe('ActiveSessions', () => {
     const labels: string[] = wrapper.findAll('dt').map((label) => label.text());
     const values: string[] = wrapper.findAll('dd').map((value) => value.text());
 
-    expect(labels.slice(0, 3)).toEqual(['IP address', 'Signed in', 'Last active']);
+    expect(labels.slice(0, 3)).toEqual(['IP address', 'Signed in', 'Latest SSO']);
     expect(wrapper.find('.thunderid-active-sessions__apps-label').text()).toBe('Applications');
     expect(values).toContain('203.0.113.7');
     expect(values).toContain('Unknown');
@@ -367,6 +373,170 @@ describe('ActiveSessions', () => {
     });
 
     expect(base.find('.thunderid-active-sessions__revoke-others').exists()).toBe(true);
+  });
+
+  it('shows each application as its logo, or its initial, named by a tooltip', async () => {
+    const withApps = {
+      ...page.sessions[1],
+      participants: [
+        {
+          appId: 'app-1',
+          appLogoUrl: 'https://example.com/store.png',
+          appName: 'Store',
+          firstJoinedAt: '',
+          lastActiveAt: '',
+        },
+        {appId: 'app-2', appName: 'quickstart', firstJoinedAt: '', lastActiveAt: ''},
+      ],
+    };
+    const base = mount(BaseActiveSessions, {
+      global: {provide: {[I18N_KEY as symbol]: i18nContext}},
+      props: {sessions: [withApps]},
+    });
+
+    const logo = base.find('img.thunderid-active-sessions__app-icon');
+    expect(logo.attributes('src')).toBe('https://example.com/store.png');
+    expect(logo.attributes('alt')).toBe('Store');
+    expect(base.find('.thunderid-active-sessions__app-icon--initial').text()).toBe('Q');
+
+    const store = base.find('[role="button"][aria-label="Store"]');
+    await store.trigger('mouseenter');
+    expect(base.find('[role="tooltip"]').text()).toBe('Store');
+
+    await logo.trigger('error');
+    expect(base.find('img.thunderid-active-sessions__app-icon').exists()).toBe(false);
+    expect(base.findAll('.thunderid-active-sessions__app-icon--initial').map((initial) => initial.text())).toEqual([
+      'S',
+      'Q',
+    ]);
+  });
+
+  it('resolves emoji and generated logos, and shows up to two initials without one', () => {
+    const withApps = {
+      ...page.sessions[1],
+      participants: [
+        {appId: 'app-1', appLogoUrl: 'emoji:🛒', appName: 'Store', firstJoinedAt: '', lastActiveAt: ''},
+        {
+          appId: 'app-2',
+          appLogoUrl: 'avatar:shape=rounded,variant=anonymous_entity,content=cube,colors=0',
+          appName: 'Console',
+          firstJoinedAt: '',
+          lastActiveAt: '',
+        },
+        {appId: 'app-3', appName: 'Admin Portal', firstJoinedAt: '', lastActiveAt: ''},
+      ],
+    };
+    const base = mount(BaseActiveSessions, {
+      global: {provide: {[I18N_KEY as symbol]: i18nContext}},
+      props: {sessions: [withApps]},
+    });
+
+    expect(base.find('.thunderid-active-sessions__app-icon--glyph').text()).toBe('🛒');
+    expect(base.find('img.thunderid-active-sessions__app-icon').attributes('src')).toMatch(/^data:image\/svg\+xml/);
+    expect(base.find('.thunderid-active-sessions__app-icon--initial').text()).toBe('AP');
+  });
+
+  it('shows every application in a strip with no toggle, and arrows only on the sides that overflow', async () => {
+    injectStyles();
+    const host: HTMLElement = document.createElement('div');
+    host.style.width = '260px';
+    document.body.appendChild(host);
+    const withApps = {
+      ...page.sessions[1],
+      participants: ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'].map(
+        (appName: string) => ({appId: `app-${appName}`, appName, firstJoinedAt: '', lastActiveAt: ''}),
+      ),
+    };
+    const base = mount(BaseActiveSessions, {
+      attachTo: host,
+      global: {provide: {[I18N_KEY as symbol]: i18nContext}},
+      props: {sessions: [withApps]},
+    });
+    await nextTick();
+
+    expect(base.findAll('.thunderid-active-sessions__app-icon')).toHaveLength(10);
+    expect(base.text()).not.toContain('more');
+    const strip = base.find('ul.thunderid-active-sessions__apps');
+    expect(strip.attributes('aria-label')).toBe('Applications');
+    expect(getComputedStyle(strip.element).overflowX).toBe('auto');
+    expect(base.find('[aria-label="Scroll applications right"]').exists()).toBe(true);
+    expect(base.find('[aria-label="Scroll applications left"]').exists()).toBe(false);
+
+    strip.element.scrollLeft = strip.element.scrollWidth;
+    await strip.trigger('scroll');
+
+    expect(base.find('[aria-label="Scroll applications left"]').exists()).toBe(true);
+    expect(base.find('[aria-label="Scroll applications right"]').exists()).toBe(false);
+    base.unmount();
+    host.remove();
+  });
+
+  it('offers no scroll arrows when every application fits', async () => {
+    const base = mount(BaseActiveSessions, {
+      global: {provide: {[I18N_KEY as symbol]: i18nContext}},
+      props: {sessions: [page.sessions[0]]},
+    });
+    await nextTick();
+
+    expect(base.find('.thunderid-active-sessions__apps-scroll').exists()).toBe(false);
+  });
+
+  it('shows how long ago the session signed in and had SSO activity, to the minute', () => {
+    const recent = {
+      ...page.sessions[1],
+      authenticatedAt: new Date(Date.now() - (2 * 60 + 30) * 1000).toISOString(),
+      lastActiveAt: new Date(Date.now() - 20 * 1000).toISOString(),
+    };
+    const base = mount(BaseActiveSessions, {
+      global: {provide: {[I18N_KEY as symbol]: i18nContext}},
+      props: {sessions: [recent]},
+    });
+
+    expect(base.findAll('.thunderid-active-sessions__detail-ago').map((ago) => ago.text())).toEqual([
+      '2m ago',
+      'Just now',
+    ]);
+  });
+
+  it('keeps the times current as the minutes pass', async () => {
+    vi.useFakeTimers({toFake: ['setInterval', 'clearInterval', 'Date']});
+    try {
+      const almostAMinute = new Date(Date.now() - 50 * 1000).toISOString();
+      const base = mount(BaseActiveSessions, {
+        global: {provide: {[I18N_KEY as symbol]: i18nContext}},
+        props: {sessions: [{...page.sessions[1], authenticatedAt: almostAMinute, lastActiveAt: almostAMinute}]},
+      });
+
+      expect(base.findAll('.thunderid-active-sessions__detail-ago').map((ago) => ago.text())).toEqual([
+        'Just now',
+        'Just now',
+      ]);
+
+      vi.advanceTimersByTime(20 * 1000);
+      await nextTick();
+
+      expect(base.findAll('.thunderid-active-sessions__detail-ago').map((ago) => ago.text())).toEqual([
+        '1m ago',
+        '1m ago',
+      ]);
+      base.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('renders on the server, as Nuxt does before hydrating', async () => {
+    const withApps = {
+      ...page.sessions[1],
+      participants: [{appId: 'app-1', appName: 'Store', firstJoinedAt: '', lastActiveAt: ''}],
+    };
+    const app = createSSRApp({render: () => h(BaseActiveSessions, {sessions: [withApps]})});
+    app.provide(I18N_KEY as symbol, i18nContext);
+
+    const html: string = await renderToString(app);
+
+    expect(html).toContain('aria-label="Store"');
+    expect(html).toContain('Latest SSO');
   });
 
   it('shows no summary for a lone session that is not this device', () => {

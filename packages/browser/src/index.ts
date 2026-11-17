@@ -59,6 +59,8 @@ export {ANONYMOUS_ANIMAL_ICONS} from './utils/anonymousAnimalIcons.generated';
 export type {AnonymousAnimalIcon} from './utils/anonymousAnimalIcons.generated';
 export {ANONYMOUS_ENTITY_ICONS} from './utils/anonymousEntityIcons.generated';
 export type {AnonymousEntityIcon} from './utils/anonymousEntityIcons.generated';
+export {default as placeTooltip} from './utils/placeTooltip';
+export type {TooltipPlacement, TooltipPosition} from './utils/placeTooltip';
 export {default as resolveLogoUri} from './utils/resolveLogoUri';
 export type {ResolvedLogo, ResolvedLogoKind} from './utils/resolveLogoUri';
 

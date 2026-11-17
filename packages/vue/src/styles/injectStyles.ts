@@ -53,6 +53,7 @@ import PASSWORD_FIELD_CSS from '../components/primitives/PasswordField/PasswordF
 import SELECT_CSS from '../components/primitives/Select/Select.css';
 import SPINNER_CSS from '../components/primitives/Spinner/Spinner.css';
 import TEXT_FIELD_CSS from '../components/primitives/TextField/TextField.css';
+import TOOLTIP_CSS from '../components/primitives/Tooltip/Tooltip.css';
 import TYPOGRAPHY_CSS from '../components/primitives/Typography/Typography.css';
 
 /**
@@ -83,6 +84,7 @@ const STYLES: string = [
   COPYABLE_TEXT_CSS,
   SPINNER_CSS,
   DATA_TABLE_CSS,
+  TOOLTIP_CSS,
   // Auth
   BASE_SIGN_IN_CSS,
   CONSENT_CSS,
