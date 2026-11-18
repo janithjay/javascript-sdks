@@ -17,16 +17,39 @@ export enum EmbeddedFlowResponseType {
 }
 
 /**
- * An SSO session a flow step started, as the flow execution API returns it. The handle resumes the
+ * An SSO session a flow step started or reused, as the flow execution API returns it. The handle resumes the
  * session without authentication, so it is held as a credential.
  */
 export interface EmbeddedFlowSessionData {
-  /** Seconds until the session reaches its absolute timeout. Present on a session a step started. */
+  /**
+   * Seconds until the session reaches its absolute timeout. A flow response returns it with each session; the
+   * callback is sent the time left, so the device secret ends with the session.
+   */
   expiresIn?: number;
   /** Identifies the flow the session belongs to. */
   flowIdentifier: string;
   /** The session handle. */
   sessionHandle: string;
+}
+
+/**
+ * An SSO session held between a flow's steps until its callback posts it.
+ */
+export interface HeldFlowSession {
+  /** When the session ends on this client's clock, when the flow response said. */
+  endsAt?: number;
+  flowIdentifier: string;
+  sessionHandle: string;
+}
+
+/**
+ * Where a flow's SSO sessions wait between its steps until its callback posts them, one entry per flow. A
+ * client's `StorageManager` is one: it keeps them in the temporary store of the user's own storage.
+ */
+export interface FlowSessionStore {
+  getFlowSessions(flowKey: string): Promise<HeldFlowSession[]>;
+  removeFlowSessions(flowKey: string): Promise<void>;
+  setFlowSessions(flowKey: string, sessions: HeldFlowSession[]): Promise<void>;
 }
 
 /**
@@ -753,6 +776,13 @@ export interface ConsentDecisions {
   purposes: ConsentPurposeDecision[];
   /** Why the decision was made, when it was not a direct user choice, e.g. the prompt expired */
   reason?: string;
+  /** The number of seconds the user chose their consent to last, when the consent prompt asked for it */
+  validityPeriod?: number;
+  /**
+   * Whether the user chose not to remember the decision, when the consent prompt asked for it. The server then
+   * decides how long the consent lasts, so no `validityPeriod` is sent with it.
+   */
+  oneTime?: boolean;
 }
 
 /**
@@ -775,6 +805,10 @@ export interface ConsentPurposeData {
    * carry rollup parent linkage).
    */
   optional: PromptElement[];
+  /** Permission delimiter, set only when the resource server grants permissions hierarchically */
+  permissionDelimiter?: string;
+  /** Display-only permission tree for a hierarchical purpose; only `optional` elements are decided */
+  displayElements?: PromptElement[];
   /** Unique identifier for the purpose */
   purposeId: string;
   /** Human-readable purpose name */
@@ -893,4 +927,9 @@ export interface EmbeddedFlowExecuteRequestConfig<T = any> extends EmbeddedFlowE
    * @example "auth_abc123def456"
    */
   authId?: string;
+  /**
+   * Where the flow's SSO sessions wait between its steps until the callback posts them, usually the client's
+   * `StorageManager`. Without one, only the sessions returned by the step that completes the flow are posted.
+   */
+  sessionStore?: FlowSessionStore;
 }
