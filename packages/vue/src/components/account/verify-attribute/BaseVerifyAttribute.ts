@@ -509,7 +509,7 @@ const BaseVerifyAttribute: Component = defineComponent({
                 ? h(
                     Button,
                     {
-                      color: 'secondary',
+                      color: 'tertiary',
                       'data-testid': 'thunderid-action-verificationCancel',
                       disabled: isSubmitting.value,
                       onClick: () => props.onCancel?.(),

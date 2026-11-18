@@ -17,6 +17,7 @@ import useTranslation from '../../../hooks/useTranslation';
 import {cx} from '../../../styles/emotion';
 import AlertPrimitive from '../../primitives/Alert/Alert';
 import Button from '../../primitives/Button/Button';
+import CardPrimitive from '../../primitives/Card/Card';
 import Check from '../../primitives/Icons/Check';
 import X from '../../primitives/Icons/X';
 import PasswordField from '../../primitives/PasswordField/PasswordField';
@@ -219,16 +220,11 @@ const BaseChangeCredential: FC<BaseChangeCredentialProps> = ({
     submitted && !confirmMatches ? t('user.change_password.mismatch.error', labelParams) : undefined;
   const newPasswordError: string | undefined = fieldErrors['newPassword'];
 
-  const form: ReactElement = (
+  const fields: ReactElement = (
     <form
       noValidate
       onSubmit={handleSubmit}
-      className={cx(
-        withVendorCSSClassPrefix('change-credential'),
-        styles['root'],
-        cardLayout ? styles['card'] : '',
-        className,
-      )}
+      className={cx(withVendorCSSClassPrefix('change-credential'), styles['root'], !cardLayout && className)}
     >
       {resolvedTitle && (
         <Typography
@@ -306,6 +302,16 @@ const BaseChangeCredential: FC<BaseChangeCredentialProps> = ({
         </Button>
       </div>
     </form>
+  );
+
+  // Framed as the SDK's outlined card, the same as every other account component. The caller's
+  // className styles the outermost box, so it moves to the card when there is one.
+  const form: ReactElement = cardLayout ? (
+    <CardPrimitive variant="outlined" className={className}>
+      {fields}
+    </CardPrimitive>
+  ) : (
+    fields
   );
 
   if (!unavailable) {

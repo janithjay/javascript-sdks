@@ -8,7 +8,7 @@
  *
  * Modifiers:
  *   Variant:  --solid | --outline | --ghost | --text
- *   Color:    --primary | --secondary | --danger
+ *   Color:    --primary | --secondary | --tertiary | --danger
  *   Size:     --small | --medium | --large
  *   State:    --full-width | --loading
  *
@@ -119,6 +119,18 @@ const BUTTON_CSS = `
   transform: scale(0.98);
 }
 
+/* Tertiary is the neutral action (Cancel, Revoke): the theme's text colors and border, the same as the
+   React SDK's tertiary button, so it stays readable whatever the theme's secondary accent is. */
+.thunderid-button--solid.thunderid-button--tertiary {
+  background-color: var(--thunderid-color-text-secondary);
+  color: var(--thunderid-color-background-surface);
+  border-color: var(--thunderid-color-text-secondary);
+}
+.thunderid-button--solid.thunderid-button--tertiary:hover:not(:disabled) {
+  background-color: var(--thunderid-color-text-primary);
+  border-color: var(--thunderid-color-text-primary);
+}
+
 .thunderid-button--solid.thunderid-button--danger {
   background-color: var(--thunderid-color-error-main);
   color: #ffffff;
@@ -158,6 +170,17 @@ const BUTTON_CSS = `
   transform: scale(0.98);
 }
 
+.thunderid-button--outline.thunderid-button--tertiary {
+  background-color: transparent;
+  color: var(--thunderid-color-text-secondary);
+  border-color: var(--thunderid-color-border);
+}
+.thunderid-button--outline.thunderid-button--tertiary:hover:not(:disabled) {
+  background-color: var(--thunderid-color-action-hover);
+  border-color: var(--thunderid-color-text-secondary);
+  color: var(--thunderid-color-text-primary);
+}
+
 .thunderid-button--outline.thunderid-button--danger {
   background-color: transparent;
   color: var(--thunderid-color-error-main);
@@ -190,6 +213,16 @@ const BUTTON_CSS = `
 .thunderid-button--ghost.thunderid-button--secondary:hover:not(:disabled) {
   background-color: var(--thunderid-color-action-hover);
   border-color: transparent;
+}
+
+.thunderid-button--ghost.thunderid-button--tertiary {
+  background-color: transparent;
+  color: var(--thunderid-color-text-secondary);
+  border-color: transparent;
+}
+.thunderid-button--ghost.thunderid-button--tertiary:hover:not(:disabled) {
+  background-color: var(--thunderid-color-action-hover);
+  color: var(--thunderid-color-text-primary);
 }
 
 .thunderid-button--ghost.thunderid-button--danger {
@@ -227,6 +260,13 @@ const BUTTON_CSS = `
   color: var(--thunderid-color-text-primary);
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+.thunderid-button--text.thunderid-button--tertiary {
+  color: var(--thunderid-color-text-secondary);
+}
+.thunderid-button--text.thunderid-button--tertiary:hover:not(:disabled) {
+  color: var(--thunderid-color-text-primary);
 }
 
 .thunderid-button--text.thunderid-button--danger {

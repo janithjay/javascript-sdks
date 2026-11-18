@@ -17,10 +17,10 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
     opacity: 0.7;
   `;
 
+  // The value cell already dims an empty value, so the button does not dim it again.
   const editButton: string = css`
     font-style: italic;
     text-decoration: underline;
-    opacity: 0.7;
     padding: 0;
     min-height: auto;
 
@@ -65,15 +65,9 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
 
   return useMemo(() => {
     const root: string = css`
-      padding: calc(${theme.vars.spacing.unit} * 4);
       min-width: 600px;
       margin: 0 auto;
       font-family: ${theme.vars.typography.fontFamily};
-    `;
-
-    const card: string = css`
-      background: ${theme.vars.colors.background.surface};
-      border-radius: ${theme.vars.borderRadius.large};
     `;
 
     const header: string = css`
@@ -204,7 +198,7 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
       align-items: center;
       padding: 0 ${theme.vars.spacing.unit};
       border-radius: 999px;
-      font-size: 0.75rem;
+      font-size: ${theme.vars.typography.fontSizes.xs};
       font-weight: 500;
       line-height: 22px;
       white-space: nowrap;
@@ -251,7 +245,6 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
 
     return {
       alert,
-      card,
       complexTextarea,
       editButton,
       field,

@@ -69,7 +69,7 @@ const ChangeCredential: Component = defineComponent({
      */
     attribute: {default: CredentialConstants.PASSWORD, type: String},
     /** Whether to wrap the form in a bordered card. */
-    cardLayout: {default: false, type: Boolean},
+    cardLayout: {default: true, type: Boolean},
     /** Extra CSS class added to the root element. */
     className: {default: '', type: String},
     /** Explicit rules. When omitted, they are derived from the user schema. */

@@ -56,10 +56,8 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
 
     const dropdownContent: string = css`
       background: ${theme.vars.colors.background.surface};
-      border-radius: ${theme.vars.borderRadius.large};
-      box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      border-radius: ${theme.vars.borderRadius.medium};
+      box-shadow: ${theme.vars.shadows.medium};
       border: 1px solid ${theme.vars.colors.border};
       font-family: ${theme.vars.typography.fontFamily};
       min-width: 250px;

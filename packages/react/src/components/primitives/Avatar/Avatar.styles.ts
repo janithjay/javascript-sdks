@@ -28,7 +28,7 @@ const useStyles = (
       align-items: center;
       background: ${backgroundColor || theme.vars.colors.background.surface};
       border: ${backgroundColor ? 'none' : `1px solid ${theme.vars.colors.border}`};
-      border-radius: ${variant === 'circular' ? '50%' : '8px'};
+      border-radius: ${variant === 'circular' ? '50%' : theme.vars.borderRadius.medium};
       color: ${backgroundColor ? '#ffffff' : theme.vars.colors.text.primary};
       display: flex;
       font-size: ${size * 0.4}px;
@@ -46,7 +46,7 @@ const useStyles = (
         border-radius: 50%;
       `,
       square: css`
-        border-radius: 8px;
+        border-radius: ${theme.vars.borderRadius.medium};
       `,
     };
 
@@ -59,10 +59,15 @@ const useStyles = (
     const skeletonStyles: string = css`
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background: linear-gradient(
+        90deg,
+        ${theme.vars.colors.background.disabled} 25%,
+        ${theme.vars.colors.border} 50%,
+        ${theme.vars.colors.background.disabled} 75%
+      );
       background-size: 200% 100%;
       animation: skeleton-loading 1.5s infinite;
-      border-radius: ${variant === 'circular' ? '50%' : '8px'};
+      border-radius: ${variant === 'circular' ? '50%' : theme.vars.borderRadius.medium};
 
       @keyframes skeleton-loading {
         0% {

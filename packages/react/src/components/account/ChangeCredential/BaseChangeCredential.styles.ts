@@ -18,12 +18,6 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
     width: 100%;
   `;
 
-  const card: string = css`
-    padding: calc(${theme.vars.spacing.unit} * 3);
-    border: 1px solid ${theme.vars.colors.border};
-    border-radius: ${theme.vars.borderRadius.large};
-  `;
-
   const heading: string = css`
     margin: 0;
   `;
@@ -105,7 +99,6 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
   return {
     actions,
     alert,
-    card,
     colorScheme,
     fields,
     heading,

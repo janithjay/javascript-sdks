@@ -257,7 +257,7 @@ export const BaseUserDropdown: FC<BaseUserDropdownProps> = ({
                     noWrap
                     className={withVendorCSSClassPrefix('user-dropdown__header-email')}
                     variant="caption"
-                    color="secondary"
+                    color="textSecondary"
                   >
                     {getMappedUserProfileValue('username', mergedMappings, user) ||
                       getMappedUserProfileValue('email', mergedMappings, user)}

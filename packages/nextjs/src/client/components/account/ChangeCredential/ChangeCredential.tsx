@@ -70,6 +70,7 @@ export type ChangeCredentialProps = Omit<
  */
 const ChangeCredential: FC<ChangeCredentialProps> = ({
   attribute = CredentialConstants.PASSWORD,
+  cardLayout = true,
   onSuccess,
   policy,
   preferences,
@@ -131,6 +132,7 @@ const ChangeCredential: FC<ChangeCredentialProps> = ({
   return (
     <BaseChangeCredential
       {...rest}
+      cardLayout={cardLayout}
       credentialDisplayName={resolvedDisplayName}
       error={error}
       fieldErrors={fieldErrors}

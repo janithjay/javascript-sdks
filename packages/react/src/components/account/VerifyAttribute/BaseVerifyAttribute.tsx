@@ -620,7 +620,7 @@ const BaseVerifyAttributeContent: FC<Omit<BaseVerifyAttributeProps, 'preferences
             <Button
               type="button"
               size="small"
-              color="secondary"
+              color="tertiary"
               variant="text"
               onClick={onCancel}
               disabled={isSubmitting}

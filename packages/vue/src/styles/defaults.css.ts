@@ -142,8 +142,8 @@ const DEFAULTS_CSS = `
   --thunderid-input-focusRing: 0 0 0 3px var(--thunderid-focus-ring-color);
 
   /* --- Component: Card --- */
-  --thunderid-card-borderRadius: var(--thunderid-border-radius-medium);
-  --thunderid-card-padding: calc(var(--thunderid-spacing-unit) * 2.5);
+  --thunderid-card-borderRadius: var(--thunderid-border-radius-large);
+  --thunderid-card-padding: calc(var(--thunderid-spacing-unit) * 3);
   --thunderid-card-shadow: var(--thunderid-shadow-small);
   --thunderid-card-borderColor: var(--thunderid-color-border);
 

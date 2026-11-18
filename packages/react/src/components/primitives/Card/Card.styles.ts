@@ -23,7 +23,7 @@ const useStyles = (
 ): Record<string, string> =>
   useMemo(() => {
     const baseCard: string = css`
-      border-radius: ${theme.vars.borderRadius.medium};
+      border-radius: ${theme.vars.borderRadius.large};
       background-color: ${theme.vars.colors.background.surface};
       font-family: ${theme.vars.typography.fontFamily};
       transition: all 0.2s ease-in-out;
@@ -31,7 +31,7 @@ const useStyles = (
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      padding: calc(${theme.vars.spacing.unit} * 2);
+      padding: calc(${theme.vars.spacing.unit} * 3);
     `;
 
     const variantStyles: Record<string, string> = {
@@ -39,7 +39,7 @@ const useStyles = (
         /* Base styles only */
       `,
       elevated: css`
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: ${theme.vars.shadows.small};
         border: none;
       `,
       outlined: css`
@@ -52,7 +52,7 @@ const useStyles = (
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        box-shadow: ${theme.vars.shadows.medium};
       }
     `;
 

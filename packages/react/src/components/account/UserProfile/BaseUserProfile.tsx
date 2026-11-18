@@ -63,6 +63,10 @@ export interface BaseUserProfileProps {
     picture?: string | string[];
     username?: string | string[];
   };
+  /**
+   * Whether to wrap the profile in a bordered card. Set to `false` to render it without one.
+   * @default true
+   */
   cardLayout?: boolean;
   className?: string;
   displayNameAttributes?: string[];
@@ -542,7 +546,7 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
               <Button
                 onClick={onStartEdit}
                 variant="text"
-                color="secondary"
+                color="tertiary"
                 size="small"
                 title="Click to edit"
                 className={styles.editButton}
@@ -639,7 +643,7 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
             <Button
               onClick={onStartEdit}
               variant="text"
-              color="secondary"
+              color="tertiary"
               size="small"
               title="Click to edit"
               className={styles.editButton}
@@ -818,8 +822,8 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
                 </Button>
                 <Button
                   size="small"
-                  color="secondary"
-                  variant="solid"
+                  color="tertiary"
+                  variant="outline"
                   onClick={(): any => handleFieldCancel(schema.name)}
                 >
                   Cancel
@@ -852,12 +856,7 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
     return fallback;
   }
 
-  const containerClasses: any = cx(
-    styles.root,
-    cardLayout ? styles.card : '',
-    withVendorCSSClassPrefix('user-profile'),
-    className,
-  );
+  const containerClasses: any = cx(styles.root, withVendorCSSClassPrefix('user-profile'), className);
 
   const currentUser: any = flattenedProfile || profile;
 
@@ -955,8 +954,8 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
     );
   };
 
-  const profileContent: any = (
-    <CardPrimitive className={containerClasses}>
+  const profileBody: ReactElement = (
+    <>
       {error && (
         <AlertPrimitive
           variant="error"
@@ -967,7 +966,15 @@ const BaseUserProfile: FC<BaseUserProfileProps> = ({
         </AlertPrimitive>
       )}
       <div className={styles.infoContainer}>{renderProfileContent()}</div>
+    </>
+  );
+
+  const profileContent: ReactElement = cardLayout ? (
+    <CardPrimitive variant="outlined" className={containerClasses}>
+      {profileBody}
     </CardPrimitive>
+  ) : (
+    <div className={containerClasses}>{profileBody}</div>
   );
 
   if (mode === 'popup') {

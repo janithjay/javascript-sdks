@@ -14,8 +14,6 @@ import {css} from '../../../styles/emotion';
 const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
   useMemo(() => {
     const card: string = css`
-      background: ${theme.vars.colors.background.surface};
-      border-radius: ${theme.vars.borderRadius.large};
       gap: calc(${theme.vars.spacing.unit} * 2);
       min-width: 420px;
       font-family: ${theme.vars.typography.fontFamily};

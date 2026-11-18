@@ -134,6 +134,20 @@ describe('BaseUserProfile verification', () => {
     cleanup();
   });
 
+  it('frames itself as the outlined card, and renders no card without cardLayout', () => {
+    const {container} = renderProfile();
+
+    expect((container.firstChild as HTMLElement).classList.contains('thunderid-card--outlined')).toBe(true);
+
+    cleanup();
+
+    const {container: plain} = renderProfile({cardLayout: false});
+    const root: HTMLElement = plain.firstChild as HTMLElement;
+
+    expect(root.classList.contains('thunderid-user-profile')).toBe(true);
+    expect(root.className).not.toMatch(/thunderid-card/);
+  });
+
   describe('status', () => {
     it('shows Verified or Unverified for each email and mobile field with a value', () => {
       renderProfile();

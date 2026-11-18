@@ -242,7 +242,7 @@ const BaseUserProfile: Component = defineComponent({
     cardLayout: {default: true, type: Boolean},
     /** Shadow / border style of the Card wrapper. */
     cardVariant: {
-      default: 'elevated',
+      default: 'outlined',
       type: String as PropType<'elevated' | 'outlined' | 'flat'>,
     },
     className: {default: '', type: String},
@@ -692,10 +692,10 @@ const BaseUserProfile: Component = defineComponent({
                     h(
                       Button,
                       {
-                        color: 'secondary' as const,
+                        color: 'tertiary' as const,
                         onClick: () => cancelEditing(name),
                         size: 'small' as const,
-                        variant: 'solid' as const,
+                        variant: 'outline' as const,
                       },
                       () => t('userProfile.actions.cancel', 'Cancel'),
                     ),
@@ -703,7 +703,7 @@ const BaseUserProfile: Component = defineComponent({
                 : hasValue
                   ? h(Button, {
                       class: px('user-profile__field-edit-btn'),
-                      color: 'secondary' as const,
+                      color: 'tertiary' as const,
                       onClick: () => {
                         if (verifyingField.value === name) verifyingField.value = null;
                         verifiedNotice.value = null;
@@ -915,7 +915,7 @@ const BaseUserProfile: Component = defineComponent({
       }
 
       if (props.cardLayout) {
-        return h(Card, {class: rootClasses, variant: props.cardVariant ?? 'elevated'}, () => children);
+        return h(Card, {class: rootClasses, variant: props.cardVariant ?? 'outlined'}, () => children);
       }
 
       return h('div', {class: rootClasses}, children);

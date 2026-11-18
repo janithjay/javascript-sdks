@@ -170,6 +170,20 @@ const customProfile =
     );
   };
 
+describe('BaseUserProfile card', () => {
+  it('frames itself as the outlined card by default, as every account component does', () => {
+    const wrapper: VueWrapper = mountBase();
+
+    expect(wrapper.classes()).toContain('thunderid-card--outlined');
+  });
+
+  it('takes another card variant when one is given', () => {
+    const wrapper: VueWrapper = mountBase({cardVariant: 'elevated'});
+
+    expect(wrapper.classes()).toContain('thunderid-card--elevated');
+  });
+});
+
 describe('BaseUserProfile verification', () => {
   describe('status', () => {
     it('shows Verified or Unverified for each email and mobile field with a value, not for a first name', () => {

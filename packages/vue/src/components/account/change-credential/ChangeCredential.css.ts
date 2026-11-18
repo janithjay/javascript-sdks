@@ -20,9 +20,9 @@ const CHANGE_CREDENTIAL_CSS = `
 }
 
 .thunderid-change-credential--card {
-  padding: calc(var(--thunderid-spacing-unit) * 3);
-  border: 1px solid var(--thunderid-color-border);
-  border-radius: var(--thunderid-border-radius-large, 8px);
+  padding: var(--thunderid-card-padding);
+  border: 1px solid var(--thunderid-card-borderColor);
+  border-radius: var(--thunderid-card-borderRadius);
   background: var(--thunderid-color-background-surface);
 }
 

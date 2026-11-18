@@ -13,11 +13,8 @@ const USER_PROFILE_CSS = `
 .thunderid-user-profile {
   display: flex;
   flex-direction: column;
-  padding: calc(var(--thunderid-spacing-unit) * 4);
   min-width: 600px;
   font-family: var(--thunderid-typography-fontFamily);
-  background: var(--thunderid-color-background-surface);
-  border-radius: var(--thunderid-border-radius-large, 8px);
   box-sizing: border-box;
 }
 
@@ -236,7 +233,7 @@ img.thunderid-user-profile__avatar {
   align-items: center;
   padding: 0 var(--thunderid-spacing-unit);
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: var(--thunderid-typography-fontSize-xs);
   font-weight: 500;
   line-height: 22px;
   white-space: nowrap;

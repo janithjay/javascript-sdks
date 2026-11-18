@@ -70,6 +70,26 @@ describe('ChangeCredential', () => {
     cleanup();
   });
 
+  it('frames the form in the outlined card by default, with the caller className on the card', () => {
+    const {container} = renderChangeCredential({className: 'my-credential'});
+
+    const card: HTMLElement = container.firstChild as HTMLElement;
+
+    expect(card.classList.contains('thunderid-card--outlined')).toBe(true);
+    expect(card.classList.contains('my-credential')).toBe(true);
+    expect(card.querySelector('form')?.classList.contains('my-credential')).toBe(false);
+  });
+
+  it('puts the caller className on the form when the card layout is turned off', () => {
+    const {container} = renderChangeCredential({cardLayout: false, className: 'my-credential'});
+
+    const form: HTMLElement = container.firstChild as HTMLElement;
+
+    expect(form.tagName).toBe('FORM');
+    expect(form.classList.contains('my-credential')).toBe(true);
+    expect(container.querySelector('.thunderid-card')).toBeNull();
+  });
+
   it('renders only the two fields, with no current-value field', () => {
     renderChangeCredential();
 

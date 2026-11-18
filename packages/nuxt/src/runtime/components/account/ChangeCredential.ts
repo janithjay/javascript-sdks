@@ -72,7 +72,7 @@ const ChangeCredential: Component = defineComponent({
   name: 'ChangeCredential',
   props: {
     attribute: {default: CredentialConstants.PASSWORD, type: String},
-    cardLayout: {default: false, type: Boolean},
+    cardLayout: {default: true, type: Boolean},
     className: {default: '', type: String},
     policy: {default: undefined, type: Object as PropType<PasswordPolicy>},
     preferences: {default: undefined, type: Object as PropType<Preferences>},

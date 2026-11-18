@@ -8,10 +8,12 @@ import {effectScope, ref} from 'vue';
 
 const BaseVerifyAttribute = {name: 'BaseVerifyAttribute'};
 const BaseUserProfile = {name: 'BaseUserProfile'};
+const BaseChangeCredential = {name: 'BaseChangeCredential'};
 const revalidateProfile = vi.fn().mockResolvedValue(undefined);
 const updateProfile = vi.fn();
 
 vi.mock('@thunderid/vue', () => ({
+  BaseChangeCredential,
   BaseUserProfile,
   BaseVerifyAttribute,
   useI18n: () => ({t: (key: string) => key}),
@@ -29,6 +31,7 @@ vi.mock('#imports', () => ({
 
 const {default: VerifyAttribute} = await import('../../src/runtime/components/account/VerifyAttribute');
 const {default: UserProfile} = await import('../../src/runtime/components/account/UserProfile');
+const {default: ChangeCredential} = await import('../../src/runtime/components/account/ChangeCredential');
 
 const renderSetup = (component: any, props: Record<string, unknown>, slots: Record<string, unknown>) => {
   const scope = effectScope();
@@ -122,6 +125,18 @@ describe('UserProfile save failure', () => {
     await node.props.onUpdate({email: 'new@example.com'});
 
     expect(render().props.error).toBe('user.profile.update.generic.error');
+    scope.stop();
+  });
+});
+
+describe('ChangeCredential card layout', () => {
+  it('frames the form in the card by default, the same as the Vue SDK, and passes the choice through', () => {
+    expect((ChangeCredential as any).props.cardLayout.default).toBe(true);
+
+    const {node, scope} = renderSetup(ChangeCredential, {attribute: 'password', cardLayout: false, className: ''}, {});
+
+    expect(node.type).toBe(BaseChangeCredential);
+    expect(node.props.cardLayout).toBe(false);
     scope.stop();
   });
 });

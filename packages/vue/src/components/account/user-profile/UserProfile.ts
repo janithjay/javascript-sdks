@@ -55,7 +55,7 @@ const UserProfile: Component = defineComponent({
     cardLayout: {default: true, type: Boolean},
     /** Shadow / border style of the card wrapper. */
     cardVariant: {
-      default: 'elevated',
+      default: 'outlined',
       type: String as PropType<'elevated' | 'outlined' | 'flat'>,
     },
     /** Extra CSS class added to the root element. */

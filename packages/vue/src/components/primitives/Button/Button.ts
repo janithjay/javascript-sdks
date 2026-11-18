@@ -5,7 +5,7 @@ import {withVendorCSSClassPrefix} from '@thunderid/browser';
 import {type Component, type SetupContext, type VNode, defineComponent, h, type PropType} from 'vue';
 
 type ButtonProps = Readonly<{
-  color: 'primary' | 'secondary' | 'danger';
+  color: 'primary' | 'secondary' | 'tertiary' | 'danger';
   disabled: boolean;
   endIcon: VNode | undefined;
   fullWidth: boolean;
@@ -21,7 +21,7 @@ const Button: Component = defineComponent({
   props: {
     color: {
       default: 'primary',
-      type: String as PropType<'primary' | 'secondary' | 'danger'>,
+      type: String as PropType<'primary' | 'secondary' | 'tertiary' | 'danger'>,
     },
     disabled: {default: false, type: Boolean},
     endIcon: {default: undefined, type: Object as PropType<VNode>},

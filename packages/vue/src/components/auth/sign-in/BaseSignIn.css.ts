@@ -19,7 +19,6 @@ const BASE_SIGN_IN_CSS = `
   min-width: 420px;
   margin: 0 auto;
   font-family: var(--thunderid-typography-fontFamily, inherit);
-  border-radius: var(--thunderid-border-radius-large);
 }
 
 .thunderid-signin__content {

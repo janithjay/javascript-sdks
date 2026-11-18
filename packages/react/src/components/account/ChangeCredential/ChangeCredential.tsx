@@ -37,6 +37,11 @@ export interface ChangeCredentialProps
    */
   attribute?: string;
   /**
+   * Whether to wrap the form in a bordered card. Set to `false` to render it without one.
+   * @default true
+   */
+  cardLayout?: boolean;
+  /**
    * Called after the credential has been changed successfully.
    */
   onSuccess?: () => void;
@@ -80,6 +85,7 @@ export interface ChangeCredentialProps
  */
 const ChangeCredential: FC<ChangeCredentialProps> = ({
   attribute = CredentialConstants.PASSWORD,
+  cardLayout = true,
   onSuccess = undefined,
   policy = undefined,
   preferences = undefined,
@@ -143,6 +149,7 @@ const ChangeCredential: FC<ChangeCredentialProps> = ({
   return (
     <BaseChangeCredential
       {...rest}
+      cardLayout={cardLayout}
       credentialDisplayName={resolvedDisplayName}
       error={error}
       fieldErrors={fieldErrors}
