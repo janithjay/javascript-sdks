@@ -165,7 +165,7 @@ const BaseActiveSessions: Component = defineComponent({
             Button,
             {
               class: cls('cancel'),
-              color: 'secondary',
+              color: 'tertiary',
               onClick: (): void => {
                 confirming.value = null;
               },
@@ -236,7 +236,7 @@ const BaseActiveSessions: Component = defineComponent({
                     'aria-describedby': deviceId,
                     'aria-expanded': String(confirming.value === session.id),
                     class: cls('revoke'),
-                    color: 'secondary',
+                    color: 'tertiary',
                     disabled: busy,
                     loading: props.revokingSessionId === session.id,
                     onClick: (event: MouseEvent): void => openConfirm(session.id, event),

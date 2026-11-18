@@ -20,9 +20,9 @@ const PASSKEYS_CSS = `
 }
 
 .thunderid-passkeys--card {
-  padding: calc(var(--thunderid-spacing-unit) * 3);
-  border: 1px solid var(--thunderid-color-border);
-  border-radius: var(--thunderid-border-radius-large, 8px);
+  padding: var(--thunderid-card-padding);
+  border: 1px solid var(--thunderid-card-borderColor);
+  border-radius: var(--thunderid-card-borderRadius);
   background: var(--thunderid-color-background-surface);
 }
 
@@ -52,7 +52,7 @@ const PASSKEYS_CSS = `
   padding: calc(var(--thunderid-spacing-unit) * 2.75) calc(var(--thunderid-spacing-unit) * 2);
   text-align: center;
   border: 1px dashed var(--thunderid-color-border);
-  border-radius: var(--thunderid-border-radius-large, 8px);
+  border-radius: var(--thunderid-border-radius-medium);
 }
 
 .thunderid-passkeys__list {
@@ -70,7 +70,7 @@ const PASSKEYS_CSS = `
   gap: calc(var(--thunderid-spacing-unit) * 1.5);
   padding: calc(var(--thunderid-spacing-unit) * 1.5) calc(var(--thunderid-spacing-unit) * 1.75);
   border: 1px solid var(--thunderid-color-border);
-  border-radius: var(--thunderid-border-radius-large, 8px);
+  border-radius: var(--thunderid-border-radius-medium);
 }
 
 .thunderid-passkeys__item-row {
@@ -129,7 +129,7 @@ const PASSKEYS_CSS = `
   gap: calc(var(--thunderid-spacing-unit) * 1.5);
   padding: calc(var(--thunderid-spacing-unit) * 2.5);
   border: 1px solid var(--thunderid-color-border);
-  border-radius: var(--thunderid-border-radius-large, 8px);
+  border-radius: var(--thunderid-border-radius-medium);
 }
 
 .thunderid-passkeys__panel-heading {

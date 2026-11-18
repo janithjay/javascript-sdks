@@ -13,7 +13,8 @@ const USER_PROFILE_CSS = `
 .thunderid-user-profile {
   display: flex;
   flex-direction: column;
-  min-width: 600px;
+  width: 100%;
+  min-width: 0;
   font-family: var(--thunderid-typography-fontFamily);
   box-sizing: border-box;
 }

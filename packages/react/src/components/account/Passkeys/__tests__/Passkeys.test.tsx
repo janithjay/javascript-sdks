@@ -536,6 +536,18 @@ describe('BasePasskeys', () => {
     expect(screen.getByText('Passkey')).toBeTruthy();
   });
 
+  it('frames itself as the outlined card, and drops the frame without cardLayout', () => {
+    const {container} = renderBase({passkeys: []});
+
+    expect((container.firstChild as HTMLElement).classList.contains('thunderid-card--outlined')).toBe(true);
+
+    cleanup();
+
+    const {container: plain} = renderBase({cardLayout: false, passkeys: []});
+
+    expect((plain.firstChild as HTMLElement).classList.contains('thunderid-card--outlined')).toBe(false);
+  });
+
   it('offers no actions without handlers', () => {
     renderBase({passkeys: [{id: 'a', name: 'Work laptop'}]});
 

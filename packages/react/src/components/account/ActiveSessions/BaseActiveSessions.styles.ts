@@ -35,13 +35,6 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
       color: ${colors.text.primary};
     `;
 
-    const card: string = css`
-      padding: ${space(2.25)} ${space(2.75)} ${space(2.5)};
-      border: 1px solid ${colors.border};
-      border-radius: ${borderRadius.large};
-      background: ${colors.background.surface};
-    `;
-
     const header: string = css`
       display: flex;
       flex-wrap: wrap;
@@ -184,15 +177,16 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
       min-width: 0;
     `;
 
-    // Mixed toward the text color so the chip's small text keeps WCAG AA contrast.
+    // The same pill as the user profile's verification badges, so status reads alike across components.
+    // Its text is mixed toward the text color so the small label keeps WCAG AA contrast.
     const current: string = css`
-      padding: ${space(0.25)} ${spacing.unit};
-      border: 1px solid ${mix(colors.primary.main, 20)};
-      border-radius: 20px;
-      background: ${mix(colors.primary.main, 8)};
+      padding: 0 ${spacing.unit};
+      border-radius: 999px;
+      background: ${mix(colors.primary.main, 14)};
       color: ${mix(colors.primary.main, 55, colors.text.primary)};
-      font-size: ${labelSize};
+      font-size: ${typography.fontSizes.xs};
       font-weight: ${typography.fontWeights.medium};
+      line-height: 22px;
       white-space: nowrap;
     `;
 
@@ -368,7 +362,6 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
       appsLabel,
       appsRow,
       browserIcon,
-      card,
       confirm,
       confirmActions,
       confirmInSession,

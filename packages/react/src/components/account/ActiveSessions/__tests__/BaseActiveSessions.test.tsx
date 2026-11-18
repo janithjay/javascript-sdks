@@ -151,6 +151,8 @@ describe('BaseActiveSessions', () => {
 
     expect(screen.queryByRole('heading')).toBeNull();
     expect((container.firstChild as HTMLElement).className).not.toBe(plainClassName);
+    expect((container.firstChild as HTMLElement).classList.contains('thunderid-card--outlined')).toBe(true);
+    expect(plainClassName).not.toContain('thunderid-card');
   });
 
   it('shows the loading state until the sessions arrive', () => {

@@ -23,8 +23,8 @@ const ACTIVE_SESSIONS_CSS = `
 
 .thunderid-active-sessions.thunderid-active-sessions--card {
   overflow: hidden;
-  border: 1px solid var(--thunderid-color-border);
-  border-radius: var(--thunderid-border-radius-large);
+  border: 1px solid var(--thunderid-card-borderColor);
+  border-radius: var(--thunderid-card-borderRadius);
   background: var(--thunderid-color-background-surface);
 }
 
@@ -38,7 +38,7 @@ const ACTIVE_SESSIONS_CSS = `
 }
 
 .thunderid-active-sessions.thunderid-active-sessions--card .thunderid-active-sessions__header {
-  padding: calc(var(--thunderid-spacing-unit) * 2.25) calc(var(--thunderid-spacing-unit) * 2.75);
+  padding: var(--thunderid-card-padding) var(--thunderid-card-padding) 0;
 }
 
 .thunderid-active-sessions .thunderid-active-sessions__heading {
@@ -72,7 +72,7 @@ const ACTIVE_SESSIONS_CSS = `
 
 .thunderid-active-sessions.thunderid-active-sessions--card > .thunderid-active-sessions__confirm,
 .thunderid-active-sessions.thunderid-active-sessions--card > .thunderid-active-sessions__error {
-  margin: calc(var(--thunderid-spacing-unit) * 2) calc(var(--thunderid-spacing-unit) * 2.75) 0;
+  margin: calc(var(--thunderid-spacing-unit) * 2) var(--thunderid-card-padding) 0;
 }
 
 .thunderid-active-sessions .thunderid-active-sessions__confirm-message {
@@ -111,7 +111,7 @@ const ACTIVE_SESSIONS_CSS = `
 }
 
 .thunderid-active-sessions.thunderid-active-sessions--card .thunderid-active-sessions__list {
-  padding: calc(var(--thunderid-spacing-unit) * 2) calc(var(--thunderid-spacing-unit) * 2.75) calc(var(--thunderid-spacing-unit) * 2.5);
+  padding: calc(var(--thunderid-spacing-unit) * 2) var(--thunderid-card-padding) var(--thunderid-card-padding);
 }
 
 .thunderid-active-sessions .thunderid-active-sessions__session {
@@ -178,14 +178,16 @@ const ACTIVE_SESSIONS_CSS = `
   color: var(--thunderid-color-text-primary);
 }
 
+/* The same pill as the user profile's verification badges, so status reads alike across components. Its
+   text is mixed toward the text color so the small label keeps WCAG AA contrast. */
 .thunderid-active-sessions .thunderid-active-sessions__current {
-  padding: calc(var(--thunderid-spacing-unit) * 0.25) var(--thunderid-spacing-unit);
-  border: 1px solid color-mix(in srgb, var(--thunderid-color-primary-main) 20%, transparent);
-  border-radius: 20px;
-  background: color-mix(in srgb, var(--thunderid-color-primary-main) 8%, transparent);
+  padding: 0 var(--thunderid-spacing-unit);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--thunderid-color-primary-main) 14%, transparent);
   color: color-mix(in srgb, var(--thunderid-color-primary-main) 55%, var(--thunderid-color-text-primary));
-  font-size: calc(var(--thunderid-typography-fontSize-xs) * 0.875);
+  font-size: var(--thunderid-typography-fontSize-xs);
   font-weight: var(--thunderid-typography-fontWeight-medium);
+  line-height: 22px;
   white-space: nowrap;
 }
 
@@ -357,7 +359,7 @@ const ACTIVE_SESSIONS_CSS = `
   box-sizing: border-box;
   width: 28px;
   height: 28px;
-  border-radius: 8px;
+  border-radius: var(--thunderid-border-radius-medium);
   object-fit: cover;
   box-shadow: 0 0 0 2px var(--thunderid-color-background-surface);
 }

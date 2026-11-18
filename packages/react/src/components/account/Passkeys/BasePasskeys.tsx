@@ -338,7 +338,7 @@ const BasePasskeys: FC<BasePasskeysProps> = ({
       <div className={cx(cls('panel-actions'), styles['actions'])}>
         <Button
           type="button"
-          color="secondary"
+          color="tertiary"
           variant="outline"
           className={cls('cancel')}
           onClick={(): void => setAddOpen(false)}
@@ -400,7 +400,7 @@ const BasePasskeys: FC<BasePasskeysProps> = ({
       <div className={cx(cls('panel-actions'), styles['actions'])}>
         <Button
           type="button"
-          color="secondary"
+          color="tertiary"
           variant="outline"
           className={cls('skip')}
           disabled={saving}
@@ -461,7 +461,7 @@ const BasePasskeys: FC<BasePasskeysProps> = ({
         <Button
           type="button"
           size="small"
-          color="secondary"
+          color="tertiary"
           variant="outline"
           className={cls('cancel')}
           ref={cancelRemoveRef}
@@ -568,7 +568,8 @@ const BasePasskeys: FC<BasePasskeysProps> = ({
   return (
     <CardPrimitive
       aria-busy={loading || busy}
-      className={cx(cls(), styles['root'], cardLayout ? styles['card'] : styles['plain'], className)}
+      variant={cardLayout ? 'outlined' : 'default'}
+      className={cx(cls(), styles['root'], !cardLayout && styles['plain'], className)}
     >
       {(heading || subheading) && (
         <div className={cx(cls('header'), styles['header'])}>

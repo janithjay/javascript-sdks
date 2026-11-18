@@ -64,9 +64,10 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
   `;
 
   return useMemo(() => {
+    // Fills its container, as the other account components do.
     const root: string = css`
-      min-width: 600px;
-      margin: 0 auto;
+      width: 100%;
+      min-width: 0;
       font-family: ${theme.vars.typography.fontFamily};
     `;
 
@@ -183,8 +184,10 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
       }
     `;
 
+    // A dialog sizes to its content, so the popup keeps the field grid from getting cramped.
     const popup: string = css`
       padding: calc(${theme.vars.spacing.unit} * 2);
+      min-width: min(600px, calc(100vw - calc(${theme.vars.spacing.unit} * 8)));
     `;
 
     const alert: string = css`

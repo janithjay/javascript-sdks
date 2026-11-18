@@ -23,6 +23,7 @@ import {cx} from '../../../styles/emotion';
 import AlertPrimitive from '../../primitives/Alert/Alert';
 import Avatar from '../../primitives/Avatar/Avatar';
 import Button from '../../primitives/Button/Button';
+import CardPrimitive from '../../primitives/Card/Card';
 import ChevronDown from '../../primitives/Icons/ChevronDown';
 import Spinner from '../../primitives/Spinner/Spinner';
 import Tooltip from '../../primitives/Tooltip/Tooltip';
@@ -359,7 +360,7 @@ const BaseActiveSessions: FC<BaseActiveSessionsProps> = ({
           ref={cancelRef}
           type="button"
           size="small"
-          color="secondary"
+          color="tertiary"
           variant="outline"
           className={cls('cancel')}
           onClick={(): void => setConfirming(null)}
@@ -425,7 +426,7 @@ const BaseActiveSessions: FC<BaseActiveSessionsProps> = ({
             <Button
               type="button"
               size="small"
-              color="secondary"
+              color="tertiary"
               variant="outline"
               className={cls('revoke')}
               aria-describedby={deviceId}
@@ -462,12 +463,16 @@ const BaseActiveSessions: FC<BaseActiveSessionsProps> = ({
     );
   };
 
+  // Framed as the SDK's outlined card, the same as every other account component.
+  const Root: typeof CardPrimitive | 'div' = cardLayout ? CardPrimitive : 'div';
+
   return (
-    <div
+    <Root
       ref={rootRef}
       tabIndex={-1}
       aria-busy={loading}
-      className={cx(cls(), styles['root'], cardLayout ? styles['card'] : '', className)}
+      {...(cardLayout ? {variant: 'outlined' as const} : {})}
+      className={cx(cls(), styles['root'], className)}
     >
       {(heading || sessions.length > 0) && (
         <div className={cx(cls('header'), styles['header'])}>
@@ -487,7 +492,7 @@ const BaseActiveSessions: FC<BaseActiveSessionsProps> = ({
             <Button
               type="button"
               size="small"
-              color="secondary"
+              color="tertiary"
               variant="outline"
               className={cx(cls('revoke-others'), styles['revokeOthers'])}
               aria-expanded={confirming === ALL_OTHERS}
@@ -525,7 +530,7 @@ const BaseActiveSessions: FC<BaseActiveSessionsProps> = ({
       {orderedSessions.length > 0 && (
         <ul className={cx(cls('list'), styles['list'])}>{orderedSessions.map(renderSession)}</ul>
       )}
-    </div>
+    </Root>
   );
 };
 

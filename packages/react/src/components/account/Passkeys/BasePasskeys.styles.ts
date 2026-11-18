@@ -19,13 +19,6 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
     box-sizing: border-box;
   `;
 
-  const card: string = css`
-    padding: calc(${theme.vars.spacing.unit} * 3);
-    background: ${theme.vars.colors.background.surface};
-    border: 1px solid ${theme.vars.colors.border};
-    border-radius: ${theme.vars.borderRadius.large};
-  `;
-
   const plain: string = css`
     padding: 0;
     background: transparent;
@@ -57,7 +50,7 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
     gap: calc(${theme.vars.spacing.unit} * 1.5);
     padding: calc(${theme.vars.spacing.unit} * 1.5) calc(${theme.vars.spacing.unit} * 1.75);
     border: 1px solid ${theme.vars.colors.border};
-    border-radius: ${theme.vars.borderRadius.large};
+    border-radius: ${theme.vars.borderRadius.medium};
   `;
 
   const itemRow: string = css`
@@ -99,7 +92,7 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
     padding: calc(${theme.vars.spacing.unit} * 2.75) calc(${theme.vars.spacing.unit} * 2);
     text-align: center;
     border: 1px dashed ${theme.vars.colors.border};
-    border-radius: ${theme.vars.borderRadius.large};
+    border-radius: ${theme.vars.borderRadius.medium};
   `;
 
   const actions: string = css`
@@ -116,7 +109,7 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
     gap: calc(${theme.vars.spacing.unit} * 1.5);
     padding: calc(${theme.vars.spacing.unit} * 2.5);
     border: 1px solid ${theme.vars.colors.border};
-    border-radius: ${theme.vars.borderRadius.large};
+    border-radius: ${theme.vars.borderRadius.medium};
   `;
 
   const panelText: string = css`
@@ -208,7 +201,6 @@ const useStyles = (theme: Theme, colorScheme: string): Record<string, string> =>
     benefit,
     benefitIcon,
     benefits,
-    card,
     colorScheme,
     confirm,
     created,

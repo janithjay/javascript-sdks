@@ -249,7 +249,7 @@ const BasePasskeys: Component = defineComponent({
           Button,
           {
             class: cls('cancel'),
-            color: 'secondary',
+            color: 'tertiary',
             onClick: (): void => {
               addOpen.value = false;
             },
@@ -317,7 +317,7 @@ const BasePasskeys: Component = defineComponent({
               Button,
               {
                 class: cls('skip'),
-                color: 'secondary',
+                color: 'tertiary',
                 disabled: props.saving,
                 onClick: (): void => props.onSave?.(''),
                 variant: 'outline',
@@ -375,7 +375,7 @@ const BasePasskeys: Component = defineComponent({
               Button,
               {
                 class: cls('cancel'),
-                color: 'secondary',
+                color: 'tertiary',
                 onClick: (): void => {
                   confirming.value = null;
                   void returnFocusTo(removeButtonId(passkey.id));
